@@ -1,16 +1,23 @@
 <index.html>
 <html lang="en">
 <head>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f172a">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal CFO Dashboard - Complete Control</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Personal CFO - Modern</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e293b">
+
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
         :root {
             --primary: #0f172a;
-            --secondary: #3b82f6;
+            --primary-light: #1e293b;
+            --secondary: #4f46e5;
+            --secondary-hover: #4338ca;
             --danger: #ef4444;
             --danger-bg: #fef2f2;
             --danger-dark: #991b1b;
@@ -20,172 +27,241 @@
             --purple: #8b5cf6;
             --bg: #f8fafc;
             --card: #ffffff;
-            --text: #1e293b;
+            --text: #0f172a;
+            --text-muted: #64748b;
             --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.02);
         }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-        h1, h2, h3 { color: var(--primary); margin-top: 0; }
-        
-        /* Month Selector Header */
-        .header-bar { max-width: 1300px; margin: 0 auto 20px auto; display: flex; justify-content: space-between; align-items: center; background: var(--primary); color: white; padding: 15px 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 15px;}
-        .header-bar h1 { margin: 0; font-size: 1.5em; color: white; }
-        .header-controls { display: flex; align-items: center; gap: 15px; }
-        .month-picker-container { display: flex; align-items: center; gap: 10px; font-weight: bold; }
-        .month-picker-container input { padding: 8px 12px; font-size: 1.1em; border-radius: 6px; border: none; outline: none; font-family: inherit; cursor: pointer; }
-        .btn-export { padding: 8px 12px; font-size: 0.9em; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; background: white; color: var(--primary); transition: background 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .btn-export:hover { background: #e2e8f0; }
 
-        /* Tab Navigation */
-        .tab-nav { display: flex; gap: 10px; margin-bottom: 20px; max-width: 1300px; margin-left: auto; margin-right: auto; flex-wrap: wrap; }
-        .tab-btn { flex: 1; min-width: 200px; padding: 15px; background: #cbd5e1; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; color: #334155; cursor: pointer; transition: all 0.2s; }
-        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .tab-btn:hover:not(.active) { background: #94a3b8; color: white; }
-        .tab-content { display: none; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; padding-bottom: 20px; transition: padding 0.3s; }
+        h1, h2, h3 { color: var(--primary); margin-top: 0; letter-spacing: -0.02em; }
+        
+        /* Modern Header */
+        .header-bar { max-width: 1300px; margin: 0 auto 25px auto; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; padding: 18px 24px; border-radius: 16px; box-shadow: var(--shadow-lg); flex-wrap: wrap; gap: 15px;}
+        .header-bar h1 { margin: 0; font-size: 1.5em; font-weight: 700; color: white; }
+        .header-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .month-picker-container { display: flex; align-items: center; gap: 10px; font-weight: 600; background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 8px;}
+        .month-picker-container input { padding: 6px 10px; font-size: 1em; border-radius: 6px; border: none; outline: none; font-family: inherit; font-weight: 600; cursor: pointer; color: var(--primary); }
+        .btn-export { padding: 8px 14px; font-size: 0.9em; font-weight: 600; border-radius: 8px; border: none; cursor: pointer; background: white; color: var(--primary); transition: all 0.2s; box-shadow: var(--shadow-sm); }
+        .btn-export:hover { background: #f1f5f9; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+        /* Modern Tab Navigation */
+        .tab-nav { display: flex; gap: 12px; margin-bottom: 25px; max-width: 1300px; margin-left: auto; margin-right: auto; }
+        .tab-btn { flex: 1; padding: 14px 10px; background: transparent; border: 2px solid transparent; border-radius: 12px; font-size: 1.05em; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; text-align: center; }
+        .tab-btn.active { background: white; color: var(--secondary); box-shadow: var(--shadow-md); border-color: var(--border); }
+        .tab-btn:hover:not(.active) { background: #e2e8f0; color: var(--primary); }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
         .tab-content.active { display: block; }
 
-        .container { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-        .card { background: var(--card); border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border); transition: all 0.3s;}
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Grid Layout */
+        .container { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+        .card { background: var(--card); border-radius: 16px; padding: 24px; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); }
         .full-width { grid-column: 1 / -1; }
         .span-2 { grid-column: span 2; }
-        .span-3 { grid-column: span 3; }
         
-        .scrollable-card { max-height: 75vh; overflow-y: auto; padding-right: 15px; }
-        .scrollable-card::-webkit-scrollbar { width: 8px; }
-        .scrollable-card::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-        .scrollable-card::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .scrollable-card::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        /* Modern Tables */
+        .table-responsive { width: 100%; overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-light); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.95em; min-width: 500px; }
+        th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border-light); }
+        th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8em; letter-spacing: 0.05em; }
+        tr:hover td { background-color: #f8fafc; }
+        td input { width: 100px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.95em; font-weight: 500; transition: border 0.2s;}
+        td input:focus { border-color: var(--secondary); outline: none; }
+        
+        /* Badges */
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.8em; font-weight: 600; display: inline-block; }
+        .badge-income { background: var(--success-bg); color: #047857; }
+        .badge-debit { background: #fef2f2; color: #b91c1c; }
+        .risk-badge { display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 0.85em; font-weight: 700; }
+        .badge-ok { background: var(--success-bg); color: var(--success); }
+        .badge-risk { background: var(--danger); color: white; animation: pulse 1.5s infinite; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
-        th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--border); }
-        th { background-color: #f1f5f9; font-weight: 600; color: #475569; }
-        
         /* Action Buttons */
-        .btn-action { padding: 5px 10px; margin: 0 2px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em; font-weight: bold; transition: 0.2s; }
+        .btn-action { padding: 6px 10px; margin: 0 2px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600; transition: 0.2s; }
         .btn-edit { background: #e0f2fe; color: #0284c7; }
         .btn-edit:hover { background: #bae6fd; }
         .btn-delete { background: #fee2e2; color: #ef4444; }
         .btn-delete:hover { background: #fecaca; }
 
         /* Forms & Inputs */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .form-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
-        .form-row label { font-weight: 600; font-size: 0.85em; color: #475569; }
-        .form-row input, .form-row select { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .form-row label { font-weight: 600; font-size: 0.85em; color: var(--text-muted); }
+        .form-row input, .form-row select { padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 1em; transition: all 0.2s; background: #f8fafc; }
+        .form-row input:focus, .form-row select:focus { border-color: var(--secondary); outline: none; background: white; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
         
-        /* Dynamic List Rows */
-        .dynamic-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; background: #f8fafc; padding: 8px; border-radius: 6px; border: 1px solid var(--border); }
-        .dynamic-row span { flex: 1; font-weight: 600; font-size: 0.9em; }
-        .dynamic-row input { width: 100px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; }
-        .btn-remove { background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; cursor: pointer; padding: 6px 10px; font-weight: bold; }
+        /* Dynamic List Rows (For simpler lists like categories) */
+        .dynamic-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-light); transition: transform 0.2s; }
+        .dynamic-row:hover { transform: translateX(2px); border-color: var(--border); }
+        .dynamic-row span { flex: 1; font-weight: 600; font-size: 0.95em; color: var(--text); }
+        .dynamic-row input { width: 100px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-weight: 500; }
+        .btn-remove { background: #fee2e2; color: #ef4444; border: none; border-radius: 6px; cursor: pointer; padding: 8px 12px; font-weight: bold; transition: 0.2s; }
         .btn-remove:hover { background: #fca5a5; }
         
-        .add-item-form { display: flex; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); }
-        .add-item-form input { flex: 1; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; }
-        .btn-add { background: var(--success); color: white; border: none; border-radius: 4px; padding: 8px 15px; font-weight: bold; cursor: pointer; }
-        .btn-add:hover { background: #059669; }
+        .add-item-form { display: flex; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border); flex-wrap: wrap; }
+        .add-item-form input, .add-item-form select { flex: 1; min-width: 120px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; font-family: inherit; }
+        .btn-add { background: var(--success); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 600; cursor: pointer; transition: 0.2s; box-shadow: var(--shadow-sm); }
+        .btn-add:hover { background: #059669; transform: translateY(-1px); }
 
-        .btn-submit { width: 100%; background-color: var(--secondary); color: white; font-weight: bold; border: none; cursor: pointer; padding: 12px; border-radius: 6px; margin-top: 15px; font-size: 1em; }
+        .btn-submit { width: 100%; background-color: var(--secondary); color: white; font-weight: 600; border: none; cursor: pointer; padding: 14px; border-radius: 10px; margin-top: 10px; font-size: 1em; transition: all 0.2s; box-shadow: var(--shadow-md); display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-submit:hover { background-color: var(--secondary-hover); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
         
-        /* Executive Summary */
-        .executive-summary { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
-        .stat-box { flex: 1; min-width: 160px; padding: 20px 15px; background: #f8fafc; border-radius: 8px; text-align: center; border-left: 5px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .stat-box h3 { margin: 0 0 8px 0; font-size: 0.8em; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; cursor: help; }
-        .stat-box p { margin: 0; font-size: 1.5em; font-weight: 800; }
-        .stat-subtitle { font-size: 0.7em; color: #94a3b8; margin-top: 5px; text-transform: none; }
+        /* Modern Executive Summary */
+        .executive-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+        .stat-box { padding: 20px 16px; background: white; border-radius: 12px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); transition: transform 0.2s; position: relative; overflow: hidden; }
+        .stat-box:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .stat-box::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 4px 0 0 4px; }
+        .stat-box.blue::before { background: var(--secondary); }
+        .stat-box.green::before { background: var(--success); }
+        .stat-box.yellow::before { background: var(--warning); }
+        .stat-box.red::before { background: var(--danger); }
+        .stat-box.purple::before { background: var(--purple); }
         
-        .section-title { font-size: 1.1em; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 15px; color: var(--primary); }
+        .stat-box h3 { margin: 0 0 8px 0; font-size: 0.75em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+        .stat-box p { margin: 0; font-size: 1.5em; font-weight: 800; color: var(--text); letter-spacing: -0.03em; }
+        .stat-subtitle { font-size: 0.75em; color: var(--text-muted); margin-top: 6px; font-weight: 500; }
         
-        /* Risk Badges */
-        .risk-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; }
-        .badge-ok { background: var(--success-bg); color: var(--success); }
-        .badge-warn { background: #fef3c7; color: var(--warning); }
-        .badge-risk { background: var(--danger); color: white; animation: pulse 1.5s infinite; }
-
-        .trouble-card { background-color: var(--danger-bg); border-color: var(--danger); }
+        .section-title { font-size: 1.15em; font-weight: 700; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        
+        /* Trouble States */
+        .trouble-card { background-color: var(--danger-bg); border-color: #fca5a5; }
         .trouble-card h2, .trouble-card h3 { color: var(--danger-dark); }
-        .trouble-text { color: var(--danger); font-weight: bold; }
+        .trouble-text { color: var(--danger); font-weight: 700; }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        /* Scanner Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 20px; padding: 24px; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); max-height: 90vh; overflow-y: auto; }
+        .modal-header { font-size: 1.3em; font-weight: 800; color: var(--primary); border-bottom: 1px solid var(--border-light); padding-bottom: 15px; margin-bottom: 20px; text-align: center; }
+        #receipt-preview-img { max-width: 100%; max-height: 180px; border-radius: 12px; object-fit: contain; background: var(--bg); display: block; margin: 0 auto 20px auto; border: 1px solid var(--border); }
+        .scanner-loader { display: none; text-align: center; padding: 30px 20px; color: var(--purple); font-weight: 700; font-size: 1.1em; }
+        .scanner-loader.active { display: block; }
+
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+        /* =========================================================
+           MOBILE SPECIFIC STYLES (App-Like Behavior)
+           ========================================================= */
+        @media (max-width: 768px) {
+            body { padding: 12px; padding-bottom: 90px; }
+            .header-bar { flex-direction: column; align-items: flex-start; padding: 20px 15px; border-radius: 12px; }
+            .header-controls { width: 100%; justify-content: space-between; margin-top: 15px; }
+            .month-picker-container { width: 100%; justify-content: space-between; background: rgba(255,255,255,0.15); padding: 8px 12px; margin: 0;}
+            
+            .container { grid-template-columns: 1fr; gap: 16px; }
+            .span-2, .span-3, .full-width { grid-column: 1 / -1; }
+            
+            .executive-summary { grid-template-columns: 1fr 1fr; }
+            .stat-box { padding: 16px 12px; border-radius: 10px; }
+
+            /* Turn Tabs into Bottom App Navigation */
+            .tab-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(10px);
+                margin: 0;
+                padding: 12px 8px 20px 8px;
+                box-shadow: 0 -10px 15px -3px rgb(0 0 0 / 0.05);
+                z-index: 1000;
+                border-top: 1px solid var(--border-light);
+                justify-content: space-between;
+                gap: 6px;
+                border-radius: 20px 20px 0 0;
+            }
+            .tab-btn { flex: 1; font-size: 0.85em; padding: 12px 4px; border-radius: 10px; border: none; background: transparent; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center; }
+            .tab-btn.active { background: #f1f5f9; color: var(--primary); box-shadow: none; border: none; }
+            
+            .form-grid { grid-template-columns: 1fr; gap: 12px; }
         }
     </style>
 </head>
 <body>
 
+<input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none;" onchange="handleReceiptCapture(event)">
+
 <div class="header-bar">
-    <h1>Personal CFO Dashboard</h1>
+    <h1>Personal CFO</h1>
     <div class="header-controls">
-        <button class="btn-export" onclick="exportCSV()">📥 Export CSV</button>
-        <button class="btn-export" onclick="exportBackup()">💾 Backup Data</button>
-        <div class="month-picker-container" style="margin-left: 10px; border-left: 2px solid #334155; padding-left: 15px;">
-            <label for="month-selector">Month:</label>
+        <button class="btn-export" onclick="exportCSV()">CSV Data</button>
+        <button class="btn-export" onclick="exportBackup()">Backup</button>
+        <div class="month-picker-container">
+            <label for="month-selector" style="color:white; font-size:0.9em;">Period</label>
             <input type="month" id="month-selector" onchange="changeMonth()">
         </div>
     </div>
 </div>
 
 <div class="tab-nav">
-    <button class="tab-btn active" onclick="switchTab('tab-cfo', this)" id="btn-tab-cfo">CFO Overview</button>
-    <button class="tab-btn" onclick="switchTab('tab-cullen', this)">Cullen's Finances</button>
-    <button class="tab-btn" onclick="switchTab('tab-elize', this)">Elize's Finances</button>
-    <button class="tab-btn" onclick="switchTab('tab-forecast', this)" style="border-bottom: 3px solid var(--danger);">📈 Forecast & Risk</button>
+    <button class="tab-btn active" onclick="switchTab('tab-cfo', this)" id="btn-tab-cfo">🏦<br>Overview</button>
+    <button class="tab-btn" onclick="switchTab('tab-cullen', this)">👨<br>Cullen</button>
+    <button class="tab-btn" onclick="switchTab('tab-elize', this)">👩<br>Elize</button>
+    <button class="tab-btn" onclick="switchTab('tab-forecast', this)" style="color: var(--danger);">📈<br>Forecast</button>
 </div>
 
 <div id="tab-cfo" class="tab-content active">
     <div class="container">
         <div class="card full-width">
-            <h2>Household Cash Flow Overview</h2>
+            <h2 style="margin-bottom: 20px;">Household Cash Flow</h2>
             <div class="executive-summary">
-                <div class="stat-box" style="border-left-color: var(--success);"><h3>Total Income</h3><p id="joint-income-display">R 0.00</p></div>
-                <div class="stat-box" style="border-left-color: var(--warning);"><h3>Fixed Debit Orders</h3><p id="joint-debits-display">R 0.00</p></div>
-                <div class="stat-box" style="border-left-color: var(--secondary);"><h3>Total Variable Budget</h3><p id="joint-budget-display">R 0.00</p></div>
-                <div class="stat-box" style="border-left-color: var(--danger);"><h3>Variable Spend Logged</h3><p id="joint-spent-display">R 0.00</p></div>
+                <div class="stat-box green"><h3>Total Income</h3><p id="joint-income-display">R 0.00</p></div>
+                <div class="stat-box yellow"><h3>Fixed Debits</h3><p id="joint-debits-display">R 0.00</p></div>
+                <div class="stat-box blue"><h3>Variable Budget</h3><p id="joint-budget-display">R 0.00</p></div>
+                <div class="stat-box red"><h3>Spend Logged</h3><p id="joint-spent-display">R 0.00</p></div>
                 
-                <div class="stat-box" id="joint-remaining-box">
-                    <h3 title="Total Income minus Fixed Debits minus Ad-Hoc Spend Logged. This is the exact cash currently left in your accounts.">Absolute Free Cash ⓘ</h3>
+                <div class="stat-box" id="joint-remaining-box" style="border: 2px solid var(--border-light);">
+                    <h3 title="Total Income - Fixed Debits - Ad-Hoc Spend">Absolute Free Cash</h3>
                     <p id="joint-remaining-display">R 0.00</p>
-                    <div class="stat-subtitle">(Income - Debits - Logged Spend)</div>
+                    <div class="stat-subtitle">(Current Actual Cash)</div>
                 </div>
 
-                <div class="stat-box" id="cfo-proj-end-box" style="border-left-color: var(--purple); background: #f1f5f9;">
-                    <h3 id="cfo-proj-end-title" style="color: var(--purple);" title="Assumes you will spend 100% of your allocated budgets. Overspends instantly drop this number.">Projected Month-End ⓘ</h3>
-                    <p id="cfo-proj-end-val">R 0.00</p>
-                    <div class="stat-subtitle">(Assuming full budget utilization)</div>
+                <div class="stat-box purple" id="cfo-proj-end-box" style="background: #f8fafc;">
+                    <h3 id="cfo-proj-end-title" style="color: var(--purple);" title="Assumes 100% budget utilization.">Proj. Month-End</h3>
+                    <p id="cfo-proj-end-val" style="color: var(--purple);">R 0.00</p>
+                    <div class="stat-subtitle">(Assumes Full Budget)</div>
                 </div>
             </div>
-        </div>
-
-        <div class="card">
-            <h3 class="section-title">1. Variable Categories & Budgets</h3>
-            <div id="categories-container"></div>
-            <div class="add-item-form">
-                <input type="text" id="new-cat-name" placeholder="New Category">
-                <input type="number" id="new-cat-amount" placeholder="Limit (R)" step="0.01">
-                <button type="button" class="btn-add" onclick="addCategory()">+ Add</button>
-            </div>
-
-            <h3 class="section-title" style="margin-top: 30px;">2. Log Daily Spend</h3>
-            <form id="expense-form">
-                <input type="hidden" id="exp-edit-id" value="">
-                <div class="form-row">
-                    <label>Who Paid?</label>
-                    <select id="exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select>
-                </div>
-                <div class="form-grid">
-                    <div class="form-row"><label>Date</label><input type="date" id="exp-date" required></div>
-                    <div class="form-row"><label>Category</label><select id="exp-category" required></select></div>
-                </div>
-                <div class="form-row"><label>Description</label><input type="text" id="exp-desc" required></div>
-                <div class="form-row"><label>Amount (R)</label><input type="number" id="exp-amount" step="0.01" required></div>
-                <button type="submit" class="btn-submit" id="btn-submit-tx">Record Transaction</button>
-            </form>
         </div>
 
         <div class="card span-2">
-            <h3 class="section-title">Budget vs Actual Visualization</h3>
-            <canvas id="jointChart" height="120"></canvas>
+            <h3 class="section-title">Log Daily Spend</h3>
+            <button type="button" class="btn-submit" style="margin-top:0; margin-bottom: 25px; background-color: var(--purple); font-size: 1.05em;" onclick="document.getElementById('camera-input').click()">
+                📸 Snap & Scan Receipt
+            </button>
+            
+            <form id="expense-form" style="border-top: 1px dashed var(--border); padding-top: 20px;">
+                <input type="hidden" id="exp-edit-id" value="">
+                <div class="form-grid">
+                    <div class="form-row"><label>Who Paid?</label><select id="exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select></div>
+                    <div class="form-row"><label>Date</label><input type="date" id="exp-date" required></div>
+                    <div class="form-row"><label>Category</label><select id="exp-category" required></select></div>
+                    <div class="form-row"><label>Amount (R)</label><input type="number" id="exp-amount" step="0.01" required></div>
+                </div>
+                <div class="form-row"><label>Description / Merchant</label><input type="text" id="exp-desc" required></div>
+                <button type="submit" class="btn-submit" id="btn-submit-tx">Save Manual Record</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3 class="section-title">Budget Setup</h3>
+            <div id="categories-container" style="max-height: 250px; overflow-y: auto; padding-right: 5px;"></div>
+            <div class="add-item-form">
+                <input type="text" id="new-cat-name" placeholder="Category Name">
+                <input type="number" id="new-cat-amount" placeholder="Limit (R)" step="0.01">
+                <button type="button" class="btn-add" onclick="addCategory()">Add</button>
+            </div>
+            
+            <h3 class="section-title" style="margin-top: 35px;">Budget vs Actual</h3>
+            <div style="position: relative; height: 220px; width: 100%;">
+                <canvas id="jointChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -193,51 +269,56 @@
 <div id="tab-cullen" class="tab-content">
     <div class="container">
         <div class="card full-width">
-            <h2>Cullen's Cash Flow Breakdown</h2>
+            <h2 style="margin-bottom: 20px;">Cullen's Breakdown</h2>
             <div class="executive-summary">
-                <div class="stat-box" style="border-left-color: var(--success);"><h3>Total Income</h3><p id="cul-inc-disp">R 0</p></div>
-                <div class="stat-box" style="border-left-color: var(--warning);"><h3>Fixed Debits</h3><p id="cul-deb-disp">R 0</p></div>
-                <div class="stat-box" style="border-left-color: var(--secondary);"><h3>Available (Pre-Var)</h3><p id="cul-avail-disp">R 0</p></div>
-                <div class="stat-box" style="border-left-color: var(--danger);"><h3>Ad-Hoc Spend</h3><p id="cul-spent-disp">R 0</p></div>
-                <div class="stat-box" id="cul-rem-box"><h3>True Remaining</h3><p id="cul-rem-disp">R 0</p></div>
-            </div>
-        </div>
-
-        <div class="card scrollable-card">
-            <h3 class="section-title">1. Variable Income</h3>
-            <div class="form-grid">
-                <div class="form-row"><label>Basic Salary</label><input type="number" id="cul-sal" step="0.01" onchange="updateFinancials()"></div>
-                <div class="form-row"><label>Comm/Bonus</label><input type="number" id="cul-comm" step="0.01" onchange="updateFinancials()"></div>
-            </div>
-
-            <h3 class="section-title" style="margin-top: 25px;">2. Celectina's Wages (Calculated)</h3>
-            <p style="font-size: 0.8em; color: #64748b; margin-top:-10px;">Calculated dynamically based on working Tuesdays & Fridays in the selected month.</p>
-            <div class="form-row" style="margin-bottom: 15px;">
-                <label>Daily Rate (R)</label>
-                <input type="number" id="cel-rate" value="275" step="0.01" onchange="updateCelistinaGlobalRate()">
-            </div>
-            <label style="font-weight: 600; font-size: 0.85em; color: #475569; display:block; margin-bottom:5px;">Working Days Checklist (Uncheck if missed):</label>
-            <div id="celistina-schedule-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                </div>
-            <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid var(--border); font-weight: bold; font-size: 1.1em;">
-                Total Wage: <span id="celistina-total-display" style="color: var(--primary);">R 0.00</span>
-            </div>
-
-            <h3 class="section-title" style="margin-top: 30px;">3. Itemized Debit Orders</h3>
-            <div id="cullen-debits-container"></div>
-            <div class="add-item-form">
-                <input type="text" id="new-cul-deb-name" placeholder="Debit Name">
-                <input type="number" id="new-cul-deb-amount" placeholder="Amount (R)" step="0.01">
-                <button type="button" class="btn-add" onclick="addDebit('Cullen')">+ Add</button>
+                <div class="stat-box green"><h3>Income</h3><p id="cul-inc-disp">R 0</p></div>
+                <div class="stat-box yellow"><h3>Fixed Debits</h3><p id="cul-deb-disp">R 0</p></div>
+                <div class="stat-box blue"><h3>Avail (Pre-Var)</h3><p id="cul-avail-disp">R 0</p></div>
+                <div class="stat-box red"><h3>Ad-Hoc Spend</h3><p id="cul-spent-disp">R 0</p></div>
+                <div class="stat-box" id="cul-rem-box" style="border: 2px solid var(--border-light);"><h3>True Remaining</h3><p id="cul-rem-disp">R 0</p></div>
             </div>
         </div>
 
         <div class="card span-2">
+            <h3 class="section-title">Income & Fixed Deductions</h3>
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table>
+                    <thead><tr><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
+                    <tbody id="cul-fixed-tbody"></tbody>
+                </table>
+            </div>
+            <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px; margin-top: 20px;">
+                <select id="new-cul-fixed-type" style="max-width: 150px;"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
+                <input type="text" id="new-cul-fixed-name" placeholder="Item Name / Description">
+                <input type="number" id="new-cul-fixed-amount" placeholder="Amount (R)" step="0.01">
+                <button type="button" class="btn-add" onclick="addFixedItem('Cullen')">+ Add Item</button>
+            </div>
+        </div>
+
+        <div class="card" style="border: 2px solid var(--purple); background: #faf5ff;">
+            <h3 class="section-title" style="color: var(--purple);">Celectina's Wages</h3>
+            <p style="font-size: 0.85em; color: var(--text-muted); margin-top:-10px; margin-bottom: 15px;">Auto-calculated based on working Tuesdays & Fridays. Automatically added to Cullen's debits.</p>
+            <div class="form-row" style="margin-bottom: 15px;">
+                <label style="color: var(--purple);">Daily Rate (R)</label>
+                <input type="number" id="cel-rate" value="275" step="0.01" onchange="updateCelistinaGlobalRate()" style="border-color: #d8b4fe; background: white;">
+            </div>
+            
+            <label style="font-weight: 600; font-size: 0.85em; color: var(--text-muted); display:block; margin-bottom:10px;">Working Days Checklist:</label>
+            <div id="celistina-schedule-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+            
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d8b4fe; font-weight: 800; font-size: 1.2em; text-align: right; color: var(--purple);">
+                Total Wage: <span id="celistina-total-display">R 0.00</span>
+            </div>
+        </div>
+
+        <div class="card full-width">
             <h3 class="section-title">Cullen's Ad-Hoc Spending Ledger</h3>
-            <table>
-                <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
-                <tbody id="cul-tbody"></tbody>
-            </table>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
+                    <tbody id="cul-tbody"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -245,79 +326,118 @@
 <div id="tab-elize" class="tab-content">
     <div class="container">
         <div class="card full-width">
-            <h2>Elize's Cash Flow Breakdown</h2>
+            <h2 style="margin-bottom: 20px;">Elize's Breakdown</h2>
             <div class="executive-summary">
-                <div class="stat-box" style="border-left-color: var(--success);"><h3>Total Income</h3><p id="eli-inc-disp">R 0</p></div>
-                <div class="stat-box" style="border-left-color: var(--warning);"><h3>Fixed Debits</h3><p id="eli-deb-disp">R 0</p></div>
-                <div class="stat-box" style="border-left-color: var(--secondary);"><h3>Available (Pre-Var)</h3><p id="eli-avail-disp">R 0</p></div>
-                <div class="stat-box" style="border-left-color: var(--danger);"><h3>Ad-Hoc Spend</h3><p id="eli-spent-disp">R 0</p></div>
-                <div class="stat-box" id="eli-rem-box"><h3>True Remaining</h3><p id="eli-rem-disp">R 0</p></div>
-            </div>
-        </div>
-
-        <div class="card scrollable-card">
-            <h3 class="section-title">1. Variable Income</h3>
-            <div class="form-grid">
-                <div class="form-row"><label>Basic Salary</label><input type="number" id="eli-sal" step="0.01" onchange="updateFinancials()"></div>
-                <div class="form-row"><label>Comm/Bonus</label><input type="number" id="eli-comm" step="0.01" onchange="updateFinancials()"></div>
-            </div>
-            <h3 class="section-title" style="margin-top: 20px;">2. Itemized Debit Orders</h3>
-            <div id="elize-debits-container"></div>
-            <div class="add-item-form">
-                <input type="text" id="new-eli-deb-name" placeholder="Debit Name">
-                <input type="number" id="new-eli-deb-amount" placeholder="Amount (R)" step="0.01">
-                <button type="button" class="btn-add" onclick="addDebit('Elize')">+ Add</button>
+                <div class="stat-box green"><h3>Income</h3><p id="eli-inc-disp">R 0</p></div>
+                <div class="stat-box yellow"><h3>Fixed Debits</h3><p id="eli-deb-disp">R 0</p></div>
+                <div class="stat-box blue"><h3>Avail (Pre-Var)</h3><p id="eli-avail-disp">R 0</p></div>
+                <div class="stat-box red"><h3>Ad-Hoc Spend</h3><p id="eli-spent-disp">R 0</p></div>
+                <div class="stat-box" id="eli-rem-box" style="border: 2px solid var(--border-light);"><h3>True Remaining</h3><p id="eli-rem-disp">R 0</p></div>
             </div>
         </div>
 
         <div class="card span-2">
+            <h3 class="section-title">Income & Fixed Deductions</h3>
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table>
+                    <thead><tr><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
+                    <tbody id="eli-fixed-tbody"></tbody>
+                </table>
+            </div>
+            <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px; margin-top: 20px;">
+                <select id="new-eli-fixed-type" style="max-width: 150px;"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
+                <input type="text" id="new-eli-fixed-name" placeholder="Item Name / Description">
+                <input type="number" id="new-eli-fixed-amount" placeholder="Amount (R)" step="0.01">
+                <button type="button" class="btn-add" onclick="addFixedItem('Elize')">+ Add Item</button>
+            </div>
+        </div>
+
+        <div class="card full-width">
             <h3 class="section-title">Elize's Ad-Hoc Spending Ledger</h3>
-            <table>
-                <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
-                <tbody id="eli-tbody"></tbody>
-            </table>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
+                    <tbody id="eli-tbody"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
 <div id="tab-forecast" class="tab-content">
     <div class="container">
-        <div class="card full-width" id="forecast-alert-card">
-            <h2 id="forecast-headline">End of Month Household Projection</h2>
-            <p style="margin-top: -10px; margin-bottom: 20px; font-size: 0.9em; color: #475569;">
-                Based on the assumption that you will utilize <strong>100% of your allocated budgets</strong>. Any overspending instantly reduces your projected month-end balance.
+        <div class="card full-width" id="forecast-alert-card" style="border-width: 2px;">
+            <h2 id="forecast-headline">End of Month Projection</h2>
+            <p style="margin-top: -10px; margin-bottom: 25px; font-size: 0.9em; color: var(--text-muted);">
+                Based on the assumption that you will utilize <strong>100% of your allocated budgets</strong>. Overspending instantly reduces your projected finish line.
             </p>
             <div class="executive-summary">
-                <div class="stat-box"><h3>Total Income</h3><p id="proj-inc">R 0.00</p></div>
-                <div class="stat-box"><h3>Fixed Debits</h3><p id="proj-deb">R 0.00</p></div>
-                <div class="stat-box"><h3 title="Sum of all Full Budgets + any Overspending">Projected Variable Spend</h3><p id="proj-var">R 0.00</p></div>
+                <div class="stat-box blue"><h3>Total Income</h3><p id="proj-inc">R 0.00</p></div>
+                <div class="stat-box yellow"><h3>Fixed Debits</h3><p id="proj-deb">R 0.00</p></div>
+                <div class="stat-box purple"><h3 title="Sum of all Full Budgets + any Overspending">Proj. Variable Spend</h3><p id="proj-var">R 0.00</p></div>
                 <div class="stat-box" style="background: white;" id="proj-end-box">
-                    <h3 id="proj-end-title">Projected Month-End Balance</h3>
+                    <h3 id="proj-end-title">Proj. Month-End Balance</h3>
                     <p id="proj-end-val">R 0.00</p>
                 </div>
             </div>
         </div>
 
-        <div class="card span-3">
+        <div class="card full-width">
             <h3 class="section-title">Category Overspend Risk Matrix</h3>
-            <p style="font-size: 0.85em; color: #64748b; margin-top: -10px;">Identifies exactly how much money is left in each budget, and flags if you have blown past your limits.</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Full Budget Limit</th>
-                        <th>Current Spend</th>
-                        <th>Remaining Budget</th>
-                        <th>Projected Month-End Spend</th>
-                        <th>Projected Variance</th>
-                        <th>Status / Risk Level</th>
-                    </tr>
-                </thead>
-                <tbody id="forecast-tbody">
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Full Budget</th>
+                            <th>Current Spend</th>
+                            <th>Remaining</th>
+                            <th>Proj. Month-End</th>
+                            <th>Proj. Variance</th>
+                            <th>Status / Risk</th>
+                        </tr>
+                    </thead>
+                    <tbody id="forecast-tbody">
+                    </tbody>
+                </table>
+            </div>
         </div>
 
+    </div>
+</div>
+
+<div id="receipt-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">Confirm Receipt Details</div>
+        
+        <div id="scanner-loader" class="scanner-loader">
+            <div style="font-size: 3em; margin-bottom: 15px; animation: pulse 2s infinite;">📸</div>
+            Scanning image for amounts...<br>
+            <small style="color:var(--text-muted); font-weight:500; display:block; margin-top: 10px;">This runs completely locally and may take a few seconds.</small>
+        </div>
+
+        <div id="scanner-form" style="display: none;">
+            <img id="receipt-preview-img" src="" alt="Receipt Preview">
+            
+            <form id="modal-expense-form">
+                <div class="form-row" style="background: #e0e7ff; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                    <label style="color: var(--secondary); font-size: 1em; margin-bottom: 8px;"><strong>Select Category</strong></label>
+                    <select id="modal-exp-category" required style="border-color: var(--secondary); border-width: 2px;"></select>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-row"><label>Amount Found (R)</label><input type="number" id="modal-exp-amount" step="0.01" required></div>
+                    <div class="form-row"><label>Who Paid?</label><select id="modal-exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select></div>
+                    <div class="form-row"><label>Date</label><input type="date" id="modal-exp-date" required></div>
+                    <div class="form-row"><label>Merchant / Desc</label><input type="text" id="modal-exp-desc" required></div>
+                </div>
+                
+                <div style="display: flex; gap: 12px; margin-top: 25px;">
+                    <button type="button" class="btn-submit" style="background-color: var(--text-muted); flex: 1; box-shadow:none;" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-submit" style="background-color: var(--success); flex: 2;">Save Transaction</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -328,12 +448,12 @@
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         btnElement.classList.add('active');
+        window.scrollTo(0,0);
     }
 
     // ----- STATE MANAGEMENT & LOCAL STORAGE -----
     let currentMonthKey = "";
     
-    // Default Data Structures
     let categories = [
         { id: 'cat1', name: 'Groceries', limit: 5400 },
         { id: 'cat2', name: 'Petrol', limit: 4200 },
@@ -344,39 +464,41 @@
         { id: 'cat7', name: 'Other', limit: 1000 }
     ];
 
-    // Celectina specific states
     let celistinaRate = 275;
     let celistinaDays = [];
 
-    // Standardized Cullen Debits (Exactly as requested)
-    let cullenDebits = [
-        { id: 'cd1', name: 'Bond Repayment', amount: 17773.29 },
-        { id: 'cd2', name: 'Normandie Levy', amount: 4955 },
-        { id: 'cd3', name: 'Discovery Insure', amount: 2036 },
-        { id: 'cd4', name: 'Crossfit', amount: 1475 },
-        { id: 'cd5', name: 'Alto Villa Levy', amount: 501 },
-        { id: 'cd6', name: 'Impact Meters', amount: 500 },
-        { id: 'cd7', name: 'MTN', amount: 0 },
-        { id: 'cd8', name: 'Google', amount: 469 },
-        { id: 'cd9', name: 'Microsoft', amount: 199 },
-        { id: 'cd10', name: 'Mweb', amount: 699 },
-        { id: 'cd11', name: 'Liberty Life', amount: 515 },
-        { id: 'cd12', name: 'Captial Wealth', amount: 550 },
-        // Celectina handled separately via dynamic calculator
-        { id: 'cd14', name: 'Liberty RA', amount: 500 },
-        { id: 'cd15', name: 'Kids Creache', amount: 13850 },
-        { id: 'cd16', name: 'Swimming', amount: 1220 },
-        { id: 'cd17', name: 'Math Buddies', amount: 0 },
-        { id: 'cd18', name: 'Credit Card Debt', amount: 3500 },
-        { id: 'cd19', name: 'Rates & Taxes', amount: 1409 }
+    // Unified Fixed Arrays (Income & Debits combined)
+    let cullenFixedItems = [
+        { id: 'inc1', type: 'income', name: 'Basic Salary', amount: 48642 },
+        { id: 'inc2', type: 'income', name: 'Comm/Bonus', amount: 3300 },
+        { id: 'cd1', type: 'debit', name: 'Bond Repayment', amount: 17773.29 },
+        { id: 'cd2', type: 'debit', name: 'Normandie Levy', amount: 4955 },
+        { id: 'cd3', type: 'debit', name: 'Discovery Insure', amount: 2036 },
+        { id: 'cd4', type: 'debit', name: 'Crossfit', amount: 1475 },
+        { id: 'cd5', type: 'debit', name: 'Alto Villa Levy', amount: 501 },
+        { id: 'cd6', type: 'debit', name: 'Impact Meters', amount: 500 },
+        { id: 'cd7', type: 'debit', name: 'MTN', amount: 0 },
+        { id: 'cd8', type: 'debit', name: 'Google', amount: 469 },
+        { id: 'cd9', type: 'debit', name: 'Microsoft', amount: 199 },
+        { id: 'cd10', type: 'debit', name: 'Mweb', amount: 699 },
+        { id: 'cd11', type: 'debit', name: 'Liberty Life', amount: 515 },
+        { id: 'cd12', type: 'debit', name: 'Captial Wealth', amount: 550 },
+        { id: 'cd14', type: 'debit', name: 'Liberty RA', amount: 500 },
+        { id: 'cd15', type: 'debit', name: 'Kids Creache', amount: 13850 },
+        { id: 'cd16', type: 'debit', name: 'Swimming', amount: 1220 },
+        { id: 'cd17', type: 'debit', name: 'Math Buddies', amount: 0 },
+        { id: 'cd18', type: 'debit', name: 'Credit Card Debt', amount: 3500 },
+        { id: 'cd19', type: 'debit', name: 'Rates & Taxes', amount: 1409 }
     ];
 
-    let elizeDebits = [
-        { id: 'ed1', name: 'Liberty RA', amount: 526 },
-        { id: 'ed2', name: 'Disc. Vitality', amount: 559 },
-        { id: 'ed3', name: 'Std Funeral Plan', amount: 350.86 },
-        { id: 'ed4', name: 'MissFit Gym', amount: 1100 },
-        { id: 'ed5', name: 'Cullen Credit', amount: 3500 }
+    let elizeFixedItems = [
+        { id: 'einc1', type: 'income', name: 'Basic Salary', amount: 20000 },
+        { id: 'einc2', type: 'income', name: 'Comm/Bonus', amount: 3300 },
+        { id: 'ed1', type: 'debit', name: 'Liberty RA', amount: 526 },
+        { id: 'ed2', type: 'debit', name: 'Disc. Vitality', amount: 559 },
+        { id: 'ed3', type: 'debit', name: 'Std Funeral Plan', amount: 350.86 },
+        { id: 'ed4', type: 'debit', name: 'MissFit Gym', amount: 1100 },
+        { id: 'ed5', type: 'debit', name: 'Cullen Credit', amount: 3500 }
     ];
 
     let transactions = [];
@@ -391,6 +513,7 @@
         
         picker.value = `${year}-${month}`; 
         document.getElementById('exp-date').valueAsDate = now;
+        document.getElementById('modal-exp-date').valueAsDate = now;
         
         initChart();
         changeMonth(); 
@@ -404,14 +527,11 @@
     function generateCelistinaDays(yearMonth) {
         if (!yearMonth) return [];
         const [y, m] = yearMonth.split('-');
-        const year = parseInt(y);
-        const month = parseInt(m) - 1;
-        const days = [];
-        let date = new Date(year, month, 1);
-        
+        const year = parseInt(y); const month = parseInt(m) - 1;
+        const days = []; let date = new Date(year, month, 1);
         while (date.getMonth() === month) {
             const dayOfWeek = date.getDay();
-            if (dayOfWeek === 2 || dayOfWeek === 5) { // 2=Tue, 5=Fri
+            if (dayOfWeek === 2 || dayOfWeek === 5) {
                 days.push({
                     dateStr: `${year}-${String(month+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`,
                     label: (dayOfWeek===2 ? 'Tue ' : 'Fri ') + String(date.getDate()).padStart(2,'0'),
@@ -429,113 +549,62 @@
         if (savedData) {
             const parsed = JSON.parse(savedData);
             categories = parsed.categories || categories;
-            cullenDebits = parsed.cullenDebits || cullenDebits;
-            elizeDebits = parsed.elizeDebits || elizeDebits;
             transactions = parsed.transactions || [];
-            
             celistinaRate = parsed.celistinaRate !== undefined ? parsed.celistinaRate : 275;
             celistinaDays = parsed.celistinaDays || generateCelistinaDays(currentMonthKey);
             
-            document.getElementById('cul-sal').value = parsed.incomes?.culSal || 0;
-            document.getElementById('cul-comm').value = parsed.incomes?.culComm || 0;
-            document.getElementById('eli-sal').value = parsed.incomes?.eliSal || 0;
-            document.getElementById('eli-comm').value = parsed.incomes?.eliComm || 0;
+            // Migration logic for older versions to the new unified array
+            if (parsed.cullenFixedItems) {
+                cullenFixedItems = parsed.cullenFixedItems;
+            } else if (parsed.cullenDebits) {
+                let migIncomes = [];
+                migIncomes.push({ id: 'ci1', type: 'income', name: 'Salary (Migrated)', amount: parsed.incomes?.culSal || 0 });
+                migIncomes.push({ id: 'ci2', type: 'income', name: 'Comm (Migrated)', amount: parsed.incomes?.culComm || 0 });
+                let migDebits = parsed.cullenDebits.map(d => ({...d, type: 'debit'}));
+                cullenFixedItems = [...migIncomes, ...migDebits];
+            }
+
+            if (parsed.elizeFixedItems) {
+                elizeFixedItems = parsed.elizeFixedItems;
+            } else if (parsed.elizeDebits) {
+                let migIncomes = [];
+                migIncomes.push({ id: 'ei1', type: 'income', name: 'Salary (Migrated)', amount: parsed.incomes?.eliSal || 0 });
+                migIncomes.push({ id: 'ei2', type: 'income', name: 'Comm (Migrated)', amount: parsed.incomes?.eliComm || 0 });
+                let migDebits = parsed.elizeDebits.map(d => ({...d, type: 'debit'}));
+                elizeFixedItems = [...migIncomes, ...migDebits];
+            }
         } else {
-            // New Month -> Wipe transactions, gen new Celectina calendar
             transactions = [];
             celistinaRate = 275;
             celistinaDays = generateCelistinaDays(currentMonthKey);
-            
-            if(document.getElementById('cul-sal').value === "") {
-                document.getElementById('cul-sal').value = 48642;
-                document.getElementById('cul-comm').value = 3300;
-                document.getElementById('eli-sal').value = 20000;
-                document.getElementById('eli-comm').value = 3300;
-            }
+            // Default fixed items remain populated from top variables
         }
         
         document.getElementById('cel-rate').value = celistinaRate;
         renderCategories();
         renderCelistinaSchedule();
-        renderDebits('Cullen');
-        renderDebits('Elize');
+        renderFixedItems('Cullen');
+        renderFixedItems('Elize');
     }
 
     function saveData() {
         if (!currentMonthKey) return;
-        const dataToSave = {
-            categories: categories,
-            cullenDebits: cullenDebits,
-            elizeDebits: elizeDebits,
-            transactions: transactions,
-            celistinaRate: celistinaRate,
-            celistinaDays: celistinaDays,
-            incomes: {
-                culSal: parseFloat(document.getElementById('cul-sal').value) || 0,
-                culComm: parseFloat(document.getElementById('cul-comm').value) || 0,
-                eliSal: parseFloat(document.getElementById('eli-sal').value) || 0,
-                eliComm: parseFloat(document.getElementById('eli-comm').value) || 0
-            }
-        };
+        const dataToSave = { categories, cullenFixedItems, elizeFixedItems, transactions, celistinaRate, celistinaDays };
         localStorage.setItem('cfo_data_' + currentMonthKey, JSON.stringify(dataToSave));
-    }
-
-    // ----- EXPORT FUNCTIONS -----
-    function exportCSV() {
-        if (transactions.length === 0) {
-            alert("No transactions to export for this month.");
-            return;
-        }
-        let csv = "Date,Person,Category,Description,Amount\n";
-        transactions.forEach(t => {
-            csv += `${t.date},${t.person},${t.category},"${t.desc.replace(/"/g, '""')}",${t.amount}\n`;
-        });
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.setAttribute('hidden', '');
-        a.setAttribute('href', url);
-        a.setAttribute('download', `transactions_${currentMonthKey}.csv`);
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
-
-    function exportBackup() {
-        const dataToSave = {
-            month: currentMonthKey,
-            categories: categories,
-            cullenDebits: cullenDebits,
-            elizeDebits: elizeDebits,
-            celistinaRate: celistinaRate,
-            celistinaDays: celistinaDays,
-            transactions: transactions,
-            incomes: {
-                culSal: parseFloat(document.getElementById('cul-sal').value) || 0,
-                culComm: parseFloat(document.getElementById('cul-comm').value) || 0,
-                eliSal: parseFloat(document.getElementById('eli-sal').value) || 0,
-                eliComm: parseFloat(document.getElementById('eli-comm').value) || 0
-            }
-        };
-        const blob = new Blob([JSON.stringify(dataToSave, null, 2)], { type: 'application/json' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.setAttribute('hidden', '');
-        a.setAttribute('href', url);
-        a.setAttribute('download', `cfo_backup_${currentMonthKey}.json`);
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
     }
 
     // ----- UI RENDERING FUNCTIONS -----
     function renderCategories() {
         const container = document.getElementById('categories-container');
         const dropdown = document.getElementById('exp-category');
-        container.innerHTML = ''; dropdown.innerHTML = '';
+        const modalDropdown = document.getElementById('modal-exp-category');
+        
+        container.innerHTML = ''; dropdown.innerHTML = ''; modalDropdown.innerHTML = '';
         categories.forEach(cat => {
             container.innerHTML += `<div class="dynamic-row"><span>${cat.name}</span><input type="number" value="${cat.limit}" step="0.01" onchange="updateCatValue('${cat.id}', this.value)"><button class="btn-remove" onclick="removeCategory('${cat.id}')">X</button></div>`;
-            dropdown.innerHTML += `<option value="${cat.name}">${cat.name}</option>`;
+            const opt = `<option value="${cat.name}">${cat.name}</option>`;
+            dropdown.innerHTML += opt;
+            modalDropdown.innerHTML += opt;
         });
         updateFinancials();
     }
@@ -545,33 +614,69 @@
         container.innerHTML = '';
         celistinaDays.forEach((day, index) => {
             container.innerHTML += `
-                <label style="display: flex; align-items: center; gap: 8px; background: #f8fafc; padding: 6px; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; font-size: 0.9em;">
-                    <input type="checkbox" ${day.present ? 'checked' : ''} onchange="toggleCelistina(${index}, this.checked)">
+                <label style="display: flex; align-items: center; gap: 10px; background: white; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 0.95em; border: 1px solid #e2e8f0; transition: border 0.2s;">
+                    <input type="checkbox" style="width: 20px; height: 20px; accent-color: var(--purple);" ${day.present ? 'checked' : ''} onchange="toggleCelistina(${index}, this.checked)">
                     ${day.label}
-                </label>
+                </label>`;
+        });
+        updateFinancials();
+    }
+
+    function toggleCelistina(index, isChecked) { celistinaDays[index].present = isChecked; updateFinancials(); }
+    function updateCelistinaGlobalRate() { celistinaRate = parseFloat(document.getElementById('cel-rate').value) || 0; updateFinancials(); }
+
+    // Render the Unified Income & Debits Table
+    function renderFixedItems(person) {
+        const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems;
+        const tbody = document.getElementById(person === 'Cullen' ? 'cul-fixed-tbody' : 'eli-fixed-tbody');
+        tbody.innerHTML = '';
+        
+        // Sort: Incomes first, then Debits
+        const sortedArr = [...arr].sort((a,b) => (a.type === 'income' ? -1 : 1));
+
+        sortedArr.forEach(item => {
+            const badge = item.type === 'income' ? '<span class="badge badge-income">Income</span>' : '<span class="badge badge-debit">Debit Order</span>';
+            tbody.innerHTML += `
+                <tr>
+                    <td style="white-space:nowrap;">${badge}</td>
+                    <td><strong>${item.name}</strong></td>
+                    <td style="white-space:nowrap;"><input type="number" value="${item.amount}" step="0.01" onchange="updateFixedValue('${person}', '${item.id}', this.value)"></td>
+                    <td><button class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">X</button></td>
+                </tr>
             `;
         });
         updateFinancials();
     }
 
-    function toggleCelistina(index, isChecked) {
-        celistinaDays[index].present = isChecked;
-        updateFinancials();
+    function addFixedItem(person) {
+        const prefix = person === 'Cullen' ? 'cul' : 'eli';
+        const typeInput = document.getElementById(`new-${prefix}-fixed-type`).value;
+        const nameInput = document.getElementById(`new-${prefix}-fixed-name`).value;
+        const amtInput = document.getElementById(`new-${prefix}-fixed-amount`).value;
+        
+        if(!nameInput) return;
+        
+        const newItem = { id: 'fx_' + Date.now(), type: typeInput, name: nameInput, amount: parseFloat(amtInput) || 0 };
+        
+        if(person === 'Cullen') cullenFixedItems.push(newItem); 
+        else elizeFixedItems.push(newItem);
+        
+        document.getElementById(`new-${prefix}-fixed-name`).value = '';
+        document.getElementById(`new-${prefix}-fixed-amount`).value = '';
+        renderFixedItems(person);
     }
 
-    function updateCelistinaGlobalRate() {
-        celistinaRate = parseFloat(document.getElementById('cel-rate').value) || 0;
-        updateFinancials();
+    function updateFixedValue(person, id, newVal) { 
+        const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; 
+        const item = arr.find(d => d.id === id); 
+        if(item) item.amount = parseFloat(newVal) || 0; 
+        updateFinancials(); 
     }
-
-    function renderDebits(person) {
-        const arr = person === 'Cullen' ? cullenDebits : elizeDebits;
-        const container = document.getElementById(person === 'Cullen' ? 'cullen-debits-container' : 'elize-debits-container');
-        container.innerHTML = '';
-        arr.forEach(deb => {
-            container.innerHTML += `<div class="dynamic-row"><span>${deb.name}</span><input type="number" value="${deb.amount}" step="0.01" onchange="updateDebitValue('${person}', '${deb.id}', this.value)"><button class="btn-remove" onclick="removeDebit('${person}', '${deb.id}')">X</button></div>`;
-        });
-        updateFinancials();
+    
+    function removeFixedItem(person, id) { 
+        if(person === 'Cullen') cullenFixedItems = cullenFixedItems.filter(d => d.id !== id); 
+        else elizeFixedItems = elizeFixedItems.filter(d => d.id !== id); 
+        renderFixedItems(person); 
     }
 
     function updateCatValue(id, newVal) { const cat = categories.find(c => c.id === id); if(cat) cat.limit = parseFloat(newVal) || 0; updateFinancials(); }
@@ -583,36 +688,19 @@
         nameInput.value = ''; amtInput.value = ''; renderCategories();
     }
 
-    function updateDebitValue(person, id, newVal) { const arr = person === 'Cullen' ? cullenDebits : elizeDebits; const deb = arr.find(d => d.id === id); if(deb) deb.amount = parseFloat(newVal) || 0; updateFinancials(); }
-    function removeDebit(person, id) { if(person === 'Cullen') cullenDebits = cullenDebits.filter(d => d.id !== id); else elizeDebits = elizeDebits.filter(d => d.id !== id); renderDebits(person); }
-    function addDebit(person) {
-        const prefix = person === 'Cullen' ? 'cul' : 'eli';
-        const nameInput = document.getElementById(`new-${prefix}-deb-name`); const amtInput = document.getElementById(`new-${prefix}-deb-amount`);
-        if(!nameInput.value) return;
-        const newItem = { id: 'deb_' + Date.now(), name: nameInput.value, amount: parseFloat(amtInput.value) || 0 };
-        if(person === 'Cullen') cullenDebits.push(newItem); else elizeDebits.push(newItem);
-        nameInput.value = ''; amtInput.value = ''; renderDebits(person);
-    }
-
-    // ----- EDIT & DELETE TRANSACTIONS -----
-    function deleteTx(id) {
-        transactions = transactions.filter(t => t.id !== id);
-        updateFinancials();
-    }
-
+    // ----- EDIT / DELETE TRANSACTIONS -----
+    function deleteTx(id) { transactions = transactions.filter(t => t.id !== id); updateFinancials(); }
     function editTx(id) {
         const tx = transactions.find(t => t.id === id);
         if(!tx) return;
-        
         document.getElementById('exp-person').value = tx.person;
         document.getElementById('exp-date').value = tx.date;
         document.getElementById('exp-category').value = tx.category;
         document.getElementById('exp-desc').value = tx.desc;
         document.getElementById('exp-amount').value = tx.amount;
         document.getElementById('exp-edit-id').value = tx.id;
-        
         document.getElementById('btn-submit-tx').innerText = "Update Transaction";
-        document.getElementById('btn-submit-tx').style.backgroundColor = "#8b5cf6";
+        document.getElementById('btn-submit-tx').style.backgroundColor = "var(--purple)";
         switchTab('tab-cfo', document.getElementById('btn-tab-cfo'));
     }
 
@@ -620,44 +708,106 @@
         e.preventDefault();
         const editId = document.getElementById('exp-edit-id').value;
         if (editId) { transactions = transactions.filter(t => t.id != editId); }
-
         transactions.push({
             id: Date.now(), person: document.getElementById('exp-person').value,
             date: document.getElementById('exp-date').value, category: document.getElementById('exp-category').value,
             desc: document.getElementById('exp-desc').value, amount: parseFloat(document.getElementById('exp-amount').value)
         });
-        
         document.getElementById('exp-desc').value = ''; document.getElementById('exp-amount').value = '';
         document.getElementById('exp-edit-id').value = '';
-        document.getElementById('btn-submit-tx').innerText = "Record Transaction";
+        document.getElementById('btn-submit-tx').innerText = "Save Manual Record";
         document.getElementById('btn-submit-tx').style.backgroundColor = "var(--secondary)";
-        
         updateFinancials();
     });
 
+    // ----- CAMERA & OCR RECEIPT LOGIC -----
+    function handleReceiptCapture(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        document.getElementById('receipt-modal').style.display = 'flex';
+        document.getElementById('scanner-loader').classList.add('active');
+        document.getElementById('scanner-form').style.display = 'none';
+        
+        const imgUrl = URL.createObjectURL(file);
+        document.getElementById('receipt-preview-img').src = imgUrl;
+
+        Tesseract.recognize(file, 'eng')
+            .then(({ data: { text } }) => {
+                let extractedAmount = 0;
+                let extractedDesc = "Scanned Receipt";
+
+                const numberMatches = text.match(/\b\d+[\.,]\d{2}\b/g);
+                if (numberMatches) {
+                    const numbers = numberMatches.map(n => parseFloat(n.replace(',', '.')));
+                    const plausibleNumbers = numbers.filter(n => n < 50000); 
+                    if (plausibleNumbers.length > 0) {
+                        extractedAmount = Math.max(...plausibleNumbers);
+                    }
+                }
+
+                const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 3 && !l.match(/^[0-9]+$/));
+                if (lines.length > 0) { extractedDesc = lines[0].substring(0, 30); }
+
+                document.getElementById('modal-exp-amount').value = extractedAmount > 0 ? extractedAmount : '';
+                document.getElementById('modal-exp-desc').value = extractedDesc;
+                
+                document.getElementById('scanner-loader').classList.remove('active');
+                document.getElementById('scanner-form').style.display = 'block';
+            })
+            .catch(err => {
+                console.error("OCR Failed:", err);
+                document.getElementById('modal-exp-desc').value = "Scanned Receipt";
+                document.getElementById('scanner-loader').classList.remove('active');
+                document.getElementById('scanner-form').style.display = 'block';
+            });
+            
+        event.target.value = ''; 
+    }
+
+    function closeModal() {
+        document.getElementById('receipt-modal').style.display = 'none';
+    }
+
+    document.getElementById('modal-expense-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        transactions.push({
+            id: Date.now(), 
+            person: document.getElementById('modal-exp-person').value,
+            date: document.getElementById('modal-exp-date').value, 
+            category: document.getElementById('modal-exp-category').value,
+            desc: document.getElementById('modal-exp-desc').value, 
+            amount: parseFloat(document.getElementById('modal-exp-amount').value)
+        });
+        closeModal();
+        switchTab('tab-cfo', document.getElementById('btn-tab-cfo'));
+        updateFinancials();
+    });
+
+    // ----- CHART & FINANCIAL CALCS -----
     function initChart() {
         const ctx = document.getElementById('jointChart').getContext('2d');
         jointChart = new Chart(ctx, {
             type: 'bar',
-            data: { labels: [], datasets: [{ label: 'Budget Limit', data: [], backgroundColor: '#e2e8f0', borderWidth: 1 }, { label: 'Actual Spend', data: [], backgroundColor: '#3b82f6', borderWidth: 1 }]},
-            options: { responsive: true, scales: { y: { beginAtZero: true } } }
+            data: { labels: [], datasets: [{ label: 'Budget Limit', data: [], backgroundColor: '#e2e8f0', borderRadius: 6 }, { label: 'Actual Spend', data: [], backgroundColor: '#4f46e5', borderRadius: 6 }]},
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, grid: { borderDash: [4, 4] } }, x: { grid: { display: false } } } }
         });
     }
 
-    // ----- MAIN ENGINE & FORECASTING -----
     function updateFinancials() {
-        const culInc = (parseFloat(document.getElementById('cul-sal').value)||0) + (parseFloat(document.getElementById('cul-comm').value)||0);
-        const eliInc = (parseFloat(document.getElementById('eli-sal').value)||0) + (parseFloat(document.getElementById('eli-comm').value)||0);
-        const jointInc = culInc + eliInc;
+        // Calculate unified arrays
+        let culInc = 0, culDeb = 0;
+        cullenFixedItems.forEach(i => { if(i.type === 'income') culInc += i.amount; else culDeb += i.amount; });
+        
+        let eliInc = 0, eliDeb = 0;
+        elizeFixedItems.forEach(i => { if(i.type === 'income') eliInc += i.amount; else eliDeb += i.amount; });
 
-        // Calculate Celectina's dynamic wage
-        let celTotal = 0;
-        celistinaDays.forEach(d => { if(d.present) celTotal += celistinaRate; });
+        // Add Celectina to Cullen's Debits visually and mathematically
+        let celTotal = 0; celistinaDays.forEach(d => { if(d.present) celTotal += celistinaRate; });
         document.getElementById('celistina-total-display').innerText = `R ${celTotal.toFixed(2)}`;
+        culDeb += celTotal;
 
-        // Incorporate Celectina into Cullen's fixed Debits total
-        const culDeb = cullenDebits.reduce((sum, d) => sum + d.amount, 0) + celTotal;
-        const eliDeb = elizeDebits.reduce((sum, d) => sum + d.amount, 0);
+        const jointInc = culInc + eliInc;
         const jointDeb = culDeb + eliDeb;
         const totalCatBudget = categories.reduce((sum, c) => sum + c.limit, 0);
 
@@ -669,14 +819,13 @@
         sortedTxs.forEach(tx => {
             if (catSpendMap[tx.category] !== undefined) catSpendMap[tx.category] += tx.amount;
             const actionBtns = `<button type="button" class="btn-action btn-edit" onclick="editTx(${tx.id})">✎</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">❌</button>`;
-            const row = `<tr><td>${tx.date}</td><td>${tx.desc}</td><td>${tx.category}</td><td>R ${tx.amount.toFixed(2)}</td><td>${actionBtns}</td></tr>`;
+            const row = `<tr><td style="white-space:nowrap;">${tx.date}</td><td><strong>${tx.desc}</strong><br><small style="color:var(--text-muted)">${tx.category}</small></td><td style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td><td>${actionBtns}</td></tr>`;
             if (tx.person === 'Cullen') { culSpent += tx.amount; culHTML += row; } else { eliSpent += tx.amount; eliHTML += row; }
         });
 
         document.getElementById('cul-tbody').innerHTML = culHTML; document.getElementById('eli-tbody').innerHTML = eliHTML;
         const jointSpent = culSpent + eliSpent;
 
-        // Base UI Updates
         document.getElementById('joint-income-display').innerText = `R ${jointInc.toFixed(2)}`;
         document.getElementById('joint-debits-display').innerText = `R ${jointDeb.toFixed(2)}`;
         document.getElementById('joint-budget-display').innerText = `R ${totalCatBudget.toFixed(2)}`;
@@ -691,73 +840,41 @@
         document.getElementById('eli-avail-disp').innerText = `R ${(eliInc - eliDeb).toFixed(2)}`; document.getElementById('eli-spent-disp').innerText = `R ${eliSpent.toFixed(2)}`;
         setRemUI('eli-rem-disp', 'eli-rem-box', eliInc - eliDeb - eliSpent);
 
-        // Chart Update
         const catNames = categories.map(c => c.name);
         jointChart.data.labels = catNames; jointChart.data.datasets[0].data = categories.map(c => c.limit);
         jointChart.data.datasets[1].data = categories.map(c => catSpendMap[c.name]);
-        jointChart.data.datasets[1].backgroundColor = categories.map(c => (catSpendMap[c.name] > c.limit) ? '#ef4444' : '#3b82f6');
+        jointChart.data.datasets[1].backgroundColor = categories.map(c => (catSpendMap[c.name] > c.limit) ? '#ef4444' : '#4f46e5');
         jointChart.update();
 
-        // ==========================================
-        // FORECASTING ENGINE (Budget-Max Logic)
-        // ==========================================
+        // FORECASTING
         let forecastHTML = '';
         let totalProjectedSpend = 0;
 
         categories.forEach(cat => {
-            const bud = cat.limit;
-            const spend = catSpendMap[cat.name];
-            
+            const bud = cat.limit; const spend = catSpendMap[cat.name];
             const remainingBudget = bud - spend;
-            
-            // Assume we will spend the FULL budget.
-            // If we have already spent more than the budget, our projected spend is our CURRENT spend.
             const projectedSpend = Math.max(bud, spend);
             totalProjectedSpend += projectedSpend;
-            
             const projectedVariance = bud - projectedSpend;
             
             let status = '', textClass = '', remClass = '';
-            
             if (remainingBudget < 0) { remClass = 'trouble-text'; }
+            if (projectedVariance < 0) { status = `<span class="risk-badge badge-risk">🚨 OVER</span>`; textClass = 'trouble-text'; } 
+            else { status = `<span class="risk-badge badge-ok">✅ Safe</span>`; }
 
-            if (projectedVariance < 0) {
-                status = `<span class="risk-badge badge-risk">🚨 OVER BUDGET</span>`;
-                textClass = 'trouble-text';
-            } else {
-                status = `<span class="risk-badge badge-ok">✅ On Track</span>`;
-            }
-
-            forecastHTML += `<tr>
-                <td><strong>${cat.name}</strong></td>
-                <td>R ${bud.toFixed(2)}</td>
-                <td>R ${spend.toFixed(2)}</td>
-                <td class="${remClass}">R ${remainingBudget.toFixed(2)}</td>
-                <td class="${textClass}">R ${projectedSpend.toFixed(2)}</td>
-                <td class="${textClass}">R ${projectedVariance.toFixed(2)}</td>
-                <td>${status}</td>
-            </tr>`;
+            forecastHTML += `<tr><td><strong>${cat.name}</strong></td><td style="white-space:nowrap;">R ${bud.toFixed(2)}</td><td style="white-space:nowrap;">R ${spend.toFixed(2)}</td><td class="${remClass}" style="white-space:nowrap;">R ${remainingBudget.toFixed(2)}</td><td class="${textClass}" style="white-space:nowrap; font-weight:700;">R ${projectedSpend.toFixed(2)}</td><td class="${textClass}">R ${projectedVariance.toFixed(2)}</td><td>${status}</td></tr>`;
         });
 
         document.getElementById('forecast-tbody').innerHTML = forecastHTML;
 
-        // Household Forecasting Logic
         const householdProjectedRemaining = jointInc - jointDeb - totalProjectedSpend;
-
         document.getElementById('proj-inc').innerText = `R ${jointInc.toFixed(2)}`;
         document.getElementById('proj-deb').innerText = `R ${jointDeb.toFixed(2)}`;
         document.getElementById('proj-var').innerText = `R ${totalProjectedSpend.toFixed(2)}`;
         
-        // Update UIs
-        const endBox = document.getElementById('proj-end-box');
-        const endVal = document.getElementById('proj-end-val');
-        const endTitle = document.getElementById('proj-end-title');
-        const alertCard = document.getElementById('forecast-alert-card');
-        const headline = document.getElementById('forecast-headline');
-
-        const cfoEndBox = document.getElementById('cfo-proj-end-box');
-        const cfoEndVal = document.getElementById('cfo-proj-end-val');
-        const cfoEndTitle = document.getElementById('cfo-proj-end-title');
+        const endBox = document.getElementById('proj-end-box'); const endVal = document.getElementById('proj-end-val'); const endTitle = document.getElementById('proj-end-title');
+        const alertCard = document.getElementById('forecast-alert-card'); const headline = document.getElementById('forecast-headline');
+        const cfoEndBox = document.getElementById('cfo-proj-end-box'); const cfoEndVal = document.getElementById('cfo-proj-end-val'); const cfoEndTitle = document.getElementById('cfo-proj-end-title');
 
         endVal.innerText = `R ${householdProjectedRemaining.toFixed(2)}`;
         cfoEndVal.innerText = `R ${householdProjectedRemaining.toFixed(2)}`;
@@ -768,34 +885,38 @@
             cfoEndBox.style.borderLeftColor = 'var(--danger)'; cfoEndBox.style.backgroundColor = 'var(--danger-bg)';
             cfoEndVal.style.color = 'var(--danger)'; cfoEndTitle.style.color = 'var(--danger)'; cfoEndTitle.innerText = '🚨 Proj. Deficit';
         } else {
-            alertCard.classList.remove('trouble-card'); headline.innerText = 'End of Month Household Projection';
-            endBox.style.border = 'none'; endBox.style.borderLeft = '5px solid var(--success)'; endVal.style.color = 'var(--success)'; endTitle.style.color = '#64748b';
-            cfoEndBox.style.borderLeftColor = 'var(--purple)'; cfoEndBox.style.backgroundColor = '#f1f5f9';
-            cfoEndVal.style.color = 'var(--text)'; cfoEndTitle.style.color = 'var(--purple)'; cfoEndTitle.innerText = 'Projected Month-End ⓘ';
+            alertCard.classList.remove('trouble-card'); headline.innerText = 'End of Month Projection';
+            endBox.style.border = 'none'; endBox.style.borderLeft = '5px solid var(--success)'; endVal.style.color = 'var(--success)'; endTitle.style.color = 'var(--text-muted)';
+            cfoEndBox.style.borderLeftColor = 'var(--purple)'; cfoEndBox.style.backgroundColor = '#f8fafc';
+            cfoEndVal.style.color = 'var(--purple)'; cfoEndTitle.style.color = 'var(--purple)'; cfoEndTitle.innerText = 'Proj. Month-End ⓘ';
         }
-
         saveData();
     }
 
     function setRemUI(textId, boxId, amount) {
         const el = document.getElementById(textId); const box = document.getElementById(boxId);
         el.innerText = `R ${amount.toFixed(2)}`;
-        if (amount < 0) { el.style.color = 'var(--danger)'; box.style.borderLeftColor = 'var(--danger)'; } 
-        else { el.style.color = 'var(--success)'; box.style.borderLeftColor = 'var(--success)'; }
+        if (amount < 0) { el.style.color = 'var(--danger)'; box.style.borderColor = '#fca5a5'; box.style.background = 'var(--danger-bg)'} 
+        else { el.style.color = 'var(--text)'; box.style.borderColor = 'var(--border-light)'; box.style.background = 'white'}
     }
 
-    // Boot up
-    window.onload = initSystem;
+    function exportCSV() {
+        if (transactions.length === 0) { alert("No transactions to export for this month."); return; }
+        let csv = "Date,Person,Category,Description,Amount\n";
+        transactions.forEach(t => { csv += `${t.date},${t.person},${t.category},"${t.desc.replace(/"/g, '""')}",${t.amount}\n`; });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const a = document.createElement('a'); a.setAttribute('href', window.URL.createObjectURL(blob)); a.setAttribute('download', `transactions_${currentMonthKey}.csv`);
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
 
-</script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Service Worker registered!'))
-        .catch(err => console.log('Service Worker failed:', err));
-    });
-  }
+    function exportBackup() {
+        const dataToSave = { month: currentMonthKey, categories, cullenFixedItems, elizeFixedItems, celistinaRate, celistinaDays, transactions };
+        const blob = new Blob([JSON.stringify(dataToSave, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a'); a.setAttribute('href', window.URL.createObjectURL(blob)); a.setAttribute('download', `cfo_backup_${currentMonthKey}.json`);
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+
+    window.onload = initSystem;
 </script>
 </body>
 </html>
