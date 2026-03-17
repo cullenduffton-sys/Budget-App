@@ -1,4 +1,4 @@
-<index.html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -43,11 +43,13 @@
         /* Modern Header */
         .header-bar { max-width: 1300px; margin: 0 auto 25px auto; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; padding: 18px 24px; border-radius: 16px; box-shadow: var(--shadow-lg); flex-wrap: wrap; gap: 15px;}
         .header-bar h1 { margin: 0; font-size: 1.5em; font-weight: 700; color: white; }
-        .header-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .header-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .month-picker-container { display: flex; align-items: center; gap: 10px; font-weight: 600; background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 8px;}
         .month-picker-container input { padding: 6px 10px; font-size: 1em; border-radius: 6px; border: none; outline: none; font-family: inherit; font-weight: 600; cursor: pointer; color: var(--primary); }
-        .btn-export { padding: 8px 14px; font-size: 0.9em; font-weight: 600; border-radius: 8px; border: none; cursor: pointer; background: white; color: var(--primary); transition: all 0.2s; box-shadow: var(--shadow-sm); }
-        .btn-export:hover { background: #f1f5f9; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        .btn-header { padding: 8px 12px; font-size: 0.85em; font-weight: 600; border-radius: 8px; border: none; cursor: pointer; background: white; color: var(--primary); transition: all 0.2s; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 5px; }
+        .btn-header:hover { background: #f1f5f9; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        .btn-header-danger { background: #fee2e2; color: #ef4444; }
+        .btn-header-danger:hover { background: #fca5a5; }
 
         /* Modern Tab Navigation */
         .tab-nav { display: flex; gap: 12px; margin-bottom: 25px; max-width: 1300px; margin-left: auto; margin-right: auto; }
@@ -66,19 +68,19 @@
         .span-2 { grid-column: span 2; }
         
         /* Modern Tables */
-        .table-responsive { width: 100%; overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-light); }
-        table { width: 100%; border-collapse: collapse; font-size: 0.95em; min-width: 500px; }
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid var(--border-light); background: white; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.95em; min-width: 600px; }
         th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border-light); }
-        th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8em; letter-spacing: 0.05em; }
+        th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8em; letter-spacing: 0.05em; white-space: nowrap; }
         tr:hover td { background-color: #f8fafc; }
         td input { width: 100px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.95em; font-weight: 500; transition: border 0.2s;}
         td input:focus { border-color: var(--secondary); outline: none; }
         
         /* Badges */
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.8em; font-weight: 600; display: inline-block; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.8em; font-weight: 600; display: inline-block; white-space: nowrap; }
         .badge-income { background: var(--success-bg); color: #047857; }
         .badge-debit { background: #fef2f2; color: #b91c1c; }
-        .risk-badge { display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 0.85em; font-weight: 700; }
+        .risk-badge { display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 0.85em; font-weight: 700; white-space: nowrap; }
         .badge-ok { background: var(--success-bg); color: var(--success); }
         .badge-risk { background: var(--danger); color: white; animation: pulse 1.5s infinite; }
 
@@ -96,9 +98,8 @@
         .form-row input, .form-row select { padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 1em; transition: all 0.2s; background: #f8fafc; }
         .form-row input:focus, .form-row select:focus { border-color: var(--secondary); outline: none; background: white; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
         
-        /* Dynamic List Rows (For simpler lists like categories) */
+        /* Dynamic List Rows */
         .dynamic-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-light); transition: transform 0.2s; }
-        .dynamic-row:hover { transform: translateX(2px); border-color: var(--border); }
         .dynamic-row span { flex: 1; font-weight: 600; font-size: 0.95em; color: var(--text); }
         .dynamic-row input { width: 100px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-weight: 500; }
         .btn-remove { background: #fee2e2; color: #ef4444; border: none; border-radius: 6px; cursor: pointer; padding: 8px 12px; font-weight: bold; transition: 0.2s; }
@@ -107,15 +108,14 @@
         .add-item-form { display: flex; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border); flex-wrap: wrap; }
         .add-item-form input, .add-item-form select { flex: 1; min-width: 120px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; font-family: inherit; }
         .btn-add { background: var(--success); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 600; cursor: pointer; transition: 0.2s; box-shadow: var(--shadow-sm); }
-        .btn-add:hover { background: #059669; transform: translateY(-1px); }
+        .btn-add:hover { background: #059669; }
 
         .btn-submit { width: 100%; background-color: var(--secondary); color: white; font-weight: 600; border: none; cursor: pointer; padding: 14px; border-radius: 10px; margin-top: 10px; font-size: 1em; transition: all 0.2s; box-shadow: var(--shadow-md); display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn-submit:hover { background-color: var(--secondary-hover); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
         
-        /* Modern Executive Summary */
+        /* Executive Summary */
         .executive-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
-        .stat-box { padding: 20px 16px; background: white; border-radius: 12px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); transition: transform 0.2s; position: relative; overflow: hidden; }
-        .stat-box:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .stat-box { padding: 20px 16px; background: white; border-radius: 12px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
         .stat-box::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 4px 0 0 4px; }
         .stat-box.blue::before { background: var(--secondary); }
         .stat-box.green::before { background: var(--success); }
@@ -128,11 +128,6 @@
         .stat-subtitle { font-size: 0.75em; color: var(--text-muted); margin-top: 6px; font-weight: 500; }
         
         .section-title { font-size: 1.15em; font-weight: 700; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
-        
-        /* Trouble States */
-        .trouble-card { background-color: var(--danger-bg); border-color: #fca5a5; }
-        .trouble-card h2, .trouble-card h3 { color: var(--danger-dark); }
-        .trouble-text { color: var(--danger); font-weight: 700; }
 
         /* Scanner Modal */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
@@ -145,12 +140,12 @@
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
         /* =========================================================
-           MOBILE SPECIFIC STYLES (App-Like Behavior)
+           MOBILE SPECIFIC STYLES (App-Like Behavior & Fixes)
            ========================================================= */
         @media (max-width: 768px) {
             body { padding: 12px; padding-bottom: 90px; }
-            .header-bar { flex-direction: column; align-items: flex-start; padding: 20px 15px; border-radius: 12px; }
-            .header-controls { width: 100%; justify-content: space-between; margin-top: 15px; }
+            .header-bar { flex-direction: column; align-items: flex-start; padding: 20px 15px; border-radius: 12px; gap: 15px; }
+            .header-controls { width: 100%; justify-content: flex-start; margin-top: 5px; }
             .month-picker-container { width: 100%; justify-content: space-between; background: rgba(255,255,255,0.15); padding: 8px 12px; margin: 0;}
             
             .container { grid-template-columns: 1fr; gap: 16px; }
@@ -158,6 +153,14 @@
             
             .executive-summary { grid-template-columns: 1fr 1fr; }
             .stat-box { padding: 16px 12px; border-radius: 10px; }
+            .stat-box p { font-size: 1.25em; }
+
+            /* Fix add-item forms breaking boundaries on mobile */
+            .add-item-form { flex-direction: column; gap: 8px; }
+            .add-item-form input, .add-item-form select, .add-item-form button { width: 100%; max-width: none; }
+
+            /* Fix Celectina Checkboxes breaking grid */
+            #celistina-schedule-container { grid-template-columns: 1fr !important; }
 
             /* Turn Tabs into Bottom App Navigation */
             .tab-nav {
@@ -165,18 +168,18 @@
                 bottom: 0;
                 left: 0;
                 right: 0;
-                background: rgba(255, 255, 255, 0.9);
+                background: rgba(255, 255, 255, 0.95);
                 backdrop-filter: blur(10px);
                 margin: 0;
-                padding: 12px 8px 20px 8px;
-                box-shadow: 0 -10px 15px -3px rgb(0 0 0 / 0.05);
+                padding: 10px 8px 20px 8px;
+                box-shadow: 0 -10px 15px -3px rgb(0 0 0 / 0.1);
                 z-index: 1000;
                 border-top: 1px solid var(--border-light);
                 justify-content: space-between;
                 gap: 6px;
                 border-radius: 20px 20px 0 0;
             }
-            .tab-btn { flex: 1; font-size: 0.85em; padding: 12px 4px; border-radius: 10px; border: none; background: transparent; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center; }
+            .tab-btn { flex: 1; font-size: 0.8em; padding: 10px 4px; border-radius: 10px; border: none; background: transparent; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center; }
             .tab-btn.active { background: #f1f5f9; color: var(--primary); box-shadow: none; border: none; }
             
             .form-grid { grid-template-columns: 1fr; gap: 12px; }
@@ -186,12 +189,15 @@
 <body>
 
 <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none;" onchange="handleReceiptCapture(event)">
+<input type="file" id="csv-upload" accept=".csv" style="display:none;" onchange="handleCSVUpload(event)">
 
 <div class="header-bar">
     <h1>Personal CFO</h1>
     <div class="header-controls">
-        <button class="btn-export" onclick="exportCSV()">CSV Data</button>
-        <button class="btn-export" onclick="exportBackup()">Backup</button>
+        <button class="btn-header" onclick="document.getElementById('csv-upload').click()">📁 Import CSV</button>
+        <button class="btn-header" onclick="exportBackup()">💾 Backup</button>
+        <button class="btn-header" onclick="exportCSV()">📥 Export Data</button>
+        <button class="btn-header btn-header-danger" onclick="resetTransactions()">🧹 Clear Spend</button>
         <div class="month-picker-container">
             <label for="month-selector" style="color:white; font-size:0.9em;">Period</label>
             <input type="month" id="month-selector" onchange="changeMonth()">
@@ -281,14 +287,14 @@
 
         <div class="card span-2">
             <h3 class="section-title">Income & Fixed Deductions</h3>
-            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <div class="table-responsive" style="max-height: 400px;">
                 <table>
                     <thead><tr><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
                     <tbody id="cul-fixed-tbody"></tbody>
                 </table>
             </div>
             <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px; margin-top: 20px;">
-                <select id="new-cul-fixed-type" style="max-width: 150px;"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
+                <select id="new-cul-fixed-type"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
                 <input type="text" id="new-cul-fixed-name" placeholder="Item Name / Description">
                 <input type="number" id="new-cul-fixed-amount" placeholder="Amount (R)" step="0.01">
                 <button type="button" class="btn-add" onclick="addFixedItem('Cullen')">+ Add Item</button>
@@ -338,14 +344,14 @@
 
         <div class="card span-2">
             <h3 class="section-title">Income & Fixed Deductions</h3>
-            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <div class="table-responsive" style="max-height: 400px;">
                 <table>
                     <thead><tr><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
                     <tbody id="eli-fixed-tbody"></tbody>
                 </table>
             </div>
             <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px; margin-top: 20px;">
-                <select id="new-eli-fixed-type" style="max-width: 150px;"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
+                <select id="new-eli-fixed-type"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
                 <input type="text" id="new-eli-fixed-name" placeholder="Item Name / Description">
                 <input type="number" id="new-eli-fixed-amount" placeholder="Amount (R)" step="0.01">
                 <button type="button" class="btn-add" onclick="addFixedItem('Elize')">+ Add Item</button>
@@ -553,31 +559,12 @@
             celistinaRate = parsed.celistinaRate !== undefined ? parsed.celistinaRate : 275;
             celistinaDays = parsed.celistinaDays || generateCelistinaDays(currentMonthKey);
             
-            // Migration logic for older versions to the new unified array
-            if (parsed.cullenFixedItems) {
-                cullenFixedItems = parsed.cullenFixedItems;
-            } else if (parsed.cullenDebits) {
-                let migIncomes = [];
-                migIncomes.push({ id: 'ci1', type: 'income', name: 'Salary (Migrated)', amount: parsed.incomes?.culSal || 0 });
-                migIncomes.push({ id: 'ci2', type: 'income', name: 'Comm (Migrated)', amount: parsed.incomes?.culComm || 0 });
-                let migDebits = parsed.cullenDebits.map(d => ({...d, type: 'debit'}));
-                cullenFixedItems = [...migIncomes, ...migDebits];
-            }
-
-            if (parsed.elizeFixedItems) {
-                elizeFixedItems = parsed.elizeFixedItems;
-            } else if (parsed.elizeDebits) {
-                let migIncomes = [];
-                migIncomes.push({ id: 'ei1', type: 'income', name: 'Salary (Migrated)', amount: parsed.incomes?.eliSal || 0 });
-                migIncomes.push({ id: 'ei2', type: 'income', name: 'Comm (Migrated)', amount: parsed.incomes?.eliComm || 0 });
-                let migDebits = parsed.elizeDebits.map(d => ({...d, type: 'debit'}));
-                elizeFixedItems = [...migIncomes, ...migDebits];
-            }
+            if (parsed.cullenFixedItems) { cullenFixedItems = parsed.cullenFixedItems; }
+            if (parsed.elizeFixedItems) { elizeFixedItems = parsed.elizeFixedItems; }
         } else {
             transactions = [];
             celistinaRate = 275;
             celistinaDays = generateCelistinaDays(currentMonthKey);
-            // Default fixed items remain populated from top variables
         }
         
         document.getElementById('cel-rate').value = celistinaRate;
@@ -591,6 +578,74 @@
         if (!currentMonthKey) return;
         const dataToSave = { categories, cullenFixedItems, elizeFixedItems, transactions, celistinaRate, celistinaDays };
         localStorage.setItem('cfo_data_' + currentMonthKey, JSON.stringify(dataToSave));
+    }
+
+    // ----- CLEAR TRANSACTIONS FUNCTION -----
+    function resetTransactions() {
+        if(confirm("Are you sure you want to clear ALL ad-hoc transactions for this month?\n\nYour fixed debits, incomes, and budgets will NOT be affected.")) {
+            transactions = [];
+            updateFinancials();
+            alert("All ad-hoc transactions have been cleared for this month.");
+        }
+    }
+
+    // ----- CSV PARSER (Matches the specific Debit Orders format) -----
+    function handleCSVUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const text = e.target.result;
+            const rows = text.split('\n');
+            
+            let newCul = [];
+            let newEli = [];
+
+            // Ignore header row or common junk keywords
+            const ignoreWords = ['total', 'budget', 'transaction detail', 'utilities', 'elize budget', 'debit orders'];
+
+            rows.forEach((row, index) => {
+                if (index === 0) return; // skip header row
+                const cols = row.split(',');
+                
+                // Parse Cullen (Columns 0 & 1)
+                if (cols.length >= 2) {
+                    let nameC = cols[0].trim();
+                    let amtC = parseFloat(cols[1]);
+                    if (nameC && !isNaN(amtC) && !ignoreWords.some(w => nameC.toLowerCase().includes(w))) {
+                        if(nameC.toLowerCase().includes('salary') || nameC.toLowerCase().includes('commision') || nameC.toLowerCase().includes('bonus')) {
+                            newCul.push({ id: 'fxc_' + Date.now() + Math.random(), type: 'income', name: nameC, amount: amtC });
+                        } else {
+                            newCul.push({ id: 'fxc_' + Date.now() + Math.random(), type: 'debit', name: nameC, amount: amtC });
+                        }
+                    }
+                }
+                
+                // Parse Elize (Columns 3 & 4)
+                if (cols.length >= 5) {
+                    let nameE = cols[3].trim();
+                    let amtE = parseFloat(cols[4]);
+                    if (nameE && !isNaN(amtE) && !ignoreWords.some(w => nameE.toLowerCase().includes(w)) && !nameE.toLowerCase().includes('total left')) {
+                        if(nameE.toLowerCase().includes('salary') || nameE.toLowerCase().includes('commision') || nameE.toLowerCase().includes('bonus')) {
+                            newEli.push({ id: 'fxe_' + Date.now() + Math.random(), type: 'income', name: nameE, amount: amtE });
+                        } else {
+                            newEli.push({ id: 'fxe_' + Date.now() + Math.random(), type: 'debit', name: nameE, amount: amtE });
+                        }
+                    }
+                }
+            });
+            
+            if (confirm(`Successfully read CSV template!\n\nFound ${newCul.length} items for Cullen and ${newEli.length} items for Elize.\n\nDo you want to completely overwrite your current Income/Debits with this new data?`)) {
+                cullenFixedItems = newCul;
+                elizeFixedItems = newEli;
+                updateFinancials();
+                renderFixedItems('Cullen');
+                renderFixedItems('Elize');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = ''; // Reset input
     }
 
     // ----- UI RENDERING FUNCTIONS -----
@@ -625,13 +680,11 @@
     function toggleCelistina(index, isChecked) { celistinaDays[index].present = isChecked; updateFinancials(); }
     function updateCelistinaGlobalRate() { celistinaRate = parseFloat(document.getElementById('cel-rate').value) || 0; updateFinancials(); }
 
-    // Render the Unified Income & Debits Table
     function renderFixedItems(person) {
         const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems;
         const tbody = document.getElementById(person === 'Cullen' ? 'cul-fixed-tbody' : 'eli-fixed-tbody');
         tbody.innerHTML = '';
         
-        // Sort: Incomes first, then Debits
         const sortedArr = [...arr].sort((a,b) => (a.type === 'income' ? -1 : 1));
 
         sortedArr.forEach(item => {
@@ -795,14 +848,12 @@
     }
 
     function updateFinancials() {
-        // Calculate unified arrays
         let culInc = 0, culDeb = 0;
         cullenFixedItems.forEach(i => { if(i.type === 'income') culInc += i.amount; else culDeb += i.amount; });
         
         let eliInc = 0, eliDeb = 0;
         elizeFixedItems.forEach(i => { if(i.type === 'income') eliInc += i.amount; else eliDeb += i.amount; });
 
-        // Add Celectina to Cullen's Debits visually and mathematically
         let celTotal = 0; celistinaDays.forEach(d => { if(d.present) celTotal += celistinaRate; });
         document.getElementById('celistina-total-display').innerText = `R ${celTotal.toFixed(2)}`;
         culDeb += celTotal;
@@ -846,7 +897,6 @@
         jointChart.data.datasets[1].backgroundColor = categories.map(c => (catSpendMap[c.name] > c.limit) ? '#ef4444' : '#4f46e5');
         jointChart.update();
 
-        // FORECASTING
         let forecastHTML = '';
         let totalProjectedSpend = 0;
 
