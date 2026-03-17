@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal CFO Dashboard - Complete Control</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #3b82f6;
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            --danger-dark: #991b1b;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+            --purple: #8b5cf6;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        h1, h2, h3 { color: var(--primary); margin-top: 0; }
+        
+        /* Month Selector Header */
+        .header-bar { max-width: 1300px; margin: 0 auto 20px auto; display: flex; justify-content: space-between; align-items: center; background: var(--primary); color: white; padding: 15px 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 15px;}
+        .header-bar h1 { margin: 0; font-size: 1.5em; color: white; }
+        .header-controls { display: flex; align-items: center; gap: 15px; }
+        .month-picker-container { display: flex; align-items: center; gap: 10px; font-weight: bold; }
+        .month-picker-container input { padding: 8px 12px; font-size: 1.1em; border-radius: 6px; border: none; outline: none; font-family: inherit; cursor: pointer; }
+        .btn-export { padding: 8px 12px; font-size: 0.9em; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; background: white; color: var(--primary); transition: background 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .btn-export:hover { background: #e2e8f0; }
+
+        /* Tab Navigation */
+        .tab-nav { display: flex; gap: 10px; margin-bottom: 20px; max-width: 1300px; margin-left: auto; margin-right: auto; flex-wrap: wrap; }
+        .tab-btn { flex: 1; min-width: 200px; padding: 15px; background: #cbd5e1; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; color: #334155; cursor: pointer; transition: all 0.2s; }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .tab-btn:hover:not(.active) { background: #94a3b8; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .container { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .card { background: var(--card); border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border); transition: all 0.3s;}
+        .full-width { grid-column: 1 / -1; }
+        .span-2 { grid-column: span 2; }
+        .span-3 { grid-column: span 3; }
+        
+        .scrollable-card { max-height: 75vh; overflow-y: auto; padding-right: 15px; }
+        .scrollable-card::-webkit-scrollbar { width: 8px; }
+        .scrollable-card::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .scrollable-card::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .scrollable-card::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
+        th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--border); }
+        th { background-color: #f1f5f9; font-weight: 600; color: #475569; }
+        
+        /* Action Buttons */
+        .btn-action { padding: 5px 10px; margin: 0 2px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em; font-weight: bold; transition: 0.2s; }
+        .btn-edit { background: #e0f2fe; color: #0284c7; }
+        .btn-edit:hover { background: #bae6fd; }
+        .btn-delete { background: #fee2e2; color: #ef4444; }
+        .btn-delete:hover { background: #fecaca; }
+
+        /* Forms & Inputs */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+        .form-row label { font-weight: 600; font-size: 0.85em; color: #475569; }
+        .form-row input, .form-row select { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; }
+        
+        /* Dynamic List Rows */
+        .dynamic-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; background: #f8fafc; padding: 8px; border-radius: 6px; border: 1px solid var(--border); }
+        .dynamic-row span { flex: 1; font-weight: 600; font-size: 0.9em; }
+        .dynamic-row input { width: 100px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; }
+        .btn-remove { background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; cursor: pointer; padding: 6px 10px; font-weight: bold; }
+        .btn-remove:hover { background: #fca5a5; }
+        
+        .add-item-form { display: flex; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); }
+        .add-item-form input { flex: 1; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; }
+        .btn-add { background: var(--success); color: white; border: none; border-radius: 4px; padding: 8px 15px; font-weight: bold; cursor: pointer; }
+        .btn-add:hover { background: #059669; }
+
+        .btn-submit { width: 100%; background-color: var(--secondary); color: white; font-weight: bold; border: none; cursor: pointer; padding: 12px; border-radius: 6px; margin-top: 15px; font-size: 1em; }
+        
+        /* Executive Summary */
+        .executive-summary { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+        .stat-box { flex: 1; min-width: 160px; padding: 20px 15px; background: #f8fafc; border-radius: 8px; text-align: center; border-left: 5px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .stat-box h3 { margin: 0 0 8px 0; font-size: 0.8em; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; cursor: help; }
+        .stat-box p { margin: 0; font-size: 1.5em; font-weight: 800; }
+        .stat-subtitle { font-size: 0.7em; color: #94a3b8; margin-top: 5px; text-transform: none; }
+        
+        .section-title { font-size: 1.1em; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 15px; color: var(--primary); }
+        
+        /* Risk Badges */
+        .risk-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; }
+        .badge-ok { background: var(--success-bg); color: var(--success); }
+        .badge-warn { background: #fef3c7; color: var(--warning); }
+        .badge-risk { background: var(--danger); color: white; animation: pulse 1.5s infinite; }
+
+        .trouble-card { background-color: var(--danger-bg); border-color: var(--danger); }
+        .trouble-card h2, .trouble-card h3 { color: var(--danger-dark); }
+        .trouble-text { color: var(--danger); font-weight: bold; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-bar">
+    <h1>Personal CFO Dashboard</h1>
+    <div class="header-controls">
+        <button class="btn-export" onclick="exportCSV()">📥 Export CSV</button>
+        <button class="btn-export" onclick="exportBackup()">💾 Backup Data</button>
+        <div class="month-picker-container" style="margin-left: 10px; border-left: 2px solid #334155; padding-left: 15px;">
+            <label for="month-selector">Month:</label>
+            <input type="month" id="month-selector" onchange="changeMonth()">
+        </div>
+    </div>
+</div>
+
+<div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('tab-cfo', this)" id="btn-tab-cfo">CFO Overview</button>
+    <button class="tab-btn" onclick="switchTab('tab-cullen', this)">Cullen's Finances</button>
+    <button class="tab-btn" onclick="switchTab('tab-elize', this)">Elize's Finances</button>
+    <button class="tab-btn" onclick="switchTab('tab-forecast', this)" style="border-bottom: 3px solid var(--danger);">📈 Forecast & Risk</button>
+</div>
+
+<div id="tab-cfo" class="tab-content active">
+    <div class="container">
+        <div class="card full-width">
+            <h2>Household Cash Flow Overview</h2>
+            <div class="executive-summary">
+                <div class="stat-box" style="border-left-color: var(--success);"><h3>Total Income</h3><p id="joint-income-display">R 0.00</p></div>
+                <div class="stat-box" style="border-left-color: var(--warning);"><h3>Fixed Debit Orders</h3><p id="joint-debits-display">R 0.00</p></div>
+                <div class="stat-box" style="border-left-color: var(--secondary);"><h3>Total Variable Budget</h3><p id="joint-budget-display">R 0.00</p></div>
+                <div class="stat-box" style="border-left-color: var(--danger);"><h3>Variable Spend Logged</h3><p id="joint-spent-display">R 0.00</p></div>
+                
+                <div class="stat-box" id="joint-remaining-box">
+                    <h3 title="Total Income minus Fixed Debits minus Ad-Hoc Spend Logged. This is the exact cash currently left in your accounts.">Absolute Free Cash ⓘ</h3>
+                    <p id="joint-remaining-display">R 0.00</p>
+                    <div class="stat-subtitle">(Income - Debits - Logged Spend)</div>
+                </div>
+
+                <div class="stat-box" id="cfo-proj-end-box" style="border-left-color: var(--purple); background: #f1f5f9;">
+                    <h3 id="cfo-proj-end-title" style="color: var(--purple);" title="Assumes you will spend 100% of your allocated budgets. Overspends instantly drop this number.">Projected Month-End ⓘ</h3>
+                    <p id="cfo-proj-end-val">R 0.00</p>
+                    <div class="stat-subtitle">(Assuming full budget utilization)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="section-title">1. Variable Categories & Budgets</h3>
+            <div id="categories-container"></div>
+            <div class="add-item-form">
+                <input type="text" id="new-cat-name" placeholder="New Category">
+                <input type="number" id="new-cat-amount" placeholder="Limit (R)" step="0.01">
+                <button type="button" class="btn-add" onclick="addCategory()">+ Add</button>
+            </div>
+
+            <h3 class="section-title" style="margin-top: 30px;">2. Log Daily Spend</h3>
+            <form id="expense-form">
+                <input type="hidden" id="exp-edit-id" value="">
+                <div class="form-row">
+                    <label>Who Paid?</label>
+                    <select id="exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select>
+                </div>
+                <div class="form-grid">
+                    <div class="form-row"><label>Date</label><input type="date" id="exp-date" required></div>
+                    <div class="form-row"><label>Category</label><select id="exp-category" required></select></div>
+                </div>
+                <div class="form-row"><label>Description</label><input type="text" id="exp-desc" required></div>
+                <div class="form-row"><label>Amount (R)</label><input type="number" id="exp-amount" step="0.01" required></div>
+                <button type="submit" class="btn-submit" id="btn-submit-tx">Record Transaction</button>
+            </form>
+        </div>
+
+        <div class="card span-2">
+            <h3 class="section-title">Budget vs Actual Visualization</h3>
+            <canvas id="jointChart" height="120"></canvas>
+        </div>
+    </div>
+</div>
+
+<div id="tab-cullen" class="tab-content">
+    <div class="container">
+        <div class="card full-width">
+            <h2>Cullen's Cash Flow Breakdown</h2>
+            <div class="executive-summary">
+                <div class="stat-box" style="border-left-color: var(--success);"><h3>Total Income</h3><p id="cul-inc-disp">R 0</p></div>
+                <div class="stat-box" style="border-left-color: var(--warning);"><h3>Fixed Debits</h3><p id="cul-deb-disp">R 0</p></div>
+                <div class="stat-box" style="border-left-color: var(--secondary);"><h3>Available (Pre-Var)</h3><p id="cul-avail-disp">R 0</p></div>
+                <div class="stat-box" style="border-left-color: var(--danger);"><h3>Ad-Hoc Spend</h3><p id="cul-spent-disp">R 0</p></div>
+                <div class="stat-box" id="cul-rem-box"><h3>True Remaining</h3><p id="cul-rem-disp">R 0</p></div>
+            </div>
+        </div>
+
+        <div class="card scrollable-card">
+            <h3 class="section-title">1. Variable Income</h3>
+            <div class="form-grid">
+                <div class="form-row"><label>Basic Salary</label><input type="number" id="cul-sal" step="0.01" onchange="updateFinancials()"></div>
+                <div class="form-row"><label>Comm/Bonus</label><input type="number" id="cul-comm" step="0.01" onchange="updateFinancials()"></div>
+            </div>
+
+            <h3 class="section-title" style="margin-top: 25px;">2. Celectina's Wages (Calculated)</h3>
+            <p style="font-size: 0.8em; color: #64748b; margin-top:-10px;">Calculated dynamically based on working Tuesdays & Fridays in the selected month.</p>
+            <div class="form-row" style="margin-bottom: 15px;">
+                <label>Daily Rate (R)</label>
+                <input type="number" id="cel-rate" value="275" step="0.01" onchange="updateCelistinaGlobalRate()">
+            </div>
+            <label style="font-weight: 600; font-size: 0.85em; color: #475569; display:block; margin-bottom:5px;">Working Days Checklist (Uncheck if missed):</label>
+            <div id="celistina-schedule-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                </div>
+            <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid var(--border); font-weight: bold; font-size: 1.1em;">
+                Total Wage: <span id="celistina-total-display" style="color: var(--primary);">R 0.00</span>
+            </div>
+
+            <h3 class="section-title" style="margin-top: 30px;">3. Itemized Debit Orders</h3>
+            <div id="cullen-debits-container"></div>
+            <div class="add-item-form">
+                <input type="text" id="new-cul-deb-name" placeholder="Debit Name">
+                <input type="number" id="new-cul-deb-amount" placeholder="Amount (R)" step="0.01">
+                <button type="button" class="btn-add" onclick="addDebit('Cullen')">+ Add</button>
+            </div>
+        </div>
+
+        <div class="card span-2">
+            <h3 class="section-title">Cullen's Ad-Hoc Spending Ledger</h3>
+            <table>
+                <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
+                <tbody id="cul-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="tab-elize" class="tab-content">
+    <div class="container">
+        <div class="card full-width">
+            <h2>Elize's Cash Flow Breakdown</h2>
+            <div class="executive-summary">
+                <div class="stat-box" style="border-left-color: var(--success);"><h3>Total Income</h3><p id="eli-inc-disp">R 0</p></div>
+                <div class="stat-box" style="border-left-color: var(--warning);"><h3>Fixed Debits</h3><p id="eli-deb-disp">R 0</p></div>
+                <div class="stat-box" style="border-left-color: var(--secondary);"><h3>Available (Pre-Var)</h3><p id="eli-avail-disp">R 0</p></div>
+                <div class="stat-box" style="border-left-color: var(--danger);"><h3>Ad-Hoc Spend</h3><p id="eli-spent-disp">R 0</p></div>
+                <div class="stat-box" id="eli-rem-box"><h3>True Remaining</h3><p id="eli-rem-disp">R 0</p></div>
+            </div>
+        </div>
+
+        <div class="card scrollable-card">
+            <h3 class="section-title">1. Variable Income</h3>
+            <div class="form-grid">
+                <div class="form-row"><label>Basic Salary</label><input type="number" id="eli-sal" step="0.01" onchange="updateFinancials()"></div>
+                <div class="form-row"><label>Comm/Bonus</label><input type="number" id="eli-comm" step="0.01" onchange="updateFinancials()"></div>
+            </div>
+            <h3 class="section-title" style="margin-top: 20px;">2. Itemized Debit Orders</h3>
+            <div id="elize-debits-container"></div>
+            <div class="add-item-form">
+                <input type="text" id="new-eli-deb-name" placeholder="Debit Name">
+                <input type="number" id="new-eli-deb-amount" placeholder="Amount (R)" step="0.01">
+                <button type="button" class="btn-add" onclick="addDebit('Elize')">+ Add</button>
+            </div>
+        </div>
+
+        <div class="card span-2">
+            <h3 class="section-title">Elize's Ad-Hoc Spending Ledger</h3>
+            <table>
+                <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
+                <tbody id="eli-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="tab-forecast" class="tab-content">
+    <div class="container">
+        <div class="card full-width" id="forecast-alert-card">
+            <h2 id="forecast-headline">End of Month Household Projection</h2>
+            <p style="margin-top: -10px; margin-bottom: 20px; font-size: 0.9em; color: #475569;">
+                Based on the assumption that you will utilize <strong>100% of your allocated budgets</strong>. Any overspending instantly reduces your projected month-end balance.
+            </p>
+            <div class="executive-summary">
+                <div class="stat-box"><h3>Total Income</h3><p id="proj-inc">R 0.00</p></div>
+                <div class="stat-box"><h3>Fixed Debits</h3><p id="proj-deb">R 0.00</p></div>
+                <div class="stat-box"><h3 title="Sum of all Full Budgets + any Overspending">Projected Variable Spend</h3><p id="proj-var">R 0.00</p></div>
+                <div class="stat-box" style="background: white;" id="proj-end-box">
+                    <h3 id="proj-end-title">Projected Month-End Balance</h3>
+                    <p id="proj-end-val">R 0.00</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card span-3">
+            <h3 class="section-title">Category Overspend Risk Matrix</h3>
+            <p style="font-size: 0.85em; color: #64748b; margin-top: -10px;">Identifies exactly how much money is left in each budget, and flags if you have blown past your limits.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Full Budget Limit</th>
+                        <th>Current Spend</th>
+                        <th>Remaining Budget</th>
+                        <th>Projected Month-End Spend</th>
+                        <th>Projected Variance</th>
+                        <th>Status / Risk Level</th>
+                    </tr>
+                </thead>
+                <tbody id="forecast-tbody">
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // ----- TAB NAVIGATION -----
+    function switchTab(tabId, btnElement) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+    }
+
+    // ----- STATE MANAGEMENT & LOCAL STORAGE -----
+    let currentMonthKey = "";
+    
+    // Default Data Structures
+    let categories = [
+        { id: 'cat1', name: 'Groceries', limit: 5400 },
+        { id: 'cat2', name: 'Petrol', limit: 4200 },
+        { id: 'cat3', name: 'Health Care', limit: 2000 },
+        { id: 'cat4', name: 'Kids / School', limit: 2000 },
+        { id: 'cat5', name: 'Luxuries', limit: 1500 },
+        { id: 'cat6', name: 'Maintenance', limit: 1000 },
+        { id: 'cat7', name: 'Other', limit: 1000 }
+    ];
+
+    // Celectina specific states
+    let celistinaRate = 275;
+    let celistinaDays = [];
+
+    // Standardized Cullen Debits (Exactly as requested)
+    let cullenDebits = [
+        { id: 'cd1', name: 'Bond Repayment', amount: 17773.29 },
+        { id: 'cd2', name: 'Normandie Levy', amount: 4955 },
+        { id: 'cd3', name: 'Discovery Insure', amount: 2036 },
+        { id: 'cd4', name: 'Crossfit', amount: 1475 },
+        { id: 'cd5', name: 'Alto Villa Levy', amount: 501 },
+        { id: 'cd6', name: 'Impact Meters', amount: 500 },
+        { id: 'cd7', name: 'MTN', amount: 0 },
+        { id: 'cd8', name: 'Google', amount: 469 },
+        { id: 'cd9', name: 'Microsoft', amount: 199 },
+        { id: 'cd10', name: 'Mweb', amount: 699 },
+        { id: 'cd11', name: 'Liberty Life', amount: 515 },
+        { id: 'cd12', name: 'Captial Wealth', amount: 550 },
+        // Celectina handled separately via dynamic calculator
+        { id: 'cd14', name: 'Liberty RA', amount: 500 },
+        { id: 'cd15', name: 'Kids Creache', amount: 13850 },
+        { id: 'cd16', name: 'Swimming', amount: 1220 },
+        { id: 'cd17', name: 'Math Buddies', amount: 0 },
+        { id: 'cd18', name: 'Credit Card Debt', amount: 3500 },
+        { id: 'cd19', name: 'Rates & Taxes', amount: 1409 }
+    ];
+
+    let elizeDebits = [
+        { id: 'ed1', name: 'Liberty RA', amount: 526 },
+        { id: 'ed2', name: 'Disc. Vitality', amount: 559 },
+        { id: 'ed3', name: 'Std Funeral Plan', amount: 350.86 },
+        { id: 'ed4', name: 'MissFit Gym', amount: 1100 },
+        { id: 'ed5', name: 'Cullen Credit', amount: 3500 }
+    ];
+
+    let transactions = [];
+    let jointChart = null;
+
+    // ----- SYSTEM INITIALIZATION -----
+    function initSystem() {
+        const picker = document.getElementById('month-selector');
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        
+        picker.value = `${year}-${month}`; 
+        document.getElementById('exp-date').valueAsDate = now;
+        
+        initChart();
+        changeMonth(); 
+    }
+
+    function changeMonth() {
+        currentMonthKey = document.getElementById('month-selector').value;
+        loadData();
+    }
+
+    function generateCelistinaDays(yearMonth) {
+        if (!yearMonth) return [];
+        const [y, m] = yearMonth.split('-');
+        const year = parseInt(y);
+        const month = parseInt(m) - 1;
+        const days = [];
+        let date = new Date(year, month, 1);
+        
+        while (date.getMonth() === month) {
+            const dayOfWeek = date.getDay();
+            if (dayOfWeek === 2 || dayOfWeek === 5) { // 2=Tue, 5=Fri
+                days.push({
+                    dateStr: `${year}-${String(month+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`,
+                    label: (dayOfWeek===2 ? 'Tue ' : 'Fri ') + String(date.getDate()).padStart(2,'0'),
+                    present: true
+                });
+            }
+            date.setDate(date.getDate() + 1);
+        }
+        return days;
+    }
+
+    function loadData() {
+        const savedData = localStorage.getItem('cfo_data_' + currentMonthKey);
+        
+        if (savedData) {
+            const parsed = JSON.parse(savedData);
+            categories = parsed.categories || categories;
+            cullenDebits = parsed.cullenDebits || cullenDebits;
+            elizeDebits = parsed.elizeDebits || elizeDebits;
+            transactions = parsed.transactions || [];
+            
+            celistinaRate = parsed.celistinaRate !== undefined ? parsed.celistinaRate : 275;
+            celistinaDays = parsed.celistinaDays || generateCelistinaDays(currentMonthKey);
+            
+            document.getElementById('cul-sal').value = parsed.incomes?.culSal || 0;
+            document.getElementById('cul-comm').value = parsed.incomes?.culComm || 0;
+            document.getElementById('eli-sal').value = parsed.incomes?.eliSal || 0;
+            document.getElementById('eli-comm').value = parsed.incomes?.eliComm || 0;
+        } else {
+            // New Month -> Wipe transactions, gen new Celectina calendar
+            transactions = [];
+            celistinaRate = 275;
+            celistinaDays = generateCelistinaDays(currentMonthKey);
+            
+            if(document.getElementById('cul-sal').value === "") {
+                document.getElementById('cul-sal').value = 48642;
+                document.getElementById('cul-comm').value = 3300;
+                document.getElementById('eli-sal').value = 20000;
+                document.getElementById('eli-comm').value = 3300;
+            }
+        }
+        
+        document.getElementById('cel-rate').value = celistinaRate;
+        renderCategories();
+        renderCelistinaSchedule();
+        renderDebits('Cullen');
+        renderDebits('Elize');
+    }
+
+    function saveData() {
+        if (!currentMonthKey) return;
+        const dataToSave = {
+            categories: categories,
+            cullenDebits: cullenDebits,
+            elizeDebits: elizeDebits,
+            transactions: transactions,
+            celistinaRate: celistinaRate,
+            celistinaDays: celistinaDays,
+            incomes: {
+                culSal: parseFloat(document.getElementById('cul-sal').value) || 0,
+                culComm: parseFloat(document.getElementById('cul-comm').value) || 0,
+                eliSal: parseFloat(document.getElementById('eli-sal').value) || 0,
+                eliComm: parseFloat(document.getElementById('eli-comm').value) || 0
+            }
+        };
+        localStorage.setItem('cfo_data_' + currentMonthKey, JSON.stringify(dataToSave));
+    }
+
+    // ----- EXPORT FUNCTIONS -----
+    function exportCSV() {
+        if (transactions.length === 0) {
+            alert("No transactions to export for this month.");
+            return;
+        }
+        let csv = "Date,Person,Category,Description,Amount\n";
+        transactions.forEach(t => {
+            csv += `${t.date},${t.person},${t.category},"${t.desc.replace(/"/g, '""')}",${t.amount}\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', `transactions_${currentMonthKey}.csv`);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function exportBackup() {
+        const dataToSave = {
+            month: currentMonthKey,
+            categories: categories,
+            cullenDebits: cullenDebits,
+            elizeDebits: elizeDebits,
+            celistinaRate: celistinaRate,
+            celistinaDays: celistinaDays,
+            transactions: transactions,
+            incomes: {
+                culSal: parseFloat(document.getElementById('cul-sal').value) || 0,
+                culComm: parseFloat(document.getElementById('cul-comm').value) || 0,
+                eliSal: parseFloat(document.getElementById('eli-sal').value) || 0,
+                eliComm: parseFloat(document.getElementById('eli-comm').value) || 0
+            }
+        };
+        const blob = new Blob([JSON.stringify(dataToSave, null, 2)], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', `cfo_backup_${currentMonthKey}.json`);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    // ----- UI RENDERING FUNCTIONS -----
+    function renderCategories() {
+        const container = document.getElementById('categories-container');
+        const dropdown = document.getElementById('exp-category');
+        container.innerHTML = ''; dropdown.innerHTML = '';
+        categories.forEach(cat => {
+            container.innerHTML += `<div class="dynamic-row"><span>${cat.name}</span><input type="number" value="${cat.limit}" step="0.01" onchange="updateCatValue('${cat.id}', this.value)"><button class="btn-remove" onclick="removeCategory('${cat.id}')">X</button></div>`;
+            dropdown.innerHTML += `<option value="${cat.name}">${cat.name}</option>`;
+        });
+        updateFinancials();
+    }
+
+    function renderCelistinaSchedule() {
+        const container = document.getElementById('celistina-schedule-container');
+        container.innerHTML = '';
+        celistinaDays.forEach((day, index) => {
+            container.innerHTML += `
+                <label style="display: flex; align-items: center; gap: 8px; background: #f8fafc; padding: 6px; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; font-size: 0.9em;">
+                    <input type="checkbox" ${day.present ? 'checked' : ''} onchange="toggleCelistina(${index}, this.checked)">
+                    ${day.label}
+                </label>
+            `;
+        });
+        updateFinancials();
+    }
+
+    function toggleCelistina(index, isChecked) {
+        celistinaDays[index].present = isChecked;
+        updateFinancials();
+    }
+
+    function updateCelistinaGlobalRate() {
+        celistinaRate = parseFloat(document.getElementById('cel-rate').value) || 0;
+        updateFinancials();
+    }
+
+    function renderDebits(person) {
+        const arr = person === 'Cullen' ? cullenDebits : elizeDebits;
+        const container = document.getElementById(person === 'Cullen' ? 'cullen-debits-container' : 'elize-debits-container');
+        container.innerHTML = '';
+        arr.forEach(deb => {
+            container.innerHTML += `<div class="dynamic-row"><span>${deb.name}</span><input type="number" value="${deb.amount}" step="0.01" onchange="updateDebitValue('${person}', '${deb.id}', this.value)"><button class="btn-remove" onclick="removeDebit('${person}', '${deb.id}')">X</button></div>`;
+        });
+        updateFinancials();
+    }
+
+    function updateCatValue(id, newVal) { const cat = categories.find(c => c.id === id); if(cat) cat.limit = parseFloat(newVal) || 0; updateFinancials(); }
+    function removeCategory(id) { categories = categories.filter(c => c.id !== id); renderCategories(); }
+    function addCategory() {
+        const nameInput = document.getElementById('new-cat-name'); const amtInput = document.getElementById('new-cat-amount');
+        if(!nameInput.value) return;
+        categories.push({ id: 'cat_' + Date.now(), name: nameInput.value, limit: parseFloat(amtInput.value) || 0 });
+        nameInput.value = ''; amtInput.value = ''; renderCategories();
+    }
+
+    function updateDebitValue(person, id, newVal) { const arr = person === 'Cullen' ? cullenDebits : elizeDebits; const deb = arr.find(d => d.id === id); if(deb) deb.amount = parseFloat(newVal) || 0; updateFinancials(); }
+    function removeDebit(person, id) { if(person === 'Cullen') cullenDebits = cullenDebits.filter(d => d.id !== id); else elizeDebits = elizeDebits.filter(d => d.id !== id); renderDebits(person); }
+    function addDebit(person) {
+        const prefix = person === 'Cullen' ? 'cul' : 'eli';
+        const nameInput = document.getElementById(`new-${prefix}-deb-name`); const amtInput = document.getElementById(`new-${prefix}-deb-amount`);
+        if(!nameInput.value) return;
+        const newItem = { id: 'deb_' + Date.now(), name: nameInput.value, amount: parseFloat(amtInput.value) || 0 };
+        if(person === 'Cullen') cullenDebits.push(newItem); else elizeDebits.push(newItem);
+        nameInput.value = ''; amtInput.value = ''; renderDebits(person);
+    }
+
+    // ----- EDIT & DELETE TRANSACTIONS -----
+    function deleteTx(id) {
+        transactions = transactions.filter(t => t.id !== id);
+        updateFinancials();
+    }
+
+    function editTx(id) {
+        const tx = transactions.find(t => t.id === id);
+        if(!tx) return;
+        
+        document.getElementById('exp-person').value = tx.person;
+        document.getElementById('exp-date').value = tx.date;
+        document.getElementById('exp-category').value = tx.category;
+        document.getElementById('exp-desc').value = tx.desc;
+        document.getElementById('exp-amount').value = tx.amount;
+        document.getElementById('exp-edit-id').value = tx.id;
+        
+        document.getElementById('btn-submit-tx').innerText = "Update Transaction";
+        document.getElementById('btn-submit-tx').style.backgroundColor = "#8b5cf6";
+        switchTab('tab-cfo', document.getElementById('btn-tab-cfo'));
+    }
+
+    document.getElementById('expense-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const editId = document.getElementById('exp-edit-id').value;
+        if (editId) { transactions = transactions.filter(t => t.id != editId); }
+
+        transactions.push({
+            id: Date.now(), person: document.getElementById('exp-person').value,
+            date: document.getElementById('exp-date').value, category: document.getElementById('exp-category').value,
+            desc: document.getElementById('exp-desc').value, amount: parseFloat(document.getElementById('exp-amount').value)
+        });
+        
+        document.getElementById('exp-desc').value = ''; document.getElementById('exp-amount').value = '';
+        document.getElementById('exp-edit-id').value = '';
+        document.getElementById('btn-submit-tx').innerText = "Record Transaction";
+        document.getElementById('btn-submit-tx').style.backgroundColor = "var(--secondary)";
+        
+        updateFinancials();
+    });
+
+    function initChart() {
+        const ctx = document.getElementById('jointChart').getContext('2d');
+        jointChart = new Chart(ctx, {
+            type: 'bar',
+            data: { labels: [], datasets: [{ label: 'Budget Limit', data: [], backgroundColor: '#e2e8f0', borderWidth: 1 }, { label: 'Actual Spend', data: [], backgroundColor: '#3b82f6', borderWidth: 1 }]},
+            options: { responsive: true, scales: { y: { beginAtZero: true } } }
+        });
+    }
+
+    // ----- MAIN ENGINE & FORECASTING -----
+    function updateFinancials() {
+        const culInc = (parseFloat(document.getElementById('cul-sal').value)||0) + (parseFloat(document.getElementById('cul-comm').value)||0);
+        const eliInc = (parseFloat(document.getElementById('eli-sal').value)||0) + (parseFloat(document.getElementById('eli-comm').value)||0);
+        const jointInc = culInc + eliInc;
+
+        // Calculate Celectina's dynamic wage
+        let celTotal = 0;
+        celistinaDays.forEach(d => { if(d.present) celTotal += celistinaRate; });
+        document.getElementById('celistina-total-display').innerText = `R ${celTotal.toFixed(2)}`;
+
+        // Incorporate Celectina into Cullen's fixed Debits total
+        const culDeb = cullenDebits.reduce((sum, d) => sum + d.amount, 0) + celTotal;
+        const eliDeb = elizeDebits.reduce((sum, d) => sum + d.amount, 0);
+        const jointDeb = culDeb + eliDeb;
+        const totalCatBudget = categories.reduce((sum, c) => sum + c.limit, 0);
+
+        let culSpent = 0, eliSpent = 0;
+        let catSpendMap = {}; categories.forEach(c => catSpendMap[c.name] = 0);
+        let culHTML = '', eliHTML = '';
+
+        const sortedTxs = [...transactions].sort((a,b) => new Date(b.date) - new Date(a.date));
+        sortedTxs.forEach(tx => {
+            if (catSpendMap[tx.category] !== undefined) catSpendMap[tx.category] += tx.amount;
+            const actionBtns = `<button type="button" class="btn-action btn-edit" onclick="editTx(${tx.id})">✎</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">❌</button>`;
+            const row = `<tr><td>${tx.date}</td><td>${tx.desc}</td><td>${tx.category}</td><td>R ${tx.amount.toFixed(2)}</td><td>${actionBtns}</td></tr>`;
+            if (tx.person === 'Cullen') { culSpent += tx.amount; culHTML += row; } else { eliSpent += tx.amount; eliHTML += row; }
+        });
+
+        document.getElementById('cul-tbody').innerHTML = culHTML; document.getElementById('eli-tbody').innerHTML = eliHTML;
+        const jointSpent = culSpent + eliSpent;
+
+        // Base UI Updates
+        document.getElementById('joint-income-display').innerText = `R ${jointInc.toFixed(2)}`;
+        document.getElementById('joint-debits-display').innerText = `R ${jointDeb.toFixed(2)}`;
+        document.getElementById('joint-budget-display').innerText = `R ${totalCatBudget.toFixed(2)}`;
+        document.getElementById('joint-spent-display').innerText = `R ${jointSpent.toFixed(2)}`;
+        setRemUI('joint-remaining-display', 'joint-remaining-box', jointInc - jointDeb - jointSpent);
+
+        document.getElementById('cul-inc-disp').innerText = `R ${culInc.toFixed(2)}`; document.getElementById('cul-deb-disp').innerText = `R ${culDeb.toFixed(2)}`;
+        document.getElementById('cul-avail-disp').innerText = `R ${(culInc - culDeb).toFixed(2)}`; document.getElementById('cul-spent-disp').innerText = `R ${culSpent.toFixed(2)}`;
+        setRemUI('cul-rem-disp', 'cul-rem-box', culInc - culDeb - culSpent);
+
+        document.getElementById('eli-inc-disp').innerText = `R ${eliInc.toFixed(2)}`; document.getElementById('eli-deb-disp').innerText = `R ${eliDeb.toFixed(2)}`;
+        document.getElementById('eli-avail-disp').innerText = `R ${(eliInc - eliDeb).toFixed(2)}`; document.getElementById('eli-spent-disp').innerText = `R ${eliSpent.toFixed(2)}`;
+        setRemUI('eli-rem-disp', 'eli-rem-box', eliInc - eliDeb - eliSpent);
+
+        // Chart Update
+        const catNames = categories.map(c => c.name);
+        jointChart.data.labels = catNames; jointChart.data.datasets[0].data = categories.map(c => c.limit);
+        jointChart.data.datasets[1].data = categories.map(c => catSpendMap[c.name]);
+        jointChart.data.datasets[1].backgroundColor = categories.map(c => (catSpendMap[c.name] > c.limit) ? '#ef4444' : '#3b82f6');
+        jointChart.update();
+
+        // ==========================================
+        // FORECASTING ENGINE (Budget-Max Logic)
+        // ==========================================
+        let forecastHTML = '';
+        let totalProjectedSpend = 0;
+
+        categories.forEach(cat => {
+            const bud = cat.limit;
+            const spend = catSpendMap[cat.name];
+            
+            const remainingBudget = bud - spend;
+            
+            // Assume we will spend the FULL budget.
+            // If we have already spent more than the budget, our projected spend is our CURRENT spend.
+            const projectedSpend = Math.max(bud, spend);
+            totalProjectedSpend += projectedSpend;
+            
+            const projectedVariance = bud - projectedSpend;
+            
+            let status = '', textClass = '', remClass = '';
+            
+            if (remainingBudget < 0) { remClass = 'trouble-text'; }
+
+            if (projectedVariance < 0) {
+                status = `<span class="risk-badge badge-risk">🚨 OVER BUDGET</span>`;
+                textClass = 'trouble-text';
+            } else {
+                status = `<span class="risk-badge badge-ok">✅ On Track</span>`;
+            }
+
+            forecastHTML += `<tr>
+                <td><strong>${cat.name}</strong></td>
+                <td>R ${bud.toFixed(2)}</td>
+                <td>R ${spend.toFixed(2)}</td>
+                <td class="${remClass}">R ${remainingBudget.toFixed(2)}</td>
+                <td class="${textClass}">R ${projectedSpend.toFixed(2)}</td>
+                <td class="${textClass}">R ${projectedVariance.toFixed(2)}</td>
+                <td>${status}</td>
+            </tr>`;
+        });
+
+        document.getElementById('forecast-tbody').innerHTML = forecastHTML;
+
+        // Household Forecasting Logic
+        const householdProjectedRemaining = jointInc - jointDeb - totalProjectedSpend;
+
+        document.getElementById('proj-inc').innerText = `R ${jointInc.toFixed(2)}`;
+        document.getElementById('proj-deb').innerText = `R ${jointDeb.toFixed(2)}`;
+        document.getElementById('proj-var').innerText = `R ${totalProjectedSpend.toFixed(2)}`;
+        
+        // Update UIs
+        const endBox = document.getElementById('proj-end-box');
+        const endVal = document.getElementById('proj-end-val');
+        const endTitle = document.getElementById('proj-end-title');
+        const alertCard = document.getElementById('forecast-alert-card');
+        const headline = document.getElementById('forecast-headline');
+
+        const cfoEndBox = document.getElementById('cfo-proj-end-box');
+        const cfoEndVal = document.getElementById('cfo-proj-end-val');
+        const cfoEndTitle = document.getElementById('cfo-proj-end-title');
+
+        endVal.innerText = `R ${householdProjectedRemaining.toFixed(2)}`;
+        cfoEndVal.innerText = `R ${householdProjectedRemaining.toFixed(2)}`;
+
+        if (householdProjectedRemaining < 0) {
+            alertCard.classList.add('trouble-card'); headline.innerText = '🚨 BIG TROUBLE: INSOLVENCY RISK DETECTED';
+            endBox.style.border = '2px solid var(--danger)'; endVal.style.color = 'var(--danger)'; endTitle.style.color = 'var(--danger)';
+            cfoEndBox.style.borderLeftColor = 'var(--danger)'; cfoEndBox.style.backgroundColor = 'var(--danger-bg)';
+            cfoEndVal.style.color = 'var(--danger)'; cfoEndTitle.style.color = 'var(--danger)'; cfoEndTitle.innerText = '🚨 Proj. Deficit';
+        } else {
+            alertCard.classList.remove('trouble-card'); headline.innerText = 'End of Month Household Projection';
+            endBox.style.border = 'none'; endBox.style.borderLeft = '5px solid var(--success)'; endVal.style.color = 'var(--success)'; endTitle.style.color = '#64748b';
+            cfoEndBox.style.borderLeftColor = 'var(--purple)'; cfoEndBox.style.backgroundColor = '#f1f5f9';
+            cfoEndVal.style.color = 'var(--text)'; cfoEndTitle.style.color = 'var(--purple)'; cfoEndTitle.innerText = 'Projected Month-End ⓘ';
+        }
+
+        saveData();
+    }
+
+    function setRemUI(textId, boxId, amount) {
+        const el = document.getElementById(textId); const box = document.getElementById(boxId);
+        el.innerText = `R ${amount.toFixed(2)}`;
+        if (amount < 0) { el.style.color = 'var(--danger)'; box.style.borderLeftColor = 'var(--danger)'; } 
+        else { el.style.color = 'var(--success)'; box.style.borderLeftColor = 'var(--success)'; }
+    }
+
+    // Boot up
+    window.onload = initSystem;
+
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker registered!'))
+        .catch(err => console.log('Service Worker failed:', err));
+    });
+  }
+</script>
+</body>
+</html>
