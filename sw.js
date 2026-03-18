@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cfo-dashboard-v3.2';
+const CACHE_NAME = 'cfo-dashboard-v4';
 const urlsToCache = [
   './dashboard.html',
   './manifest.json',
