@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Personal CFO - Modern</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
     
@@ -113,6 +115,10 @@
         .btn-submit { width: 100%; background-color: var(--secondary); color: white; font-weight: 600; border: none; cursor: pointer; padding: 14px; border-radius: 10px; margin-top: 10px; font-size: 1em; transition: all 0.2s; box-shadow: var(--shadow-md); display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn-submit:hover { background-color: var(--secondary-hover); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
         
+        /* Upload Buttons Container */
+        .upload-buttons { display: flex; gap: 10px; margin-bottom: 25px; }
+        .upload-buttons .btn-submit { margin-top: 0; }
+        
         /* Executive Summary */
         .executive-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
         .stat-box { padding: 20px 16px; background: white; border-radius: 12px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
@@ -132,7 +138,8 @@
         /* Scanner Modal */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
         .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 20px; padding: 24px; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); max-height: 90vh; overflow-y: auto; }
-        .modal-header { font-size: 1.3em; font-weight: 800; color: var(--primary); border-bottom: 1px solid var(--border-light); padding-bottom: 15px; margin-bottom: 20px; text-align: center; }
+        .modal-header { font-size: 1.3em; font-weight: 800; color: var(--primary); border-bottom: 1px solid var(--border-light); padding-bottom: 15px; margin-bottom: 10px; text-align: center; }
+        .modal-subheader { text-align: center; color: var(--text-muted); margin-bottom: 20px; font-size: 0.9em; }
         #receipt-preview-img { max-width: 100%; max-height: 180px; border-radius: 12px; object-fit: contain; background: var(--bg); display: block; margin: 0 auto 20px auto; border: 1px solid var(--border); }
         .scanner-loader { display: none; text-align: center; padding: 30px 20px; color: var(--purple); font-weight: 700; font-size: 1.1em; }
         .scanner-loader.active { display: block; }
@@ -158,6 +165,8 @@
             .add-item-form { flex-direction: column; gap: 8px; }
             .add-item-form input, .add-item-form select, .add-item-form button { width: 100%; max-width: none; }
             #celistina-schedule-container { grid-template-columns: 1fr !important; }
+            
+            .upload-buttons { flex-direction: column; }
 
             /* Turn Tabs into Bottom App Navigation */
             .tab-nav {
@@ -190,10 +199,9 @@
                 overflow-x: visible; 
             }
             table { min-width: 100%; display: block; }
-            thead { display: none; /* Hide standard headers */ }
+            thead { display: none; }
             tbody { display: block; width: 100%; }
             
-            /* Turn Rows into Cards */
             tr { 
                 display: block; 
                 margin-bottom: 15px; 
@@ -205,7 +213,6 @@
             }
             tr:hover td { background-color: transparent; }
             
-            /* Turn Cells into Flex Rows */
             td { 
                 display: flex !important; 
                 justify-content: space-between; 
@@ -216,7 +223,6 @@
             }
             td:last-child { border-bottom: none; }
             
-            /* Inject fake headers via data-label attribute */
             td::before { 
                 content: attr(data-label); 
                 font-weight: 600; 
@@ -228,7 +234,6 @@
                 padding-right: 15px;
             }
 
-            /* Fix nested elements alignment */
             td input { width: 120px; text-align: right; margin-left: auto;}
             td strong { text-align: right; display: block; }
             td small { text-align: right; display: block; margin-top: 4px; }
@@ -237,7 +242,8 @@
 </head>
 <body>
 
-<input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none;" onchange="handleReceiptCapture(event)">
+<input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none;" onchange="handleFileCapture(event)">
+<input type="file" id="upload-input" accept="image/*,application/pdf" style="display:none;" onchange="handleFileCapture(event)">
 <input type="file" id="csv-upload" accept=".csv" style="display:none;" onchange="handleCSVUpload(event)">
 
 <div class="header-bar">
@@ -287,16 +293,22 @@
 
         <div class="card span-2">
             <h3 class="section-title">Log Daily Spend</h3>
-            <button type="button" class="btn-submit" style="margin-top:0; margin-bottom: 25px; background-color: var(--purple); font-size: 1.05em;" onclick="document.getElementById('camera-input').click()">
-                📸 Snap & Scan Receipt
-            </button>
+            
+            <div class="upload-buttons">
+                <button type="button" class="btn-submit" style="background-color: var(--purple); font-size: 1.05em; flex: 1;" onclick="document.getElementById('camera-input').click()">
+                    📸 Snap Photo
+                </button>
+                <button type="button" class="btn-submit" style="background-color: var(--secondary); font-size: 1.05em; flex: 1;" onclick="document.getElementById('upload-input').click()">
+                    📄 Upload Doc / PDF
+                </button>
+            </div>
             
             <form id="expense-form" style="border-top: 1px dashed var(--border); padding-top: 20px;">
                 <input type="hidden" id="exp-edit-id" value="">
                 <div class="form-grid">
                     <div class="form-row"><label>Who Paid?</label><select id="exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select></div>
                     <div class="form-row"><label>Date</label><input type="date" id="exp-date" required></div>
-                    <div class="form-row"><label>Category</label><select id="exp-category" required></select></div>
+                    <div class="form-row"><label>Allocate Category</label><select id="exp-category" required></select></div>
                     <div class="form-row"><label>Amount (R)</label><input type="number" id="exp-amount" step="0.01" required></div>
                 </div>
                 <div class="form-row"><label>Description / Merchant</label><input type="text" id="exp-desc" required></div>
@@ -463,33 +475,34 @@
 
 <div id="receipt-modal" class="modal-overlay">
     <div class="modal-content">
-        <div class="modal-header">Confirm Receipt Details</div>
+        <div class="modal-header">Allocate Payment</div>
+        <div class="modal-subheader">Please confirm the amount and allocate this document to the correct budget.</div>
         
         <div id="scanner-loader" class="scanner-loader">
-            <div style="font-size: 3em; margin-bottom: 15px; animation: pulse 2s infinite;">📸</div>
-            Scanning image for amounts...<br>
+            <div style="font-size: 3em; margin-bottom: 15px; animation: pulse 2s infinite;">📄</div>
+            <span id="scanner-loader-text">Scanning document for amounts...</span><br>
             <small style="color:var(--text-muted); font-weight:500; display:block; margin-top: 10px;">This runs completely locally and may take a few seconds.</small>
         </div>
 
         <div id="scanner-form" style="display: none;">
-            <img id="receipt-preview-img" src="" alt="Receipt Preview">
+            <img id="receipt-preview-img" src="" alt="Document Preview">
             
             <form id="modal-expense-form">
                 <div class="form-row" style="background: #e0e7ff; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                    <label style="color: var(--secondary); font-size: 1em; margin-bottom: 8px;"><strong>Select Category</strong></label>
-                    <select id="modal-exp-category" required style="border-color: var(--secondary); border-width: 2px;"></select>
+                    <label style="color: var(--secondary); font-size: 1.1em; margin-bottom: 8px;"><strong>1. Allocate to Category</strong></label>
+                    <select id="modal-exp-category" required style="border-color: var(--secondary); border-width: 2px; padding: 15px;"></select>
                 </div>
 
                 <div class="form-grid">
                     <div class="form-row"><label>Amount Found (R)</label><input type="number" id="modal-exp-amount" step="0.01" required></div>
                     <div class="form-row"><label>Who Paid?</label><select id="modal-exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select></div>
                     <div class="form-row"><label>Date</label><input type="date" id="modal-exp-date" required></div>
-                    <div class="form-row"><label>Merchant / Desc</label><input type="text" id="modal-exp-desc" required></div>
+                    <div class="form-row"><label>Description / Merchant</label><input type="text" id="modal-exp-desc" required></div>
                 </div>
                 
                 <div style="display: flex; gap: 12px; margin-top: 25px;">
                     <button type="button" class="btn-submit" style="background-color: var(--text-muted); flex: 1; box-shadow:none;" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn-submit" style="background-color: var(--success); flex: 2;">Save Transaction</button>
+                    <button type="submit" class="btn-submit" style="background-color: var(--success); flex: 2;">Save & Allocate</button>
                 </div>
             </form>
         </div>
@@ -497,6 +510,9 @@
 </div>
 
 <script>
+    // Initialize PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
     // ----- TAB NAVIGATION -----
     function switchTab(tabId, btnElement) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -654,7 +670,6 @@
                 if (index === 0) return; 
                 const cols = row.split(',');
                 
-                // Parse Cullen (Columns 0 & 1)
                 if (cols.length >= 2) {
                     let nameC = cols[0].trim();
                     let amtC = parseFloat(cols[1]);
@@ -667,7 +682,6 @@
                     }
                 }
                 
-                // Parse Elize (Columns 3 & 4)
                 if (cols.length >= 5) {
                     let nameE = cols[3].trim();
                     let amtE = parseFloat(cols[4]);
@@ -818,32 +832,82 @@
         updateFinancials();
     });
 
-    // ----- CAMERA & OCR RECEIPT LOGIC -----
-    function handleReceiptCapture(event) {
+    // ----- PDF & IMAGE OCR LOGIC -----
+    async function handleFileCapture(event) {
         const file = event.target.files[0];
         if (!file) return;
 
         document.getElementById('receipt-modal').style.display = 'flex';
         document.getElementById('scanner-loader').classList.add('active');
         document.getElementById('scanner-form').style.display = 'none';
+        const loaderText = document.getElementById('scanner-loader-text');
         
-        const imgUrl = URL.createObjectURL(file);
+        let imgUrlToProcess = '';
+
+        try {
+            if (file.type === 'application/pdf') {
+                loaderText.innerText = "Converting PDF to Image...";
+                
+                const fileReader = new FileReader();
+                fileReader.onload = async function() {
+                    try {
+                        const typedarray = new Uint8Array(this.result);
+                        const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                        const page = await pdf.getPage(1); // Read first page
+                        
+                        const scale = 2.0; // Scale up for better OCR reading
+                        const viewport = page.getViewport({scale: scale});
+                        
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        
+                        await page.render({canvasContext: context, viewport: viewport}).promise;
+                        imgUrlToProcess = canvas.toDataURL('image/png');
+                        
+                        runOCR(imgUrlToProcess, "Uploaded PDF Document");
+                    } catch (err) {
+                        console.error("PDF Rendering Failed", err);
+                        fallbackOCR("PDF processing failed.");
+                    }
+                };
+                fileReader.readAsArrayBuffer(file);
+            } else {
+                // It's a normal image file
+                loaderText.innerText = "Scanning image for amounts...";
+                imgUrlToProcess = URL.createObjectURL(file);
+                runOCR(imgUrlToProcess, "Uploaded Photo / Receipt");
+            }
+        } catch (error) {
+            fallbackOCR("Failed to load file.");
+        }
+        
+        event.target.value = ''; // Reset input
+    }
+
+    function runOCR(imgUrl, defaultDesc) {
+        const loaderText = document.getElementById('scanner-loader-text');
+        loaderText.innerText = "Running local AI text scanner...";
+        
         document.getElementById('receipt-preview-img').src = imgUrl;
 
-        Tesseract.recognize(file, 'eng')
+        Tesseract.recognize(imgUrl, 'eng')
             .then(({ data: { text } }) => {
                 let extractedAmount = 0;
-                let extractedDesc = "Scanned Receipt";
+                let extractedDesc = defaultDesc;
 
+                // Find plausible Rand amounts
                 const numberMatches = text.match(/\b\d+[\.,]\d{2}\b/g);
                 if (numberMatches) {
                     const numbers = numberMatches.map(n => parseFloat(n.replace(',', '.')));
-                    const plausibleNumbers = numbers.filter(n => n < 50000); 
+                    const plausibleNumbers = numbers.filter(n => n < 100000); 
                     if (plausibleNumbers.length > 0) {
                         extractedAmount = Math.max(...plausibleNumbers);
                     }
                 }
 
+                // Try to find a merchant name (usually first readable line)
                 const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 3 && !l.match(/^[0-9]+$/));
                 if (lines.length > 0) { extractedDesc = lines[0].substring(0, 30); }
 
@@ -855,12 +919,14 @@
             })
             .catch(err => {
                 console.error("OCR Failed:", err);
-                document.getElementById('modal-exp-desc').value = "Scanned Receipt";
-                document.getElementById('scanner-loader').classList.remove('active');
-                document.getElementById('scanner-form').style.display = 'block';
+                fallbackOCR(defaultDesc);
             });
-            
-        event.target.value = ''; 
+    }
+
+    function fallbackOCR(desc) {
+        document.getElementById('modal-exp-desc').value = desc;
+        document.getElementById('scanner-loader').classList.remove('active');
+        document.getElementById('scanner-form').style.display = 'block';
     }
 
     function closeModal() {
