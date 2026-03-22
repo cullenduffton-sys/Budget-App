@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e293b">
@@ -45,10 +46,10 @@
         /* Modern Header */
         .header-bar { max-width: 1300px; margin: 0 auto 25px auto; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; padding: 18px 24px; border-radius: 16px; box-shadow: var(--shadow-lg); flex-wrap: wrap; gap: 15px;}
         .header-bar h1 { margin: 0; font-size: 1.5em; font-weight: 700; color: white; }
-        .header-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .month-picker-container { display: flex; align-items: center; gap: 10px; font-weight: 600; background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 8px;}
         .month-picker-container input { padding: 6px 10px; font-size: 1em; border-radius: 6px; border: none; outline: none; font-family: inherit; font-weight: 600; cursor: pointer; color: var(--primary); }
-        .btn-header { padding: 8px 12px; font-size: 0.85em; font-weight: 600; border-radius: 8px; border: none; cursor: pointer; background: white; color: var(--primary); transition: all 0.2s; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 5px; }
+        .btn-header { padding: 8px 10px; font-size: 0.85em; font-weight: 600; border-radius: 8px; border: none; cursor: pointer; background: white; color: var(--primary); transition: all 0.2s; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 5px; }
         .btn-header:hover { background: #f1f5f9; transform: translateY(-1px); box-shadow: var(--shadow-md); }
         .btn-header-danger { background: #fee2e2; color: #ef4444; }
         .btn-header-danger:hover { background: #fca5a5; }
@@ -70,6 +71,7 @@
         .span-2 { grid-column: span 2; }
         
         /* Modern Tables (Desktop) */
+        .ledger-table-container { max-height: 400px; overflow-y: auto; }
         .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid var(--border-light); background: white; }
         table { width: 100%; border-collapse: collapse; font-size: 0.95em; min-width: 600px; }
         th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border-light); }
@@ -107,7 +109,7 @@
         .btn-remove { background: #fee2e2; color: #ef4444; border: none; border-radius: 6px; cursor: pointer; padding: 8px 12px; font-weight: bold; transition: 0.2s; }
         .btn-remove:hover { background: #fca5a5; }
         
-        .add-item-form { display: flex; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border); flex-wrap: wrap; }
+        .add-item-form { display: flex; gap: 10px; margin-top: 25px; padding-top: 15px; border-top: 1px dashed var(--border); flex-wrap: wrap; }
         .add-item-form input, .add-item-form select { flex: 1; min-width: 120px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; font-family: inherit; }
         .btn-add { background: var(--success); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 600; cursor: pointer; transition: 0.2s; box-shadow: var(--shadow-sm); }
         .btn-add:hover { background: #059669; }
@@ -147,7 +149,7 @@
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
         /* =========================================================
-           MOBILE SPECIFIC STYLES (App-Like Behavior & Table Fixes)
+           MOBILE SPECIFIC STYLES (App-Like Behavior & Overlap Fix)
            ========================================================= */
         @media (max-width: 768px) {
             body { padding: 12px; padding-bottom: 90px; }
@@ -191,8 +193,12 @@
             .form-grid { grid-template-columns: 1fr; gap: 12px; }
 
             /* =========================================================
-               MOBILE TABLE TRANSFORMATION (Cards instead of Grids)
+               MOBILE TABLE TRANSFORMATION (Fixes the Spacing Overlap)
                ========================================================= */
+            .ledger-table-container { 
+                max-height: none; /* Removes the height limit causing the overlap */
+                overflow: visible; 
+            }
             .table-responsive { 
                 border: none; 
                 background: transparent; 
@@ -250,8 +256,9 @@
     <h1>Personal CFO</h1>
     <div class="header-controls">
         <button class="btn-header" onclick="document.getElementById('csv-upload').click()">📁 Import CSV</button>
-        <button class="btn-header" onclick="exportBackup()">💾 Backup</button>
-        <button class="btn-header" onclick="exportCSV()">📥 Export Data</button>
+        <button class="btn-header" onclick="exportReceiptsZIP()">🖼️ Export Receipts</button>
+        <button class="btn-header" onclick="exportBackup()">💾 Backup Data</button>
+        <button class="btn-header" onclick="exportCSV()">📥 Export CSV</button>
         <button class="btn-header btn-header-danger" onclick="resetTransactions()">🧹 Clear Spend</button>
         <div class="month-picker-container">
             <label for="month-selector" style="color:white; font-size:0.9em;">Period</label>
@@ -348,13 +355,15 @@
 
         <div class="card span-2">
             <h3 class="section-title">Income & Fixed Deductions</h3>
-            <div class="table-responsive" style="max-height: 400px;">
-                <table>
-                    <thead><tr><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
-                    <tbody id="cul-fixed-tbody"></tbody>
-                </table>
+            <div class="ledger-table-container">
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
+                        <tbody id="cul-fixed-tbody"></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px; margin-top: 20px;">
+            <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px;">
                 <select id="new-cul-fixed-type"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
                 <input type="text" id="new-cul-fixed-name" placeholder="Item Name / Description">
                 <input type="number" id="new-cul-fixed-amount" placeholder="Amount (R)" step="0.01">
@@ -380,11 +389,13 @@
 
         <div class="card full-width">
             <h3 class="section-title">Cullen's Ad-Hoc Spending Ledger</h3>
-            <div class="table-responsive">
-                <table>
-                    <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
-                    <tbody id="cul-tbody"></tbody>
-                </table>
+            <div class="ledger-table-container">
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
+                        <tbody id="cul-tbody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -405,13 +416,15 @@
 
         <div class="card span-2">
             <h3 class="section-title">Income & Fixed Deductions</h3>
-            <div class="table-responsive" style="max-height: 400px;">
-                <table>
-                    <thead><tr><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
-                    <tbody id="eli-fixed-tbody"></tbody>
-                </table>
+            <div class="ledger-table-container">
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
+                        <tbody id="eli-fixed-tbody"></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px; margin-top: 20px;">
+            <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px;">
                 <select id="new-eli-fixed-type"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
                 <input type="text" id="new-eli-fixed-name" placeholder="Item Name / Description">
                 <input type="number" id="new-eli-fixed-amount" placeholder="Amount (R)" step="0.01">
@@ -421,11 +434,13 @@
 
         <div class="card full-width">
             <h3 class="section-title">Elize's Ad-Hoc Spending Ledger</h3>
-            <div class="table-responsive">
-                <table>
-                    <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
-                    <tbody id="eli-tbody"></tbody>
-                </table>
+            <div class="ledger-table-container">
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
+                        <tbody id="eli-tbody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -497,12 +512,12 @@
                     <div class="form-row"><label>Amount Found (R)</label><input type="number" id="modal-exp-amount" step="0.01" required></div>
                     <div class="form-row"><label>Who Paid?</label><select id="modal-exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select></div>
                     <div class="form-row"><label>Date</label><input type="date" id="modal-exp-date" required></div>
-                    <div class="form-row"><label>Description / Merchant</label><input type="text" id="modal-exp-desc" required></div>
+                    <div class="form-row"><label>Merchant / Desc</label><input type="text" id="modal-exp-desc" required></div>
                 </div>
                 
                 <div style="display: flex; gap: 12px; margin-top: 25px;">
                     <button type="button" class="btn-submit" style="background-color: var(--text-muted); flex: 1; box-shadow:none;" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn-submit" style="background-color: var(--success); flex: 2;">Save & Allocate</button>
+                    <button type="submit" class="btn-submit" style="background-color: var(--success); flex: 2;">Save & Store Receipt</button>
                 </div>
             </form>
         </div>
@@ -512,6 +527,56 @@
 <script>
     // Initialize PDF.js worker
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+    // ----- DATABASE FOR RECEIPT STORAGE -----
+    let db;
+    function initDB() {
+        let request = indexedDB.open("CFO_ReceiptsDB", 1);
+        request.onupgradeneeded = function(e) {
+            db = e.target.result;
+            if (!db.objectStoreNames.contains('receipts')) {
+                db.createObjectStore('receipts', { keyPath: 'id' });
+            }
+        };
+        request.onsuccess = function(e) { db = e.target.result; };
+        request.onerror = function(e) { console.error("IndexedDB error", e); };
+    }
+
+    function saveReceiptToDB(txId, imageData, desc, date) {
+        if (!db || !imageData) return;
+        let transaction = db.transaction(['receipts'], 'readwrite');
+        let store = transaction.objectStore('receipts');
+        store.put({ id: txId, image: imageData, desc: desc, date: date });
+    }
+
+    function exportReceiptsZIP() {
+        if (!db) return alert("Database not ready yet. Please try again in a few seconds.");
+        let transaction = db.transaction(['receipts'], 'readonly');
+        let store = transaction.objectStore('receipts');
+        let request = store.getAll();
+        
+        request.onsuccess = function() {
+            let receipts = request.result;
+            if (receipts.length === 0) return alert("No receipts found in the local database.");
+            
+            let zip = new JSZip();
+            receipts.forEach((r) => {
+                let base64Data = r.image.split(',')[1];
+                let ext = r.image.split(';')[0].match(/jpeg|png|gif/) ? r.image.split(';')[0].match(/jpeg|png|gif/)[0] : 'jpg';
+                let filename = `${r.date}_${r.desc.replace(/[^a-z0-9]/gi, '_')}_${r.id}.${ext}`;
+                zip.file(filename, base64Data, {base64: true});
+            });
+            
+            zip.generateAsync({type:"blob"}).then(function(content) {
+                const a = document.createElement('a'); 
+                a.href = URL.createObjectURL(content); 
+                a.download = `CFO_Tax_Receipts_${new Date().getFullYear()}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        };
+    }
 
     // ----- TAB NAVIGATION -----
     function switchTab(tabId, btnElement) {
@@ -524,6 +589,7 @@
 
     // ----- STATE MANAGEMENT & LOCAL STORAGE -----
     let currentMonthKey = "";
+    let currentScannedImageBase64 = null; // Temp storage for the active scan
     
     let categories = [
         { id: 'cat1', name: 'Groceries', limit: 5400 },
@@ -574,6 +640,7 @@
 
     // ----- SYSTEM INITIALIZATION -----
     function initSystem() {
+        initDB();
         const picker = document.getElementById('month-selector');
         const now = new Date();
         const year = now.getFullYear();
@@ -832,7 +899,34 @@
         updateFinancials();
     });
 
-    // ----- PDF & IMAGE OCR LOGIC -----
+    // ----- NEW IMPROVED OCR & IMAGE COMPRESSION ENGINE -----
+    function compressImage(file, callback) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const MAX_WIDTH = 1200; // Optimal for Tesseract to read text clearly
+                let width = img.width;
+                let height = img.height;
+                
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                callback(compressedDataUrl);
+            }
+            img.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+
     async function handleFileCapture(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -842,7 +936,7 @@
         document.getElementById('scanner-form').style.display = 'none';
         const loaderText = document.getElementById('scanner-loader-text');
         
-        let imgUrlToProcess = '';
+        currentScannedImageBase64 = null;
 
         try {
             if (file.type === 'application/pdf') {
@@ -853,9 +947,9 @@
                     try {
                         const typedarray = new Uint8Array(this.result);
                         const pdf = await pdfjsLib.getDocument(typedarray).promise;
-                        const page = await pdf.getPage(1); // Read first page
+                        const page = await pdf.getPage(1); 
                         
-                        const scale = 2.0; // Scale up for better OCR reading
+                        const scale = 2.0; 
                         const viewport = page.getViewport({scale: scale});
                         
                         const canvas = document.createElement('canvas');
@@ -864,9 +958,9 @@
                         canvas.width = viewport.width;
                         
                         await page.render({canvasContext: context, viewport: viewport}).promise;
-                        imgUrlToProcess = canvas.toDataURL('image/png');
+                        currentScannedImageBase64 = canvas.toDataURL('image/jpeg', 0.85);
                         
-                        runOCR(imgUrlToProcess, "Uploaded PDF Document");
+                        runOCR(currentScannedImageBase64, "Uploaded PDF Document");
                     } catch (err) {
                         console.error("PDF Rendering Failed", err);
                         fallbackOCR("PDF processing failed.");
@@ -874,21 +968,22 @@
                 };
                 fileReader.readAsArrayBuffer(file);
             } else {
-                // It's a normal image file
-                loaderText.innerText = "Scanning image for amounts...";
-                imgUrlToProcess = URL.createObjectURL(file);
-                runOCR(imgUrlToProcess, "Uploaded Photo / Receipt");
+                loaderText.innerText = "Compressing Image...";
+                compressImage(file, (compressedBase64) => {
+                    currentScannedImageBase64 = compressedBase64;
+                    runOCR(compressedBase64, "Scanned Receipt");
+                });
             }
         } catch (error) {
             fallbackOCR("Failed to load file.");
         }
         
-        event.target.value = ''; // Reset input
+        event.target.value = ''; 
     }
 
     function runOCR(imgUrl, defaultDesc) {
         const loaderText = document.getElementById('scanner-loader-text');
-        loaderText.innerText = "Running local AI text scanner...";
+        loaderText.innerText = "Running local AI text scanner... this might take 5-10 seconds.";
         
         document.getElementById('receipt-preview-img').src = imgUrl;
 
@@ -897,19 +992,47 @@
                 let extractedAmount = 0;
                 let extractedDesc = defaultDesc;
 
-                // Find plausible Rand amounts
-                const numberMatches = text.match(/\b\d+[\.,]\d{2}\b/g);
-                if (numberMatches) {
-                    const numbers = numberMatches.map(n => parseFloat(n.replace(',', '.')));
-                    const plausibleNumbers = numbers.filter(n => n < 100000); 
-                    if (plausibleNumbers.length > 0) {
-                        extractedAmount = Math.max(...plausibleNumbers);
+                const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                
+                // 1. IMPROVED AMOUNT PARSING (Looks specifically for the word "Total")
+                let foundTotal = false;
+                for (let line of lines) {
+                    let upper = line.toUpperCase();
+                    if (upper.includes('TOTAL') && !upper.includes('SUB')) {
+                        let match = line.match(/[\d\.,]+/g);
+                        if (match) {
+                            let nums = match.map(n => parseFloat(n.replace(',', '.'))).filter(n => !isNaN(n));
+                            if (nums.length > 0) { 
+                                extractedAmount = Math.max(extractedAmount, ...nums); 
+                                foundTotal = true; 
+                            }
+                        }
+                    }
+                }
+                
+                // Fallback: If no word "Total" is found, just find the biggest realistic currency number on the receipt
+                if (!foundTotal) {
+                    const numberMatches = text.match(/\b\d+[\.,]\d{2}\b/g);
+                    if (numberMatches) {
+                        const numbers = numberMatches.map(n => parseFloat(n.replace(',', '.')));
+                        const plausibleNumbers = numbers.filter(n => n < 100000); 
+                        if (plausibleNumbers.length > 0) {
+                            extractedAmount = Math.max(...plausibleNumbers);
+                        }
                     }
                 }
 
-                // Try to find a merchant name (usually first readable line)
-                const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 3 && !l.match(/^[0-9]+$/));
-                if (lines.length > 0) { extractedDesc = lines[0].substring(0, 30); }
+                // 2. IMPROVED MERCHANT PARSING (Filters out dates, long numbers, VAT numbers to find Store Name)
+                for (let line of lines) {
+                    if (line.length < 4) continue;
+                    // Skip if the line contains too many numbers (like phone numbers, dates, VAT codes)
+                    if (line.replace(/[^0-9]/g,"").length > 5) continue; 
+                    // Skip common receipt header words
+                    if (line.match(/(TAX|VAT|INVOICE|RECEIPT|CASH|SLIP|TEL|FAX)/i)) continue;
+                    
+                    extractedDesc = line.substring(0, 30);
+                    break;
+                }
 
                 document.getElementById('modal-exp-amount').value = extractedAmount > 0 ? extractedAmount : '';
                 document.getElementById('modal-exp-desc').value = extractedDesc;
@@ -931,18 +1054,30 @@
 
     function closeModal() {
         document.getElementById('receipt-modal').style.display = 'none';
+        currentScannedImageBase64 = null;
     }
 
     document.getElementById('modal-expense-form').addEventListener('submit', function(e) {
         e.preventDefault();
+        
+        let txId = Date.now();
+        let desc = document.getElementById('modal-exp-desc').value;
+        let date = document.getElementById('modal-exp-date').value;
+        
         transactions.push({
-            id: Date.now(), 
+            id: txId, 
             person: document.getElementById('modal-exp-person').value,
-            date: document.getElementById('modal-exp-date').value, 
+            date: date, 
             category: document.getElementById('modal-exp-category').value,
-            desc: document.getElementById('modal-exp-desc').value, 
+            desc: desc, 
             amount: parseFloat(document.getElementById('modal-exp-amount').value)
         });
+        
+        // Save the image data into IndexedDB for Tax Season
+        if(currentScannedImageBase64) {
+            saveReceiptToDB(txId, currentScannedImageBase64, desc, date);
+        }
+
         closeModal();
         switchTab('tab-cfo', document.getElementById('btn-tab-cfo'));
         updateFinancials();
