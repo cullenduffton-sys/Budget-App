@@ -10,6 +10,9 @@
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e293b">
 
@@ -23,7 +26,6 @@
             --secondary-hover: #4338ca;
             --danger: #ef4444;
             --danger-bg: #fef2f2;
-            --danger-dark: #991b1b;
             --warning: #f59e0b;
             --success: #10b981;
             --success-bg: #ecfdf5;
@@ -43,7 +45,6 @@
         body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; padding-bottom: 20px; transition: padding 0.3s; }
         h1, h2, h3 { color: var(--primary); margin-top: 0; letter-spacing: -0.02em; }
         
-        /* Modern Header */
         .header-bar { max-width: 1300px; margin: 0 auto 25px auto; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; padding: 18px 24px; border-radius: 16px; box-shadow: var(--shadow-lg); flex-wrap: wrap; gap: 15px;}
         .header-bar h1 { margin: 0; font-size: 1.5em; font-weight: 700; color: white; }
         .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -52,35 +53,26 @@
         .btn-header { padding: 8px 10px; font-size: 0.85em; font-weight: 600; border-radius: 8px; border: none; cursor: pointer; background: white; color: var(--primary); transition: all 0.2s; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 5px; }
         .btn-header:hover { background: #f1f5f9; transform: translateY(-1px); box-shadow: var(--shadow-md); }
         .btn-header-danger { background: #fee2e2; color: #ef4444; }
-        .btn-header-danger:hover { background: #fca5a5; }
 
-        /* Modern Tab Navigation */
         .tab-nav { display: flex; gap: 12px; margin-bottom: 25px; max-width: 1300px; margin-left: auto; margin-right: auto; }
         .tab-btn { flex: 1; padding: 14px 10px; background: transparent; border: 2px solid transparent; border-radius: 12px; font-size: 1.05em; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; text-align: center; }
         .tab-btn.active { background: white; color: var(--secondary); box-shadow: var(--shadow-md); border-color: var(--border); }
-        .tab-btn:hover:not(.active) { background: #e2e8f0; color: var(--primary); }
         .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
         .tab-content.active { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Grid Layout */
         .container { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
         .card { background: var(--card); border-radius: 16px; padding: 24px; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); }
         .full-width { grid-column: 1 / -1; }
         .span-2 { grid-column: span 2; }
         
-        /* Modern Tables (Desktop) */
         .ledger-table-container { max-height: 400px; overflow-y: auto; }
         .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid var(--border-light); background: white; }
         table { width: 100%; border-collapse: collapse; font-size: 0.95em; min-width: 600px; }
         th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border-light); }
-        th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8em; letter-spacing: 0.05em; white-space: nowrap; }
-        tr:hover td { background-color: #f8fafc; }
-        td input { width: 100px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.95em; font-weight: 500; transition: border 0.2s;}
-        td input:focus { border-color: var(--secondary); outline: none; }
+        th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8em; }
+        td input { width: 100px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.95em; font-weight: 500; }
         
-        /* Badges */
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.8em; font-weight: 600; display: inline-block; white-space: nowrap; }
         .badge-income { background: var(--success-bg); color: #047857; }
         .badge-debit { background: #fef2f2; color: #b91c1c; }
@@ -88,40 +80,28 @@
         .badge-ok { background: var(--success-bg); color: var(--success); }
         .badge-risk { background: var(--danger); color: white; animation: pulse 1.5s infinite; }
 
-        /* Action Buttons */
-        .btn-action { padding: 6px 10px; margin: 0 2px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600; transition: 0.2s; }
+        .btn-action { padding: 8px 12px; margin: 0 2px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: 0.2s; }
         .btn-edit { background: #e0f2fe; color: #0284c7; }
-        .btn-edit:hover { background: #bae6fd; }
         .btn-delete { background: #fee2e2; color: #ef4444; }
-        .btn-delete:hover { background: #fecaca; }
 
-        /* Forms & Inputs */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
         .form-row label { font-weight: 600; font-size: 0.85em; color: var(--text-muted); }
-        .form-row input, .form-row select { padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 1em; transition: all 0.2s; background: #f8fafc; }
-        .form-row input:focus, .form-row select:focus { border-color: var(--secondary); outline: none; background: white; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        .form-row input, .form-row select { padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 1em; background: #f8fafc; }
         
-        /* Dynamic List Rows */
-        .dynamic-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-light); transition: transform 0.2s; }
-        .dynamic-row span { flex: 1; font-weight: 600; font-size: 0.95em; color: var(--text); }
+        .dynamic-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-light); }
+        .dynamic-row span { flex: 1; font-weight: 600; font-size: 0.95em; }
         .dynamic-row input { width: 100px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-weight: 500; }
-        .btn-remove { background: #fee2e2; color: #ef4444; border: none; border-radius: 6px; cursor: pointer; padding: 8px 12px; font-weight: bold; transition: 0.2s; }
-        .btn-remove:hover { background: #fca5a5; }
+        .btn-remove { background: #fee2e2; color: #ef4444; border: none; border-radius: 6px; cursor: pointer; padding: 8px 12px; font-weight: bold; }
         
         .add-item-form { display: flex; gap: 10px; margin-top: 25px; padding-top: 15px; border-top: 1px dashed var(--border); flex-wrap: wrap; }
         .add-item-form input, .add-item-form select { flex: 1; min-width: 120px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; font-family: inherit; }
-        .btn-add { background: var(--success); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 600; cursor: pointer; transition: 0.2s; box-shadow: var(--shadow-sm); }
-        .btn-add:hover { background: #059669; }
+        .btn-add { background: var(--success); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 600; cursor: pointer; }
 
         .btn-submit { width: 100%; background-color: var(--secondary); color: white; font-weight: 600; border: none; cursor: pointer; padding: 14px; border-radius: 10px; margin-top: 10px; font-size: 1em; transition: all 0.2s; box-shadow: var(--shadow-md); display: flex; justify-content: center; align-items: center; gap: 8px; }
-        .btn-submit:hover { background-color: var(--secondary-hover); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-        
-        /* Upload Buttons Container */
         .upload-buttons { display: flex; gap: 10px; margin-bottom: 25px; }
         .upload-buttons .btn-submit { margin-top: 0; }
         
-        /* Executive Summary */
         .executive-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
         .stat-box { padding: 20px 16px; background: white; border-radius: 12px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
         .stat-box::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 4px 0 0 4px; }
@@ -130,27 +110,22 @@
         .stat-box.yellow::before { background: var(--warning); }
         .stat-box.red::before { background: var(--danger); }
         .stat-box.purple::before { background: var(--purple); }
-        
         .stat-box h3 { margin: 0 0 8px 0; font-size: 0.75em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
         .stat-box p { margin: 0; font-size: 1.5em; font-weight: 800; color: var(--text); letter-spacing: -0.03em; }
         .stat-subtitle { font-size: 0.75em; color: var(--text-muted); margin-top: 6px; font-weight: 500; }
         
         .section-title { font-size: 1.15em; font-weight: 700; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
 
-        /* Scanner Modal */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
         .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 20px; padding: 24px; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); max-height: 90vh; overflow-y: auto; }
         .modal-header { font-size: 1.3em; font-weight: 800; color: var(--primary); border-bottom: 1px solid var(--border-light); padding-bottom: 15px; margin-bottom: 10px; text-align: center; }
         .modal-subheader { text-align: center; color: var(--text-muted); margin-bottom: 20px; font-size: 0.9em; }
-        #receipt-preview-img { max-width: 100%; max-height: 180px; border-radius: 12px; object-fit: contain; background: var(--bg); display: block; margin: 0 auto 20px auto; border: 1px solid var(--border); }
+        #receipt-preview-img, #edit-receipt-img { max-width: 100%; max-height: 180px; border-radius: 12px; object-fit: contain; background: var(--bg); display: block; margin: 0 auto 20px auto; border: 1px solid var(--border); }
         .scanner-loader { display: none; text-align: center; padding: 30px 20px; color: var(--purple); font-weight: 700; font-size: 1.1em; }
         .scanner-loader.active { display: block; }
 
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
-        /* =========================================================
-           MOBILE SPECIFIC STYLES (App-Like Behavior & Overlap Fix)
-           ========================================================= */
         @media (max-width: 768px) {
             body { padding: 12px; padding-bottom: 90px; }
             .header-bar { flex-direction: column; align-items: flex-start; padding: 20px 15px; border-radius: 12px; gap: 15px; }
@@ -159,87 +134,28 @@
             
             .container { grid-template-columns: 1fr; gap: 16px; }
             .span-2, .span-3, .full-width { grid-column: 1 / -1; }
-            
             .executive-summary { grid-template-columns: 1fr 1fr; }
-            .stat-box { padding: 16px 12px; border-radius: 10px; }
-            .stat-box p { font-size: 1.25em; }
-
+            
             .add-item-form { flex-direction: column; gap: 8px; }
             .add-item-form input, .add-item-form select, .add-item-form button { width: 100%; max-width: none; }
             #celistina-schedule-container { grid-template-columns: 1fr !important; }
-            
             .upload-buttons { flex-direction: column; }
 
-            /* Turn Tabs into Bottom App Navigation */
-            .tab-nav {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(10px);
-                margin: 0;
-                padding: 10px 8px 20px 8px;
-                box-shadow: 0 -10px 15px -3px rgb(0 0 0 / 0.1);
-                z-index: 1000;
-                border-top: 1px solid var(--border-light);
-                justify-content: space-between;
-                gap: 6px;
-                border-radius: 20px 20px 0 0;
-            }
+            .tab-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); margin: 0; padding: 10px 8px 20px 8px; box-shadow: 0 -10px 15px -3px rgb(0 0 0 / 0.1); z-index: 1000; border-top: 1px solid var(--border-light); justify-content: space-between; gap: 6px; border-radius: 20px 20px 0 0; }
             .tab-btn { flex: 1; font-size: 0.8em; padding: 10px 4px; border-radius: 10px; border: none; background: transparent; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center; }
             .tab-btn.active { background: #f1f5f9; color: var(--primary); box-shadow: none; border: none; }
             
             .form-grid { grid-template-columns: 1fr; gap: 12px; }
 
-            /* =========================================================
-               MOBILE TABLE TRANSFORMATION (Fixes the Spacing Overlap)
-               ========================================================= */
-            .ledger-table-container { 
-                max-height: none; /* Removes the height limit causing the overlap */
-                overflow: visible; 
-            }
-            .table-responsive { 
-                border: none; 
-                background: transparent; 
-                overflow-x: visible; 
-            }
+            .ledger-table-container { max-height: none; overflow: visible; }
+            .table-responsive { border: none; background: transparent; overflow-x: visible; }
             table { min-width: 100%; display: block; }
             thead { display: none; }
             tbody { display: block; width: 100%; }
-            
-            tr { 
-                display: block; 
-                margin-bottom: 15px; 
-                background: white; 
-                border: 1px solid var(--border-light); 
-                border-radius: 12px; 
-                box-shadow: var(--shadow-sm);
-                padding: 8px;
-            }
-            tr:hover td { background-color: transparent; }
-            
-            td { 
-                display: flex !important; 
-                justify-content: space-between; 
-                align-items: center; 
-                padding: 10px 8px; 
-                border-bottom: 1px solid var(--border-light); 
-                text-align: right;
-            }
+            tr { display: block; margin-bottom: 15px; background: white; border: 1px solid var(--border-light); border-radius: 12px; box-shadow: var(--shadow-sm); padding: 8px; }
+            td { display: flex !important; justify-content: space-between; align-items: center; padding: 10px 8px; border-bottom: 1px solid var(--border-light); text-align: right; }
             td:last-child { border-bottom: none; }
-            
-            td::before { 
-                content: attr(data-label); 
-                font-weight: 600; 
-                color: var(--text-muted); 
-                text-transform: uppercase; 
-                font-size: 0.8em; 
-                letter-spacing: 0.05em; 
-                text-align: left; 
-                padding-right: 15px;
-            }
-
+            td::before { content: attr(data-label); font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8em; text-align: left; padding-right: 15px; }
             td input { width: 120px; text-align: right; margin-left: auto;}
             td strong { text-align: right; display: block; }
             td small { text-align: right; display: block; margin-top: 4px; }
@@ -255,10 +171,9 @@
 <div class="header-bar">
     <h1>Personal CFO</h1>
     <div class="header-controls">
-        <button class="btn-header" onclick="document.getElementById('csv-upload').click()">📁 Import CSV</button>
+        <button class="btn-header" id="btn-cloud-sync" onclick="openSyncModal()">☁️ Setup Sync</button>
         <button class="btn-header" onclick="exportReceiptsZIP()">🖼️ Export Receipts</button>
-        <button class="btn-header" onclick="exportBackup()">💾 Backup Data</button>
-        <button class="btn-header" onclick="exportCSV()">📥 Export CSV</button>
+        <button class="btn-header" onclick="document.getElementById('csv-upload').click()">📁 Import CSV</button>
         <button class="btn-header btn-header-danger" onclick="resetTransactions()">🧹 Clear Spend</button>
         <div class="month-picker-container">
             <label for="month-selector" style="color:white; font-size:0.9em;">Period</label>
@@ -291,7 +206,7 @@
                 </div>
 
                 <div class="stat-box purple" id="cfo-proj-end-box" style="background: #f8fafc;">
-                    <h3 id="cfo-proj-end-title" style="color: var(--purple);" title="Assumes 100% budget utilization.">Proj. Month-End</h3>
+                    <h3 id="cfo-proj-end-title" style="color: var(--purple);">Proj. Month-End</h3>
                     <p id="cfo-proj-end-val" style="color: var(--purple);">R 0.00</p>
                     <div class="stat-subtitle">(Assumes Full Budget)</div>
                 </div>
@@ -312,6 +227,12 @@
             
             <form id="expense-form" style="border-top: 1px dashed var(--border); padding-top: 20px;">
                 <input type="hidden" id="exp-edit-id" value="">
+                
+                <div id="edit-receipt-container" style="display: none; background: #faf5ff; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 2px dashed var(--purple); text-align: center;">
+                    <span style="display:block; font-weight:700; color:var(--purple); margin-bottom:10px;">Reviewing Scanned Document</span>
+                    <img id="edit-receipt-img" src="" alt="Stored Receipt">
+                </div>
+
                 <div class="form-grid">
                     <div class="form-row"><label>Who Paid?</label><select id="exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select></div>
                     <div class="form-row"><label>Date</label><input type="date" id="exp-date" required></div>
@@ -319,7 +240,11 @@
                     <div class="form-row"><label>Amount (R)</label><input type="number" id="exp-amount" step="0.01" required></div>
                 </div>
                 <div class="form-row"><label>Description / Merchant</label><input type="text" id="exp-desc" required></div>
-                <button type="submit" class="btn-submit" id="btn-submit-tx">Save Manual Record</button>
+                
+                <div style="display:flex; gap:10px;">
+                    <button type="submit" class="btn-submit" id="btn-submit-tx">Save Manual Record</button>
+                    <button type="button" class="btn-submit" id="btn-cancel-edit" style="display:none; background:var(--text-muted); flex:0.4;" onclick="cancelEdit()">Cancel Edit</button>
+                </div>
             </form>
         </div>
 
@@ -331,11 +256,8 @@
                 <input type="number" id="new-cat-amount" placeholder="Limit (R)" step="0.01">
                 <button type="button" class="btn-add" onclick="addCategory()">Add</button>
             </div>
-            
             <h3 class="section-title" style="margin-top: 35px;">Budget vs Actual</h3>
-            <div style="position: relative; height: 220px; width: 100%;">
-                <canvas id="jointChart"></canvas>
-            </div>
+            <div style="position: relative; height: 220px; width: 100%;"><canvas id="jointChart"></canvas></div>
         </div>
     </div>
 </div>
@@ -373,18 +295,11 @@
 
         <div class="card" style="border: 2px solid var(--purple); background: #faf5ff;">
             <h3 class="section-title" style="color: var(--purple);">Celectina's Wages</h3>
-            <p style="font-size: 0.85em; color: var(--text-muted); margin-top:-10px; margin-bottom: 15px;">Auto-calculated based on working Tuesdays & Fridays. Automatically added to Cullen's debits.</p>
-            <div class="form-row" style="margin-bottom: 15px;">
-                <label style="color: var(--purple);">Daily Rate (R)</label>
-                <input type="number" id="cel-rate" value="275" step="0.01" onchange="updateCelistinaGlobalRate()" style="border-color: #d8b4fe; background: white;">
-            </div>
-            
+            <p style="font-size: 0.85em; color: var(--text-muted); margin-top:-10px; margin-bottom: 15px;">Automatically added to Cullen's debits.</p>
+            <div class="form-row" style="margin-bottom: 15px;"><label style="color: var(--purple);">Daily Rate (R)</label><input type="number" id="cel-rate" value="275" step="0.01" onchange="updateCelistinaGlobalRate()" style="border-color: #d8b4fe; background: white;"></div>
             <label style="font-weight: 600; font-size: 0.85em; color: var(--text-muted); display:block; margin-bottom:10px;">Working Days Checklist:</label>
             <div id="celistina-schedule-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
-            
-            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d8b4fe; font-weight: 800; font-size: 1.2em; text-align: right; color: var(--purple);">
-                Total Wage: <span id="celistina-total-display">R 0.00</span>
-            </div>
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d8b4fe; font-weight: 800; font-size: 1.2em; text-align: right; color: var(--purple);">Total Wage: <span id="celistina-total-display">R 0.00</span></div>
         </div>
 
         <div class="card full-width">
@@ -450,17 +365,12 @@
     <div class="container">
         <div class="card full-width" id="forecast-alert-card" style="border-width: 2px;">
             <h2 id="forecast-headline">End of Month Projection</h2>
-            <p style="margin-top: -10px; margin-bottom: 25px; font-size: 0.9em; color: var(--text-muted);">
-                Based on the assumption that you will utilize <strong>100% of your allocated budgets</strong>. Overspending instantly reduces your projected finish line.
-            </p>
+            <p style="margin-top: -10px; margin-bottom: 25px; font-size: 0.9em; color: var(--text-muted);">Based on utilizing <strong>100% of your allocated budgets</strong>.</p>
             <div class="executive-summary">
                 <div class="stat-box blue"><h3>Total Income</h3><p id="proj-inc">R 0.00</p></div>
                 <div class="stat-box yellow"><h3>Fixed Debits</h3><p id="proj-deb">R 0.00</p></div>
-                <div class="stat-box purple"><h3 title="Sum of all Full Budgets + any Overspending">Proj. Variable Spend</h3><p id="proj-var">R 0.00</p></div>
-                <div class="stat-box" style="background: white;" id="proj-end-box">
-                    <h3 id="proj-end-title">Proj. Month-End Balance</h3>
-                    <p id="proj-end-val">R 0.00</p>
-                </div>
+                <div class="stat-box purple"><h3>Proj. Variable Spend</h3><p id="proj-var">R 0.00</p></div>
+                <div class="stat-box" style="background: white;" id="proj-end-box"><h3 id="proj-end-title">Proj. Month-End Balance</h3><p id="proj-end-val">R 0.00</p></div>
             </div>
         </div>
 
@@ -468,23 +378,11 @@
             <h3 class="section-title">Category Overspend Risk Matrix</h3>
             <div class="table-responsive">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Category</th>
-                            <th>Full Budget</th>
-                            <th>Current Spend</th>
-                            <th>Remaining</th>
-                            <th>Proj. Month-End</th>
-                            <th>Proj. Variance</th>
-                            <th>Status / Risk</th>
-                        </tr>
-                    </thead>
-                    <tbody id="forecast-tbody">
-                    </tbody>
+                    <thead><tr><th>Category</th><th>Full Budget</th><th>Current Spend</th><th>Remaining</th><th>Proj. Month-End</th><th>Proj. Variance</th><th>Status / Risk</th></tr></thead>
+                    <tbody id="forecast-tbody"></tbody>
                 </table>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -501,20 +399,17 @@
 
         <div id="scanner-form" style="display: none;">
             <img id="receipt-preview-img" src="" alt="Document Preview">
-            
             <form id="modal-expense-form">
                 <div class="form-row" style="background: #e0e7ff; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
                     <label style="color: var(--secondary); font-size: 1.1em; margin-bottom: 8px;"><strong>1. Allocate to Category</strong></label>
                     <select id="modal-exp-category" required style="border-color: var(--secondary); border-width: 2px; padding: 15px;"></select>
                 </div>
-
                 <div class="form-grid">
                     <div class="form-row"><label>Amount Found (R)</label><input type="number" id="modal-exp-amount" step="0.01" required></div>
                     <div class="form-row"><label>Who Paid?</label><select id="modal-exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select></div>
                     <div class="form-row"><label>Date</label><input type="date" id="modal-exp-date" required></div>
                     <div class="form-row"><label>Merchant / Desc</label><input type="text" id="modal-exp-desc" required></div>
                 </div>
-                
                 <div style="display: flex; gap: 12px; margin-top: 25px;">
                     <button type="button" class="btn-submit" style="background-color: var(--text-muted); flex: 1; box-shadow:none;" onclick="closeModal()">Cancel</button>
                     <button type="submit" class="btn-submit" style="background-color: var(--success); flex: 2;">Save & Store Receipt</button>
@@ -524,708 +419,81 @@
     </div>
 </div>
 
+<div id="sync-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">Enable Real-Time Device Sync</div>
+        <p style="font-size:0.95em; color:var(--text-muted);">To magically sync this app across your phone and computer, you just need a free Google Firebase link.</p>
+        <ol style="font-size:0.85em; margin-bottom: 20px; line-height: 1.6; padding-left: 20px;">
+            <li>Go to <a href="https://console.firebase.google.com/" target="_blank" style="color:var(--secondary); font-weight:bold;">console.firebase.google.com</a> and sign in.</li>
+            <li>Click <b>Add Project</b> (Name it 'PersonalCFO', turn off Analytics).</li>
+            <li>Click the Web icon <b>(&lt;/&gt;)</b> to add an app.</li>
+            <li>Copy ONLY the JSON text inside the <code>firebaseConfig = { ... }</code> box.</li>
+            <li>Go to <b>Firestore Database</b> (left menu) -> Create Database -> Start in <b>Test Mode</b>.</li>
+        </ol>
+        <label style="font-weight:600; font-size:0.85em; color:var(--text);">Paste your config code here:</label>
+        <textarea id="firebase-config-input" placeholder='{&#10;  apiKey: "AIzaSy...",&#10;  authDomain: "project.firebaseapp.com",&#10;  ...&#10;}' style="width:100%; height:120px; font-family:monospace; padding:10px; border-radius:8px; border:1px solid var(--border); margin-top:5px;"></textarea>
+        <div style="display: flex; gap: 12px; margin-top: 15px;">
+            <button class="btn-submit" style="background:var(--text-muted); flex:1;" onclick="closeSyncModal()">Cancel</button>
+            <button class="btn-submit" style="flex:2;" onclick="saveSyncConfig()">Connect Database</button>
+        </div>
+    </div>
+</div>
+
 <script>
     // Initialize PDF.js worker
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
-    // ----- DATABASE FOR RECEIPT STORAGE -----
-    let db;
-    function initDB() {
-        let request = indexedDB.open("CFO_ReceiptsDB", 1);
-        request.onupgradeneeded = function(e) {
-            db = e.target.result;
-            if (!db.objectStoreNames.contains('receipts')) {
-                db.createObjectStore('receipts', { keyPath: 'id' });
-            }
-        };
-        request.onsuccess = function(e) { db = e.target.result; };
-        request.onerror = function(e) { console.error("IndexedDB error", e); };
-    }
+    // ----- CLOUD SYNC (FIREBASE) SYSTEM -----
+    let cloudEnabled = false;
+    let isSavingLocally = false;
+    let dbCloud = null;
 
-    function saveReceiptToDB(txId, imageData, desc, date) {
-        if (!db || !imageData) return;
-        let transaction = db.transaction(['receipts'], 'readwrite');
-        let store = transaction.objectStore('receipts');
-        store.put({ id: txId, image: imageData, desc: desc, date: date });
-    }
+    function openSyncModal() { document.getElementById('sync-modal').style.display = 'flex'; }
+    function closeSyncModal() { document.getElementById('sync-modal').style.display = 'none'; }
 
-    function exportReceiptsZIP() {
-        if (!db) return alert("Database not ready yet. Please try again in a few seconds.");
-        let transaction = db.transaction(['receipts'], 'readonly');
-        let store = transaction.objectStore('receipts');
-        let request = store.getAll();
-        
-        request.onsuccess = function() {
-            let receipts = request.result;
-            if (receipts.length === 0) return alert("No receipts found in the local database.");
-            
-            let zip = new JSZip();
-            receipts.forEach((r) => {
-                let base64Data = r.image.split(',')[1];
-                let ext = r.image.split(';')[0].match(/jpeg|png|gif/) ? r.image.split(';')[0].match(/jpeg|png|gif/)[0] : 'jpg';
-                let filename = `${r.date}_${r.desc.replace(/[^a-z0-9]/gi, '_')}_${r.id}.${ext}`;
-                zip.file(filename, base64Data, {base64: true});
-            });
-            
-            zip.generateAsync({type:"blob"}).then(function(content) {
-                const a = document.createElement('a'); 
-                a.href = URL.createObjectURL(content); 
-                a.download = `CFO_Tax_Receipts_${new Date().getFullYear()}.zip`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            });
-        };
-    }
-
-    // ----- TAB NAVIGATION -----
-    function switchTab(tabId, btnElement) {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        btnElement.classList.add('active');
-        window.scrollTo(0,0);
-    }
-
-    // ----- STATE MANAGEMENT & LOCAL STORAGE -----
-    let currentMonthKey = "";
-    let currentScannedImageBase64 = null; // Temp storage for the active scan
-    
-    let categories = [
-        { id: 'cat1', name: 'Groceries', limit: 5400 },
-        { id: 'cat2', name: 'Petrol', limit: 4200 },
-        { id: 'cat3', name: 'Health Care', limit: 2000 },
-        { id: 'cat4', name: 'Kids / School', limit: 2000 },
-        { id: 'cat5', name: 'Luxuries', limit: 1500 },
-        { id: 'cat6', name: 'Maintenance', limit: 1000 },
-        { id: 'cat7', name: 'Other', limit: 1000 }
-    ];
-
-    let celistinaRate = 275;
-    let celistinaDays = [];
-
-    let cullenFixedItems = [
-        { id: 'inc1', type: 'income', name: 'Basic Salary', amount: 48642 },
-        { id: 'inc2', type: 'income', name: 'Comm/Bonus', amount: 3300 },
-        { id: 'cd1', type: 'debit', name: 'Bond Repayment', amount: 17773.29 },
-        { id: 'cd2', type: 'debit', name: 'Normandie Levy', amount: 4955 },
-        { id: 'cd3', type: 'debit', name: 'Discovery Insure', amount: 2036 },
-        { id: 'cd4', type: 'debit', name: 'Crossfit', amount: 1475 },
-        { id: 'cd5', type: 'debit', name: 'Alto Villa Levy', amount: 501 },
-        { id: 'cd6', type: 'debit', name: 'Impact Meters', amount: 500 },
-        { id: 'cd8', type: 'debit', name: 'Google', amount: 469 },
-        { id: 'cd9', type: 'debit', name: 'Microsoft', amount: 199 },
-        { id: 'cd10', type: 'debit', name: 'Mweb', amount: 699 },
-        { id: 'cd11', type: 'debit', name: 'Liberty Life', amount: 515 },
-        { id: 'cd12', type: 'debit', name: 'Captial Wealth', amount: 550 },
-        { id: 'cd14', type: 'debit', name: 'Liberty RA', amount: 500 },
-        { id: 'cd15', type: 'debit', name: 'Kids Creache', amount: 13850 },
-        { id: 'cd16', type: 'debit', name: 'Swimming', amount: 1220 },
-        { id: 'cd18', type: 'debit', name: 'Credit Card Debt', amount: 3500 },
-        { id: 'cd19', type: 'debit', name: 'Rates & Taxes', amount: 1409 }
-    ];
-
-    let elizeFixedItems = [
-        { id: 'einc1', type: 'income', name: 'Basic Salary', amount: 20000 },
-        { id: 'einc2', type: 'income', name: 'Comm/Bonus', amount: 3300 },
-        { id: 'ed1', type: 'debit', name: 'Liberty RA', amount: 526 },
-        { id: 'ed2', type: 'debit', name: 'Disc. Vitality', amount: 559 },
-        { id: 'ed3', type: 'debit', name: 'Std Funeral Plan', amount: 350.86 },
-        { id: 'ed4', type: 'debit', name: 'MissFit Gym', amount: 1100 },
-        { id: 'ed5', type: 'debit', name: 'Cullen Credit', amount: 3500 }
-    ];
-
-    let transactions = [];
-    let jointChart = null;
-
-    // ----- SYSTEM INITIALIZATION -----
-    function initSystem() {
-        initDB();
-        const picker = document.getElementById('month-selector');
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        
-        picker.value = `${year}-${month}`; 
-        document.getElementById('exp-date').valueAsDate = now;
-        document.getElementById('modal-exp-date').valueAsDate = now;
-        
-        initChart();
-        changeMonth(); 
-    }
-
-    function changeMonth() {
-        currentMonthKey = document.getElementById('month-selector').value;
-        loadData();
-    }
-
-    function generateCelistinaDays(yearMonth) {
-        if (!yearMonth) return [];
-        const [y, m] = yearMonth.split('-');
-        const year = parseInt(y); const month = parseInt(m) - 1;
-        const days = []; let date = new Date(year, month, 1);
-        while (date.getMonth() === month) {
-            const dayOfWeek = date.getDay();
-            if (dayOfWeek === 2 || dayOfWeek === 5) {
-                days.push({
-                    dateStr: `${year}-${String(month+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`,
-                    label: (dayOfWeek===2 ? 'Tue ' : 'Fri ') + String(date.getDate()).padStart(2,'0'),
-                    present: true
-                });
-            }
-            date.setDate(date.getDate() + 1);
-        }
-        return days;
-    }
-
-    function loadData() {
-        const savedData = localStorage.getItem('cfo_data_' + currentMonthKey);
-        
-        if (savedData) {
-            const parsed = JSON.parse(savedData);
-            categories = parsed.categories || categories;
-            transactions = parsed.transactions || [];
-            celistinaRate = parsed.celistinaRate !== undefined ? parsed.celistinaRate : 275;
-            celistinaDays = parsed.celistinaDays || generateCelistinaDays(currentMonthKey);
-            
-            if (parsed.cullenFixedItems) { cullenFixedItems = parsed.cullenFixedItems; }
-            if (parsed.elizeFixedItems) { elizeFixedItems = parsed.elizeFixedItems; }
-        } else {
-            transactions = [];
-            celistinaRate = 275;
-            celistinaDays = generateCelistinaDays(currentMonthKey);
-        }
-        
-        document.getElementById('cel-rate').value = celistinaRate;
-        renderCategories();
-        renderCelistinaSchedule();
-        renderFixedItems('Cullen');
-        renderFixedItems('Elize');
-    }
-
-    function saveData() {
-        if (!currentMonthKey) return;
-        const dataToSave = { categories, cullenFixedItems, elizeFixedItems, transactions, celistinaRate, celistinaDays };
-        localStorage.setItem('cfo_data_' + currentMonthKey, JSON.stringify(dataToSave));
-    }
-
-    // ----- CLEAR TRANSACTIONS FUNCTION -----
-    function resetTransactions() {
-        if(confirm("Are you sure you want to clear ALL ad-hoc transactions for this month?\n\nYour fixed debits, incomes, and budgets will NOT be affected.")) {
-            transactions = [];
-            updateFinancials();
-            alert("All ad-hoc transactions have been cleared for this month.");
-        }
-    }
-
-    // ----- CSV PARSER -----
-    function handleCSVUpload(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const text = e.target.result;
-            const rows = text.split('\n');
-            
-            let newCul = [];
-            let newEli = [];
-
-            const ignoreWords = ['total', 'budget', 'transaction detail', 'utilities', 'elize budget', 'debit orders'];
-
-            rows.forEach((row, index) => {
-                if (index === 0) return; 
-                const cols = row.split(',');
-                
-                if (cols.length >= 2) {
-                    let nameC = cols[0].trim();
-                    let amtC = parseFloat(cols[1]);
-                    if (nameC && !isNaN(amtC) && !ignoreWords.some(w => nameC.toLowerCase().includes(w))) {
-                        if(nameC.toLowerCase().includes('salary') || nameC.toLowerCase().includes('commision') || nameC.toLowerCase().includes('bonus')) {
-                            newCul.push({ id: 'fxc_' + Date.now() + Math.random(), type: 'income', name: nameC, amount: amtC });
-                        } else {
-                            newCul.push({ id: 'fxc_' + Date.now() + Math.random(), type: 'debit', name: nameC, amount: amtC });
-                        }
-                    }
-                }
-                
-                if (cols.length >= 5) {
-                    let nameE = cols[3].trim();
-                    let amtE = parseFloat(cols[4]);
-                    if (nameE && !isNaN(amtE) && !ignoreWords.some(w => nameE.toLowerCase().includes(w)) && !nameE.toLowerCase().includes('total left')) {
-                        if(nameE.toLowerCase().includes('salary') || nameE.toLowerCase().includes('commision') || nameE.toLowerCase().includes('bonus')) {
-                            newEli.push({ id: 'fxe_' + Date.now() + Math.random(), type: 'income', name: nameE, amount: amtE });
-                        } else {
-                            newEli.push({ id: 'fxe_' + Date.now() + Math.random(), type: 'debit', name: nameE, amount: amtE });
-                        }
-                    }
-                }
-            });
-            
-            if (confirm(`Successfully read CSV template!\n\nFound ${newCul.length} items for Cullen and ${newEli.length} items for Elize.\n\nDo you want to completely overwrite your current Income/Debits with this new data?`)) {
-                cullenFixedItems = newCul;
-                elizeFixedItems = newEli;
-                updateFinancials();
-                renderFixedItems('Cullen');
-                renderFixedItems('Elize');
-            }
-        };
-        reader.readAsText(file);
-        event.target.value = ''; 
-    }
-
-    // ----- UI RENDERING FUNCTIONS -----
-    function renderCategories() {
-        const container = document.getElementById('categories-container');
-        const dropdown = document.getElementById('exp-category');
-        const modalDropdown = document.getElementById('modal-exp-category');
-        
-        container.innerHTML = ''; dropdown.innerHTML = ''; modalDropdown.innerHTML = '';
-        categories.forEach(cat => {
-            container.innerHTML += `<div class="dynamic-row"><span>${cat.name}</span><input type="number" value="${cat.limit}" step="0.01" onchange="updateCatValue('${cat.id}', this.value)"><button class="btn-remove" onclick="removeCategory('${cat.id}')">X</button></div>`;
-            const opt = `<option value="${cat.name}">${cat.name}</option>`;
-            dropdown.innerHTML += opt;
-            modalDropdown.innerHTML += opt;
-        });
-        updateFinancials();
-    }
-
-    function renderCelistinaSchedule() {
-        const container = document.getElementById('celistina-schedule-container');
-        container.innerHTML = '';
-        celistinaDays.forEach((day, index) => {
-            container.innerHTML += `
-                <label style="display: flex; align-items: center; gap: 10px; background: white; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 0.95em; border: 1px solid #e2e8f0; transition: border 0.2s;">
-                    <input type="checkbox" style="width: 20px; height: 20px; accent-color: var(--purple);" ${day.present ? 'checked' : ''} onchange="toggleCelistina(${index}, this.checked)">
-                    ${day.label}
-                </label>`;
-        });
-        updateFinancials();
-    }
-
-    function toggleCelistina(index, isChecked) { celistinaDays[index].present = isChecked; updateFinancials(); }
-    function updateCelistinaGlobalRate() { celistinaRate = parseFloat(document.getElementById('cel-rate').value) || 0; updateFinancials(); }
-
-    function renderFixedItems(person) {
-        const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems;
-        const tbody = document.getElementById(person === 'Cullen' ? 'cul-fixed-tbody' : 'eli-fixed-tbody');
-        tbody.innerHTML = '';
-        
-        const sortedArr = [...arr].sort((a,b) => (a.type === 'income' ? -1 : 1));
-
-        sortedArr.forEach(item => {
-            const badge = item.type === 'income' ? '<span class="badge badge-income">Income</span>' : '<span class="badge badge-debit">Debit</span>';
-            tbody.innerHTML += `
-                <tr>
-                    <td data-label="Type" style="white-space:nowrap;">${badge}</td>
-                    <td data-label="Description"><strong>${item.name}</strong></td>
-                    <td data-label="Amount (R)" style="white-space:nowrap;"><input type="number" value="${item.amount}" step="0.01" onchange="updateFixedValue('${person}', '${item.id}', this.value)"></td>
-                    <td data-label="Action"><button class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">X</button></td>
-                </tr>
-            `;
-        });
-        updateFinancials();
-    }
-
-    function addFixedItem(person) {
-        const prefix = person === 'Cullen' ? 'cul' : 'eli';
-        const typeInput = document.getElementById(`new-${prefix}-fixed-type`).value;
-        const nameInput = document.getElementById(`new-${prefix}-fixed-name`).value;
-        const amtInput = document.getElementById(`new-${prefix}-fixed-amount`).value;
-        
-        if(!nameInput) return;
-        
-        const newItem = { id: 'fx_' + Date.now(), type: typeInput, name: nameInput, amount: parseFloat(amtInput) || 0 };
-        
-        if(person === 'Cullen') cullenFixedItems.push(newItem); 
-        else elizeFixedItems.push(newItem);
-        
-        document.getElementById(`new-${prefix}-fixed-name`).value = '';
-        document.getElementById(`new-${prefix}-fixed-amount`).value = '';
-        renderFixedItems(person);
-    }
-
-    function updateFixedValue(person, id, newVal) { 
-        const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; 
-        const item = arr.find(d => d.id === id); 
-        if(item) item.amount = parseFloat(newVal) || 0; 
-        updateFinancials(); 
-    }
-    
-    function removeFixedItem(person, id) { 
-        if(person === 'Cullen') cullenFixedItems = cullenFixedItems.filter(d => d.id !== id); 
-        else elizeFixedItems = elizeFixedItems.filter(d => d.id !== id); 
-        renderFixedItems(person); 
-    }
-
-    function updateCatValue(id, newVal) { const cat = categories.find(c => c.id === id); if(cat) cat.limit = parseFloat(newVal) || 0; updateFinancials(); }
-    function removeCategory(id) { categories = categories.filter(c => c.id !== id); renderCategories(); }
-    function addCategory() {
-        const nameInput = document.getElementById('new-cat-name'); const amtInput = document.getElementById('new-cat-amount');
-        if(!nameInput.value) return;
-        categories.push({ id: 'cat_' + Date.now(), name: nameInput.value, limit: parseFloat(amtInput.value) || 0 });
-        nameInput.value = ''; amtInput.value = ''; renderCategories();
-    }
-
-    // ----- EDIT / DELETE TRANSACTIONS -----
-    function deleteTx(id) { transactions = transactions.filter(t => t.id !== id); updateFinancials(); }
-    function editTx(id) {
-        const tx = transactions.find(t => t.id === id);
-        if(!tx) return;
-        document.getElementById('exp-person').value = tx.person;
-        document.getElementById('exp-date').value = tx.date;
-        document.getElementById('exp-category').value = tx.category;
-        document.getElementById('exp-desc').value = tx.desc;
-        document.getElementById('exp-amount').value = tx.amount;
-        document.getElementById('exp-edit-id').value = tx.id;
-        document.getElementById('btn-submit-tx').innerText = "Update Transaction";
-        document.getElementById('btn-submit-tx').style.backgroundColor = "var(--purple)";
-        switchTab('tab-cfo', document.getElementById('btn-tab-cfo'));
-    }
-
-    document.getElementById('expense-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const editId = document.getElementById('exp-edit-id').value;
-        if (editId) { transactions = transactions.filter(t => t.id != editId); }
-        transactions.push({
-            id: Date.now(), person: document.getElementById('exp-person').value,
-            date: document.getElementById('exp-date').value, category: document.getElementById('exp-category').value,
-            desc: document.getElementById('exp-desc').value, amount: parseFloat(document.getElementById('exp-amount').value)
-        });
-        document.getElementById('exp-desc').value = ''; document.getElementById('exp-amount').value = '';
-        document.getElementById('exp-edit-id').value = '';
-        document.getElementById('btn-submit-tx').innerText = "Save Manual Record";
-        document.getElementById('btn-submit-tx').style.backgroundColor = "var(--secondary)";
-        updateFinancials();
-    });
-
-    // ----- NEW IMPROVED OCR & IMAGE COMPRESSION ENGINE -----
-    function compressImage(file, callback) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = new Image();
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const MAX_WIDTH = 1200; // Optimal for Tesseract to read text clearly
-                let width = img.width;
-                let height = img.height;
-                
-                if (width > MAX_WIDTH) {
-                    height *= MAX_WIDTH / width;
-                    width = MAX_WIDTH;
-                }
-                
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(img, 0, 0, width, height);
-                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
-                callback(compressedDataUrl);
-            }
-            img.src = e.target.result;
-        }
-        reader.readAsDataURL(file);
-    }
-
-    async function handleFileCapture(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        document.getElementById('receipt-modal').style.display = 'flex';
-        document.getElementById('scanner-loader').classList.add('active');
-        document.getElementById('scanner-form').style.display = 'none';
-        const loaderText = document.getElementById('scanner-loader-text');
-        
-        currentScannedImageBase64 = null;
-
+    function saveSyncConfig() {
+        let configStr = document.getElementById('firebase-config-input').value.trim();
+        if(!configStr) return alert("Please paste the config text.");
         try {
-            if (file.type === 'application/pdf') {
-                loaderText.innerText = "Converting PDF to Image...";
-                
-                const fileReader = new FileReader();
-                fileReader.onload = async function() {
-                    try {
-                        const typedarray = new Uint8Array(this.result);
-                        const pdf = await pdfjsLib.getDocument(typedarray).promise;
-                        const page = await pdf.getPage(1); 
-                        
-                        const scale = 2.0; 
-                        const viewport = page.getViewport({scale: scale});
-                        
-                        const canvas = document.createElement('canvas');
-                        const context = canvas.getContext('2d');
-                        canvas.height = viewport.height;
-                        canvas.width = viewport.width;
-                        
-                        await page.render({canvasContext: context, viewport: viewport}).promise;
-                        currentScannedImageBase64 = canvas.toDataURL('image/jpeg', 0.85);
-                        
-                        runOCR(currentScannedImageBase64, "Uploaded PDF Document");
-                    } catch (err) {
-                        console.error("PDF Rendering Failed", err);
-                        fallbackOCR("PDF processing failed.");
-                    }
-                };
-                fileReader.readAsArrayBuffer(file);
-            } else {
-                loaderText.innerText = "Compressing Image...";
-                compressImage(file, (compressedBase64) => {
-                    currentScannedImageBase64 = compressedBase64;
-                    runOCR(compressedBase64, "Scanned Receipt");
-                });
-            }
-        } catch (error) {
-            fallbackOCR("Failed to load file.");
-        }
-        
-        event.target.value = ''; 
-    }
-
-    function runOCR(imgUrl, defaultDesc) {
-        const loaderText = document.getElementById('scanner-loader-text');
-        loaderText.innerText = "Running local AI text scanner... this might take 5-10 seconds.";
-        
-        document.getElementById('receipt-preview-img').src = imgUrl;
-
-        Tesseract.recognize(imgUrl, 'eng')
-            .then(({ data: { text } }) => {
-                let extractedAmount = 0;
-                let extractedDesc = defaultDesc;
-
-                const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-                
-                // 1. IMPROVED AMOUNT PARSING (Looks specifically for the word "Total")
-                let foundTotal = false;
-                for (let line of lines) {
-                    let upper = line.toUpperCase();
-                    if (upper.includes('TOTAL') && !upper.includes('SUB')) {
-                        let match = line.match(/[\d\.,]+/g);
-                        if (match) {
-                            let nums = match.map(n => parseFloat(n.replace(',', '.'))).filter(n => !isNaN(n));
-                            if (nums.length > 0) { 
-                                extractedAmount = Math.max(extractedAmount, ...nums); 
-                                foundTotal = true; 
-                            }
-                        }
-                    }
-                }
-                
-                // Fallback: If no word "Total" is found, just find the biggest realistic currency number on the receipt
-                if (!foundTotal) {
-                    const numberMatches = text.match(/\b\d+[\.,]\d{2}\b/g);
-                    if (numberMatches) {
-                        const numbers = numberMatches.map(n => parseFloat(n.replace(',', '.')));
-                        const plausibleNumbers = numbers.filter(n => n < 100000); 
-                        if (plausibleNumbers.length > 0) {
-                            extractedAmount = Math.max(...plausibleNumbers);
-                        }
-                    }
-                }
-
-                // 2. IMPROVED MERCHANT PARSING (Filters out dates, long numbers, VAT numbers to find Store Name)
-                for (let line of lines) {
-                    if (line.length < 4) continue;
-                    // Skip if the line contains too many numbers (like phone numbers, dates, VAT codes)
-                    if (line.replace(/[^0-9]/g,"").length > 5) continue; 
-                    // Skip common receipt header words
-                    if (line.match(/(TAX|VAT|INVOICE|RECEIPT|CASH|SLIP|TEL|FAX)/i)) continue;
-                    
-                    extractedDesc = line.substring(0, 30);
-                    break;
-                }
-
-                document.getElementById('modal-exp-amount').value = extractedAmount > 0 ? extractedAmount : '';
-                document.getElementById('modal-exp-desc').value = extractedDesc;
-                
-                document.getElementById('scanner-loader').classList.remove('active');
-                document.getElementById('scanner-form').style.display = 'block';
-            })
-            .catch(err => {
-                console.error("OCR Failed:", err);
-                fallbackOCR(defaultDesc);
-            });
-    }
-
-    function fallbackOCR(desc) {
-        document.getElementById('modal-exp-desc').value = desc;
-        document.getElementById('scanner-loader').classList.remove('active');
-        document.getElementById('scanner-form').style.display = 'block';
-    }
-
-    function closeModal() {
-        document.getElementById('receipt-modal').style.display = 'none';
-        currentScannedImageBase64 = null;
-    }
-
-    document.getElementById('modal-expense-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        let txId = Date.now();
-        let desc = document.getElementById('modal-exp-desc').value;
-        let date = document.getElementById('modal-exp-date').value;
-        
-        transactions.push({
-            id: txId, 
-            person: document.getElementById('modal-exp-person').value,
-            date: date, 
-            category: document.getElementById('modal-exp-category').value,
-            desc: desc, 
-            amount: parseFloat(document.getElementById('modal-exp-amount').value)
-        });
-        
-        // Save the image data into IndexedDB for Tax Season
-        if(currentScannedImageBase64) {
-            saveReceiptToDB(txId, currentScannedImageBase64, desc, date);
-        }
-
-        closeModal();
-        switchTab('tab-cfo', document.getElementById('btn-tab-cfo'));
-        updateFinancials();
-    });
-
-    // ----- CHART & FINANCIAL CALCS -----
-    function initChart() {
-        const ctx = document.getElementById('jointChart').getContext('2d');
-        jointChart = new Chart(ctx, {
-            type: 'bar',
-            data: { labels: [], datasets: [{ label: 'Budget Limit', data: [], backgroundColor: '#e2e8f0', borderRadius: 6 }, { label: 'Actual Spend', data: [], backgroundColor: '#4f46e5', borderRadius: 6 }]},
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, grid: { borderDash: [4, 4] } }, x: { grid: { display: false } } } }
-        });
-    }
-
-    function updateFinancials() {
-        let culInc = 0, culDeb = 0;
-        cullenFixedItems.forEach(i => { if(i.type === 'income') culInc += i.amount; else culDeb += i.amount; });
-        
-        let eliInc = 0, eliDeb = 0;
-        elizeFixedItems.forEach(i => { if(i.type === 'income') eliInc += i.amount; else eliDeb += i.amount; });
-
-        let celTotal = 0; celistinaDays.forEach(d => { if(d.present) celTotal += celistinaRate; });
-        document.getElementById('celistina-total-display').innerText = `R ${celTotal.toFixed(2)}`;
-        culDeb += celTotal;
-
-        const jointInc = culInc + eliInc;
-        const jointDeb = culDeb + eliDeb;
-        const totalCatBudget = categories.reduce((sum, c) => sum + c.limit, 0);
-
-        let culSpent = 0, eliSpent = 0;
-        let catSpendMap = {}; categories.forEach(c => catSpendMap[c.name] = 0);
-        let culHTML = '', eliHTML = '';
-
-        const sortedTxs = [...transactions].sort((a,b) => new Date(b.date) - new Date(a.date));
-        sortedTxs.forEach(tx => {
-            if (catSpendMap[tx.category] !== undefined) catSpendMap[tx.category] += tx.amount;
-            const actionBtns = `<button type="button" class="btn-action btn-edit" onclick="editTx(${tx.id})">✎</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">❌</button>`;
-            const row = `<tr>
-                <td data-label="Date" style="white-space:nowrap;">${tx.date}</td>
-                <td data-label="Description"><strong>${tx.desc}</strong><small style="color:var(--text-muted)">${tx.category}</small></td>
-                <td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td>
-                <td data-label="Actions">${actionBtns}</td>
-            </tr>`;
-            if (tx.person === 'Cullen') { culSpent += tx.amount; culHTML += row; } else { eliSpent += tx.amount; eliHTML += row; }
-        });
-
-        document.getElementById('cul-tbody').innerHTML = culHTML; document.getElementById('eli-tbody').innerHTML = eliHTML;
-        const jointSpent = culSpent + eliSpent;
-
-        document.getElementById('joint-income-display').innerText = `R ${jointInc.toFixed(2)}`;
-        document.getElementById('joint-debits-display').innerText = `R ${jointDeb.toFixed(2)}`;
-        document.getElementById('joint-budget-display').innerText = `R ${totalCatBudget.toFixed(2)}`;
-        document.getElementById('joint-spent-display').innerText = `R ${jointSpent.toFixed(2)}`;
-        setRemUI('joint-remaining-display', 'joint-remaining-box', jointInc - jointDeb - jointSpent);
-
-        document.getElementById('cul-inc-disp').innerText = `R ${culInc.toFixed(2)}`; document.getElementById('cul-deb-disp').innerText = `R ${culDeb.toFixed(2)}`;
-        document.getElementById('cul-avail-disp').innerText = `R ${(culInc - culDeb).toFixed(2)}`; document.getElementById('cul-spent-disp').innerText = `R ${culSpent.toFixed(2)}`;
-        setRemUI('cul-rem-disp', 'cul-rem-box', culInc - culDeb - culSpent);
-
-        document.getElementById('eli-inc-disp').innerText = `R ${eliInc.toFixed(2)}`; document.getElementById('eli-deb-disp').innerText = `R ${eliDeb.toFixed(2)}`;
-        document.getElementById('eli-avail-disp').innerText = `R ${(eliInc - eliDeb).toFixed(2)}`; document.getElementById('eli-spent-disp').innerText = `R ${eliSpent.toFixed(2)}`;
-        setRemUI('eli-rem-disp', 'eli-rem-box', eliInc - eliDeb - eliSpent);
-
-        const catNames = categories.map(c => c.name);
-        jointChart.data.labels = catNames; jointChart.data.datasets[0].data = categories.map(c => c.limit);
-        jointChart.data.datasets[1].data = categories.map(c => catSpendMap[c.name]);
-        jointChart.data.datasets[1].backgroundColor = categories.map(c => (catSpendMap[c.name] > c.limit) ? '#ef4444' : '#4f46e5');
-        jointChart.update();
-
-        let forecastHTML = '';
-        let totalProjectedSpend = 0;
-
-        categories.forEach(cat => {
-            const bud = cat.limit; const spend = catSpendMap[cat.name];
-            const remainingBudget = bud - spend;
-            const projectedSpend = Math.max(bud, spend);
-            totalProjectedSpend += projectedSpend;
-            const projectedVariance = bud - projectedSpend;
+            // Safely parse JS object string into real JSON
+            let configObj = new Function('return ' + configStr)();
+            if(!configObj.apiKey || !configObj.projectId) throw new Error("Missing keys");
             
-            let status = '', textClass = '', remClass = '';
-            if (remainingBudget < 0) { remClass = 'trouble-text'; }
-            if (projectedVariance < 0) { status = `<span class="risk-badge badge-risk">🚨 OVER</span>`; textClass = 'trouble-text'; } 
-            else { status = `<span class="risk-badge badge-ok">✅ Safe</span>`; }
-
-            forecastHTML += `<tr>
-                <td data-label="Category"><strong>${cat.name}</strong></td>
-                <td data-label="Full Budget" style="white-space:nowrap;">R ${bud.toFixed(2)}</td>
-                <td data-label="Current Spend" style="white-space:nowrap;">R ${spend.toFixed(2)}</td>
-                <td data-label="Remaining" class="${remClass}" style="white-space:nowrap;">R ${remainingBudget.toFixed(2)}</td>
-                <td data-label="Proj. Month-End" class="${textClass}" style="white-space:nowrap; font-weight:700;">R ${projectedSpend.toFixed(2)}</td>
-                <td data-label="Proj. Variance" class="${textClass}">R ${projectedVariance.toFixed(2)}</td>
-                <td data-label="Status / Risk">${status}</td>
-            </tr>`;
-        });
-
-        document.getElementById('forecast-tbody').innerHTML = forecastHTML;
-
-        const householdProjectedRemaining = jointInc - jointDeb - totalProjectedSpend;
-        document.getElementById('proj-inc').innerText = `R ${jointInc.toFixed(2)}`;
-        document.getElementById('proj-deb').innerText = `R ${jointDeb.toFixed(2)}`;
-        document.getElementById('proj-var').innerText = `R ${totalProjectedSpend.toFixed(2)}`;
-        
-        const endBox = document.getElementById('proj-end-box'); const endVal = document.getElementById('proj-end-val'); const endTitle = document.getElementById('proj-end-title');
-        const alertCard = document.getElementById('forecast-alert-card'); const headline = document.getElementById('forecast-headline');
-        const cfoEndBox = document.getElementById('cfo-proj-end-box'); const cfoEndVal = document.getElementById('cfo-proj-end-val'); const cfoEndTitle = document.getElementById('cfo-proj-end-title');
-
-        endVal.innerText = `R ${householdProjectedRemaining.toFixed(2)}`;
-        cfoEndVal.innerText = `R ${householdProjectedRemaining.toFixed(2)}`;
-
-        if (householdProjectedRemaining < 0) {
-            alertCard.classList.add('trouble-card'); headline.innerText = '🚨 BIG TROUBLE: INSOLVENCY RISK DETECTED';
-            endBox.style.border = '2px solid var(--danger)'; endVal.style.color = 'var(--danger)'; endTitle.style.color = 'var(--danger)';
-            cfoEndBox.style.borderLeftColor = 'var(--danger)'; cfoEndBox.style.backgroundColor = 'var(--danger-bg)';
-            cfoEndVal.style.color = 'var(--danger)'; cfoEndTitle.style.color = 'var(--danger)'; cfoEndTitle.innerText = '🚨 Proj. Deficit';
-        } else {
-            alertCard.classList.remove('trouble-card'); headline.innerText = 'End of Month Projection';
-            endBox.style.border = 'none'; endBox.style.borderLeft = '5px solid var(--success)'; endVal.style.color = 'var(--success)'; endTitle.style.color = 'var(--text-muted)';
-            cfoEndBox.style.borderLeftColor = 'var(--purple)'; cfoEndBox.style.backgroundColor = '#f8fafc';
-            cfoEndVal.style.color = 'var(--purple)'; cfoEndTitle.style.color = 'var(--purple)'; cfoEndTitle.innerText = 'Proj. Month-End ⓘ';
+            localStorage.setItem('cfo_firebase_config', JSON.stringify(configObj));
+            closeSyncModal();
+            initCloudSync();
+        } catch (e) {
+            alert("Invalid config format. Please make sure you copy exactly what is inside the curly braces { ... } from Firebase.");
         }
-        saveData();
     }
 
-    function setRemUI(textId, boxId, amount) {
-        const el = document.getElementById(textId); const box = document.getElementById(boxId);
-        el.innerText = `R ${amount.toFixed(2)}`;
-        if (amount < 0) { el.style.color = 'var(--danger)'; box.style.borderColor = '#fca5a5'; box.style.background = 'var(--danger-bg)'} 
-        else { el.style.color = 'var(--text)'; box.style.borderColor = 'var(--border-light)'; box.style.background = 'white'}
-    }
-
-    function exportCSV() {
-        if (transactions.length === 0) { alert("No transactions to export for this month."); return; }
-        let csv = "Date,Person,Category,Description,Amount\n";
-        transactions.forEach(t => { csv += `${t.date},${t.person},${t.category},"${t.desc.replace(/"/g, '""')}",${t.amount}\n`; });
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const a = document.createElement('a'); a.setAttribute('href', window.URL.createObjectURL(blob)); a.setAttribute('download', `transactions_${currentMonthKey}.csv`);
-        document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    }
-
-    function exportBackup() {
-        const dataToSave = { month: currentMonthKey, categories, cullenFixedItems, elizeFixedItems, celistinaRate, celistinaDays, transactions };
-        const blob = new Blob([JSON.stringify(dataToSave, null, 2)], { type: 'application/json' });
-        const a = document.createElement('a'); a.setAttribute('href', window.URL.createObjectURL(blob)); a.setAttribute('download', `cfo_backup_${currentMonthKey}.json`);
-        document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    }
-
-    window.onload = initSystem;
-</script>
-</body>
-</html>
+    function initCloudSync() {
+        const configStr = localStorage.getItem('cfo_firebase_config');
+        if (configStr) {
+            try {
+                const config = JSON.parse(configStr);
+                if (!firebase.apps.length) { firebase.initializeApp(config); }
+                dbCloud = firebase.firestore();
+                cloudEnabled = true;
+                
+                document.getElementById('btn-cloud-sync').innerText = "☁️ Synced";
+                document.getElementById('btn-cloud-sync').style.color = "var(--success)";
+                
+                // Real-time listener
+                dbCloud.collection("cfo_sync").doc("month_" + currentMonthKey).onSnapshot((doc) => {
+                    if (doc.exists && !isSavingLocally) {
+                        const data = doc.data();
+                        categories = data.categories || categories;
+                        cullenFixedItems = data.cullenFixedItems || cullenFixedItems;
+                        elizeFixedItems = data.elizeFixedItems || elizeFixedItems;
+                        transactions = data.transactions || [];
+                        celistinaRate = data.celistinaRate !== undefined ? data.celistinaRate : 275;
+                        celistinaDays = data.celistinaDays || generateCelistinaDays(currentMonthKey);
+                        
+                        document.getElementById('cel-rate').value = celistinaRate;
+                        renderCategories();
+                        renderCelistinaSchedule();
+                        renderFixedItems('Cullen');
+                        renderFixedItems('Elize');
+                        // Note: updateFinancials is called by renders, but we skip cloud sync during it to prevent loops
+                    }
