@@ -69,10 +69,15 @@
         .ledger-table-container { max-height: 400px; overflow-y: auto; }
         .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid var(--border-light); background: white; }
         table { width: 100%; border-collapse: collapse; font-size: 0.95em; min-width: 600px; }
-        th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border-light); }
+        th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border-light); transition: background-color 0.3s; }
         th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8em; }
-        td input { width: 100px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.95em; font-weight: 500; }
+        td input[type="number"], td input[type="text"] { width: 100px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.95em; font-weight: 500; }
         
+        /* New Paid Status Styling */
+        tr.is-paid td { background-color: var(--success-bg); border-bottom-color: #d1fae5; }
+        tr.is-paid td:first-child { border-left: 4px solid var(--success); }
+        .checkbox-paid { width: 20px; height: 20px; accent-color: var(--success); cursor: pointer; }
+
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.8em; font-weight: 600; display: inline-block; white-space: nowrap; }
         .badge-income { background: var(--success-bg); color: #047857; }
         .badge-debit { background: #fef2f2; color: #b91c1c; }
@@ -153,10 +158,11 @@
             thead { display: none; }
             tbody { display: block; width: 100%; }
             tr { display: block; margin-bottom: 15px; background: white; border: 1px solid var(--border-light); border-radius: 12px; box-shadow: var(--shadow-sm); padding: 8px; }
-            td { display: flex !important; justify-content: space-between; align-items: center; padding: 10px 8px; border-bottom: 1px solid var(--border-light); text-align: right; }
+            tr.is-paid { background-color: var(--success-bg); border-left: 6px solid var(--success); }
+            td { display: flex !important; justify-content: space-between; align-items: center; padding: 10px 8px; border-bottom: 1px solid var(--border-light); text-align: right; background: transparent !important; }
             td:last-child { border-bottom: none; }
             td::before { content: attr(data-label); font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8em; text-align: left; padding-right: 15px; }
-            td input { width: 120px; text-align: right; margin-left: auto;}
+            td input[type="number"], td input[type="text"] { width: 120px; text-align: right; margin-left: auto;}
             td strong { text-align: right; display: block; }
             td small { text-align: right; display: block; margin-top: 4px; }
         }
@@ -280,7 +286,7 @@
             <div class="ledger-table-container">
                 <div class="table-responsive">
                     <table>
-                        <thead><tr><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
+                        <thead><tr><th>Status</th><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
                         <tbody id="cul-fixed-tbody"></tbody>
                     </table>
                 </div>
@@ -334,7 +340,7 @@
             <div class="ledger-table-container">
                 <div class="table-responsive">
                     <table>
-                        <thead><tr><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
+                        <thead><tr><th>Status</th><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
                         <tbody id="eli-fixed-tbody"></tbody>
                     </table>
                 </div>
@@ -455,7 +461,6 @@
         let configStr = document.getElementById('firebase-config-input').value.trim();
         if(!configStr) return alert("Please paste the config text.");
         try {
-            // Safely parse JS object string into real JSON
             let configObj = new Function('return ' + configStr)();
             if(!configObj.apiKey || !configObj.projectId) throw new Error("Missing keys");
             
@@ -479,7 +484,6 @@
                 document.getElementById('btn-cloud-sync').innerText = "☁️ Synced";
                 document.getElementById('btn-cloud-sync').style.color = "var(--success)";
                 
-                // Real-time listener
                 dbCloud.collection("cfo_sync").doc("month_" + currentMonthKey).onSnapshot((doc) => {
                     if (doc.exists && !isSavingLocally) {
                         const data = doc.data();
@@ -495,12 +499,9 @@
                         renderCelistinaSchedule();
                         renderFixedItems('Cullen');
                         renderFixedItems('Elize');
-                        // Note: updateFinancials is called by renders, but we skip cloud sync during it to prevent loops
                     }
                 });
-            } catch (e) {
-                console.error("Firebase init failed", e);
-            }
+            } catch (e) { console.error("Firebase init failed", e); }
         }
     }
 
@@ -572,8 +573,8 @@
     let currentScannedImageBase64 = null; 
     let categories = [{ id: 'cat1', name: 'Groceries', limit: 5400 }, { id: 'cat2', name: 'Petrol', limit: 4200 }, { id: 'cat3', name: 'Health Care', limit: 2000 }, { id: 'cat4', name: 'Kids / School', limit: 2000 }, { id: 'cat5', name: 'Luxuries', limit: 1500 }, { id: 'cat6', name: 'Maintenance', limit: 1000 }, { id: 'cat7', name: 'Other', limit: 1000 }];
     let celistinaRate = 275; let celistinaDays = [];
-    let cullenFixedItems = [{ id: 'inc1', type: 'income', name: 'Basic Salary', amount: 48642 }, { id: 'inc2', type: 'income', name: 'Comm/Bonus', amount: 3300 }, { id: 'cd1', type: 'debit', name: 'Bond Repayment', amount: 17773.29 }, { id: 'cd2', type: 'debit', name: 'Normandie Levy', amount: 4955 }, { id: 'cd3', type: 'debit', name: 'Discovery Insure', amount: 2036 }, { id: 'cd4', type: 'debit', name: 'Crossfit', amount: 1475 }, { id: 'cd15', type: 'debit', name: 'Kids Creache', amount: 13850 }];
-    let elizeFixedItems = [{ id: 'einc1', type: 'income', name: 'Basic Salary', amount: 20000 }, { id: 'einc2', type: 'income', name: 'Comm/Bonus', amount: 3300 }, { id: 'ed1', type: 'debit', name: 'Liberty RA', amount: 526 }, { id: 'ed2', type: 'debit', name: 'Disc. Vitality', amount: 559 }, { id: 'ed4', type: 'debit', name: 'MissFit Gym', amount: 1100 }];
+    let cullenFixedItems = [{ id: 'inc1', type: 'income', name: 'Basic Salary', amount: 48642, paid: false }, { id: 'inc2', type: 'income', name: 'Comm/Bonus', amount: 3300, paid: false }, { id: 'cd1', type: 'debit', name: 'Bond Repayment', amount: 17773.29, paid: false }, { id: 'cd2', type: 'debit', name: 'Normandie Levy', amount: 4955, paid: false }, { id: 'cd3', type: 'debit', name: 'Discovery Insure', amount: 2036, paid: false }, { id: 'cd4', type: 'debit', name: 'Crossfit', amount: 1475, paid: false }, { id: 'cd15', type: 'debit', name: 'Kids Creache', amount: 13850, paid: false }];
+    let elizeFixedItems = [{ id: 'einc1', type: 'income', name: 'Basic Salary', amount: 20000, paid: false }, { id: 'einc2', type: 'income', name: 'Comm/Bonus', amount: 3300, paid: false }, { id: 'ed1', type: 'debit', name: 'Liberty RA', amount: 526, paid: false }, { id: 'ed2', type: 'debit', name: 'Disc. Vitality', amount: 559, paid: false }, { id: 'ed4', type: 'debit', name: 'MissFit Gym', amount: 1100, paid: false }];
     let transactions = []; let jointChart = null;
 
     function initSystem() {
@@ -583,13 +584,13 @@
         picker.value = `${now.getFullYear()}-${month}`; 
         document.getElementById('exp-date').valueAsDate = now; document.getElementById('modal-exp-date').valueAsDate = now;
         initChart(); changeMonth(); 
-        initCloudSync(); // Try to connect to Firebase on load
+        initCloudSync();
     }
 
     function changeMonth() {
         currentMonthKey = document.getElementById('month-selector').value;
         loadData();
-        if(cloudEnabled) { initCloudSync(); } // Attach listener to new month
+        if(cloudEnabled) { initCloudSync(); } 
     }
 
     function generateCelistinaDays(yearMonth) {
@@ -636,8 +637,8 @@
             const rows = e.target.result.split('\n'); let newCul = []; let newEli = [];
             rows.forEach((row, idx) => {
                 if (idx === 0) return; const cols = row.split(',');
-                if (cols.length >= 2) { let nameC = cols[0].trim(); let amtC = parseFloat(cols[1]); if (nameC && !isNaN(amtC)) { newCul.push({ id: 'fxc_'+Date.now()+Math.random(), type: nameC.toLowerCase().includes('salary')?'income':'debit', name: nameC, amount: amtC }); } }
-                if (cols.length >= 5) { let nameE = cols[3].trim(); let amtE = parseFloat(cols[4]); if (nameE && !isNaN(amtE)) { newEli.push({ id: 'fxe_'+Date.now()+Math.random(), type: nameE.toLowerCase().includes('salary')?'income':'debit', name: nameE, amount: amtE }); } }
+                if (cols.length >= 2) { let nameC = cols[0].trim(); let amtC = parseFloat(cols[1]); if (nameC && !isNaN(amtC)) { newCul.push({ id: 'fxc_'+Date.now()+Math.random(), type: nameC.toLowerCase().includes('salary')?'income':'debit', name: nameC, amount: amtC, paid: false }); } }
+                if (cols.length >= 5) { let nameE = cols[3].trim(); let amtE = parseFloat(cols[4]); if (nameE && !isNaN(amtE)) { newEli.push({ id: 'fxe_'+Date.now()+Math.random(), type: nameE.toLowerCase().includes('salary')?'income':'debit', name: nameE, amount: amtE, paid: false }); } }
             });
             if (confirm(`Successfully read CSV! Found ${newCul.length} items for Cullen and ${newEli.length} for Elize. Overwrite Income/Debits?`)) { cullenFixedItems = newCul; elizeFixedItems = newEli; updateFinancials(); renderFixedItems('Cullen'); renderFixedItems('Elize'); }
         };
@@ -663,15 +664,42 @@
     function updateCelistinaGlobalRate() { celistinaRate = parseFloat(document.getElementById('cel-rate').value) || 0; updateFinancials(); }
 
     function renderFixedItems(person) {
-        const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; const tbody = document.getElementById(person === 'Cullen' ? 'cul-fixed-tbody' : 'eli-fixed-tbody'); tbody.innerHTML = '';
+        const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; 
+        const tbody = document.getElementById(person === 'Cullen' ? 'cul-fixed-tbody' : 'eli-fixed-tbody'); 
+        tbody.innerHTML = '';
+        
         [...arr].sort((a,b) => (a.type === 'income' ? -1 : 1)).forEach(item => {
             const badge = item.type === 'income' ? '<span class="badge badge-income">Income</span>' : '<span class="badge badge-debit">Debit</span>';
-            tbody.innerHTML += `<tr><td data-label="Type" style="white-space:nowrap;">${badge}</td><td data-label="Description"><strong>${item.name}</strong></td><td data-label="Amount (R)"><input type="number" value="${item.amount}" step="0.01" onchange="updateFixedValue('${person}', '${item.id}', this.value)"></td><td data-label="Action"><button class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">X</button></td></tr>`;
-        }); updateFinancials();
+            const isPaid = item.paid ? 'checked' : '';
+            const rowClass = item.paid ? 'is-paid' : '';
+            
+            tbody.innerHTML += `
+                <tr class="${rowClass}">
+                    <td data-label="Paid Status" style="text-align: center;"><input type="checkbox" class="checkbox-paid" ${isPaid} onchange="togglePaidStatus('${person}', '${item.id}', this.checked)" title="Mark as Paid"></td>
+                    <td data-label="Type" style="white-space:nowrap;">${badge}</td>
+                    <td data-label="Description"><strong>${item.name}</strong></td>
+                    <td data-label="Amount (R)"><input type="number" value="${item.amount}" step="0.01" onchange="updateFixedValue('${person}', '${item.id}', this.value)"></td>
+                    <td data-label="Action"><button class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">X</button></td>
+                </tr>
+            `;
+        }); 
+        updateFinancials();
     }
+
+    // NEW LOGIC: Toggle Paid Checkbox
+    function togglePaidStatus(person, id, isChecked) {
+        const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems;
+        const item = arr.find(d => d.id === id);
+        if(item) {
+            item.paid = isChecked;
+            saveData(); // Save immediately to trigger cloud sync
+            renderFixedItems(person); // Re-render to show the green highlight
+        }
+    }
+
     function addFixedItem(person) {
         const prefix = person === 'Cullen' ? 'cul' : 'eli'; const typeInput = document.getElementById(`new-${prefix}-fixed-type`).value; const nameInput = document.getElementById(`new-${prefix}-fixed-name`).value; const amtInput = document.getElementById(`new-${prefix}-fixed-amount`).value;
-        if(!nameInput) return; const newItem = { id: 'fx_' + Date.now(), type: typeInput, name: nameInput, amount: parseFloat(amtInput) || 0 };
+        if(!nameInput) return; const newItem = { id: 'fx_' + Date.now(), type: typeInput, name: nameInput, amount: parseFloat(amtInput) || 0, paid: false };
         if(person === 'Cullen') cullenFixedItems.push(newItem); else elizeFixedItems.push(newItem);
         document.getElementById(`new-${prefix}-fixed-name`).value = ''; document.getElementById(`new-${prefix}-fixed-amount`).value = ''; renderFixedItems(person);
     }
@@ -706,16 +734,13 @@
         document.getElementById('btn-submit-tx').style.backgroundColor = "var(--purple)";
         document.getElementById('btn-cancel-edit').style.display = "block";
         
-        // Lookup Receipt Image
         if(db) {
             let req = db.transaction(['receipts'], 'readonly').objectStore('receipts').get(tx.id.toString());
             req.onsuccess = function() {
                 if(req.result && req.result.image) {
                     document.getElementById('edit-receipt-img').src = req.result.image;
                     document.getElementById('edit-receipt-container').style.display = 'block';
-                } else {
-                    document.getElementById('edit-receipt-container').style.display = 'none';
-                }
+                } else { document.getElementById('edit-receipt-container').style.display = 'none'; }
             };
         }
         switchTab('tab-cfo', document.getElementById('btn-tab-cfo'));
@@ -730,8 +755,7 @@
             date: document.getElementById('exp-date').value, category: document.getElementById('exp-category').value,
             desc: document.getElementById('exp-desc').value, amount: parseFloat(document.getElementById('exp-amount').value)
         });
-        cancelEdit();
-        updateFinancials();
+        cancelEdit(); updateFinancials();
     });
 
     // ----- OCR & IMAGE COMPRESSION -----
@@ -792,7 +816,6 @@
             let extractedAmount = 0; let extractedDesc = defaultDesc;
             const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             
-            // Smarter Amount Logic
             let foundTotal = false;
             for (let line of lines) {
                 let upper = line.toUpperCase();
@@ -806,7 +829,6 @@
                 if (numMatch) { extractedAmount = Math.max(...numMatch.map(n => parseFloat(n.replace(',', '.'))).filter(n => n < 100000)); }
             }
 
-            // Smarter Description Logic (Find First clean text line)
             for (let line of lines) {
                 if (line.length > 3 && /[a-zA-Z]/.test(line) && line.replace(/[^0-9]/g,"").length < 6 && !line.match(/(TAX|VAT|INVOICE|RECEIPT|CASH|SLIP|TEL|FAX|DATE|TIME)/i)) {
                     extractedDesc = line.substring(0, 30); break;
