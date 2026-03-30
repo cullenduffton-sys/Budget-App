@@ -73,7 +73,6 @@
         th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8em; }
         td input[type="number"], td input[type="text"] { width: 100px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.95em; font-weight: 500; }
         
-        /* New Paid Status Styling */
         tr.is-paid td { background-color: var(--success-bg); border-bottom-color: #d1fae5; }
         tr.is-paid td:first-child { border-left: 4px solid var(--success); }
         .checkbox-paid { width: 20px; height: 20px; accent-color: var(--success); cursor: pointer; }
@@ -257,13 +256,30 @@
         <div class="card">
             <h3 class="section-title">Budget Setup</h3>
             <div id="categories-container" style="max-height: 250px; overflow-y: auto; padding-right: 5px;"></div>
-            <div class="add-item-form">
+            <div class="add-item-form" style="margin-bottom: 30px;">
                 <input type="text" id="new-cat-name" placeholder="Category Name">
                 <input type="number" id="new-cat-amount" placeholder="Limit (R)" step="0.01">
                 <button type="button" class="btn-add" onclick="addCategory()">Add</button>
             </div>
-            <h3 class="section-title" style="margin-top: 35px;">Budget vs Actual</h3>
-            <div style="position: relative; height: 220px; width: 100%;"><canvas id="jointChart"></canvas></div>
+            
+            <h3 class="section-title" style="margin-top: 35px;">Forecast vs Actual</h3>
+            <div style="position: relative; height: 350px; width: 100%; margin-bottom: 25px;"><canvas id="jointChart"></canvas></div>
+            
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Budget</th>
+                            <th>Spent</th>
+                            <th>Remaining</th>
+                        </tr>
+                    </thead>
+                    <tbody id="overview-budget-tbody">
+                        </tbody>
+                </table>
+            </div>
+            
         </div>
     </div>
 </div>
@@ -501,7 +517,10 @@
                         renderFixedItems('Elize');
                     }
                 });
-            } catch (e) { console.error("Firebase init failed", e); }
+            } catch (e) { 
+                alert("Firebase Error: " + e.message); 
+                console.error("Firebase init failed", e); 
+            }
         }
     }
 
@@ -511,7 +530,11 @@
         const dataToSave = { categories, cullenFixedItems, elizeFixedItems, transactions, celistinaRate, celistinaDays };
         dbCloud.collection("cfo_sync").doc("month_" + currentMonthKey).set(dataToSave)
             .then(() => { setTimeout(() => { isSavingLocally = false; }, 1000); })
-            .catch(e => { console.error("Sync error", e); isSavingLocally = false; });
+            .catch(e => { 
+                alert("Upload Blocked! Error: " + e.message);
+                console.error("Sync error", e); 
+                isSavingLocally = false; 
+            });
     }
 
     // ----- DATABASE FOR RECEIPT STORAGE -----
@@ -686,14 +709,13 @@
         updateFinancials();
     }
 
-    // NEW LOGIC: Toggle Paid Checkbox
     function togglePaidStatus(person, id, isChecked) {
         const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems;
         const item = arr.find(d => d.id === id);
         if(item) {
             item.paid = isChecked;
-            saveData(); // Save immediately to trigger cloud sync
-            renderFixedItems(person); // Re-render to show the green highlight
+            saveData(); 
+            renderFixedItems(person); 
         }
     }
 
@@ -852,9 +874,28 @@
         closeModal(); switchTab('tab-cfo', document.getElementById('btn-tab-cfo')); updateFinancials();
     });
 
-    // ----- CHART & FINANCIAL CALCS -----
+    // ----- CHARTING & TABLE CALCS -----
     function initChart() {
-        jointChart = new Chart(document.getElementById('jointChart').getContext('2d'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Budget Limit', data: [], backgroundColor: '#e2e8f0', borderRadius: 6 }, { label: 'Actual Spend', data: [], backgroundColor: '#4f46e5', borderRadius: 6 }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, grid: { borderDash: [4, 4] } }, x: { grid: { display: false } } } } });
+        jointChart = new Chart(document.getElementById('jointChart').getContext('2d'), { 
+            type: 'bar', 
+            data: { 
+                labels: [], 
+                datasets: [
+                    { label: 'Budget Limit', data: [], backgroundColor: '#e2e8f0', borderRadius: 6 }, 
+                    { label: 'Actual Spend', data: [], backgroundColor: '#4f46e5', borderRadius: 6 },
+                    { label: 'Remaining', data: [], backgroundColor: '#10b981', borderRadius: 6 } 
+                ]
+            }, 
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { legend: { position: 'bottom' } }, 
+                scales: { 
+                    y: { beginAtZero: true, grid: { borderDash: [4, 4] } }, 
+                    x: { grid: { display: false } } 
+                } 
+            } 
+        });
     }
 
     function updateFinancials() {
@@ -882,17 +923,36 @@
         document.getElementById('cul-inc-disp').innerText = `R ${culInc.toFixed(2)}`; document.getElementById('cul-deb-disp').innerText = `R ${culDeb.toFixed(2)}`; document.getElementById('cul-avail-disp').innerText = `R ${(culInc - culDeb).toFixed(2)}`; document.getElementById('cul-spent-disp').innerText = `R ${culSpent.toFixed(2)}`; setRemUI('cul-rem-disp', 'cul-rem-box', culInc - culDeb - culSpent);
         document.getElementById('eli-inc-disp').innerText = `R ${eliInc.toFixed(2)}`; document.getElementById('eli-deb-disp').innerText = `R ${eliDeb.toFixed(2)}`; document.getElementById('eli-avail-disp').innerText = `R ${(eliInc - eliDeb).toFixed(2)}`; document.getElementById('eli-spent-disp').innerText = `R ${eliSpent.toFixed(2)}`; setRemUI('eli-rem-disp', 'eli-rem-box', eliInc - eliDeb - eliSpent);
 
-        jointChart.data.labels = categories.map(c => c.name); jointChart.data.datasets[0].data = categories.map(c => c.limit); jointChart.data.datasets[1].data = categories.map(c => catSpendMap[c.name]); jointChart.data.datasets[1].backgroundColor = categories.map(c => (catSpendMap[c.name] > c.limit) ? '#ef4444' : '#4f46e5'); jointChart.update();
+        // --- CHART DATA UPDATE ---
+        jointChart.data.labels = categories.map(c => c.name); 
+        jointChart.data.datasets[0].data = categories.map(c => c.limit); 
+        jointChart.data.datasets[1].data = categories.map(c => catSpendMap[c.name]); 
+        jointChart.data.datasets[1].backgroundColor = categories.map(c => (catSpendMap[c.name] > c.limit) ? '#ef4444' : '#4f46e5'); 
+        jointChart.data.datasets[2].data = categories.map(c => c.limit - catSpendMap[c.name]); 
+        jointChart.data.datasets[2].backgroundColor = categories.map(c => (c.limit - catSpendMap[c.name] >= 0) ? '#10b981' : '#f59e0b');
+        jointChart.update();
 
-        let forecastHTML = ''; let totalProjectedSpend = 0;
+        // --- TABLES GENERATION ---
+        let forecastHTML = ''; 
+        let overviewHTML = ''; // New table for Tab 1
+        let totalProjectedSpend = 0;
+        
         categories.forEach(cat => {
             const bud = cat.limit; const spend = catSpendMap[cat.name]; const remainingBudget = bud - spend; const projectedSpend = Math.max(bud, spend); totalProjectedSpend += projectedSpend; const projectedVariance = bud - projectedSpend;
+            
+            // Forecast Table Logic (Tab 4)
             let status = '', textClass = '', remClass = '';
             if (remainingBudget < 0) { remClass = 'trouble-text'; }
             if (projectedVariance < 0) { status = `<span class="risk-badge badge-risk">🚨 OVER</span>`; textClass = 'trouble-text'; } else { status = `<span class="risk-badge badge-ok">✅ Safe</span>`; }
             forecastHTML += `<tr><td data-label="Category"><strong>${cat.name}</strong></td><td data-label="Full Budget" style="white-space:nowrap;">R ${bud.toFixed(2)}</td><td data-label="Current Spend" style="white-space:nowrap;">R ${spend.toFixed(2)}</td><td data-label="Remaining" class="${remClass}" style="white-space:nowrap;">R ${remainingBudget.toFixed(2)}</td><td data-label="Proj. Month-End" class="${textClass}" style="white-space:nowrap; font-weight:700;">R ${projectedSpend.toFixed(2)}</td><td data-label="Proj. Variance" class="${textClass}">R ${projectedVariance.toFixed(2)}</td><td data-label="Status / Risk">${status}</td></tr>`;
+            
+            // Overview Table Logic (Tab 1) - Color code remaining
+            let overviewRemStyle = remainingBudget < 0 ? 'color: var(--danger); font-weight: bold;' : 'color: var(--success); font-weight: bold;';
+            overviewHTML += `<tr><td data-label="Category"><strong>${cat.name}</strong></td><td data-label="Budget" style="white-space:nowrap;">R ${bud.toFixed(2)}</td><td data-label="Spent" style="white-space:nowrap;">R ${spend.toFixed(2)}</td><td data-label="Remaining" style="${overviewRemStyle} white-space:nowrap;">R ${remainingBudget.toFixed(2)}</td></tr>`;
         });
+        
         document.getElementById('forecast-tbody').innerHTML = forecastHTML;
+        document.getElementById('overview-budget-tbody').innerHTML = overviewHTML; // Inject into new Tab 1 table
 
         const householdProjectedRemaining = jointInc - jointDeb - totalProjectedSpend;
         document.getElementById('proj-inc').innerText = `R ${jointInc.toFixed(2)}`; document.getElementById('proj-deb').innerText = `R ${jointDeb.toFixed(2)}`; document.getElementById('proj-var').innerText = `R ${totalProjectedSpend.toFixed(2)}`;
