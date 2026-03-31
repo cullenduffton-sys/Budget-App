@@ -71,7 +71,7 @@
         table { width: 100%; border-collapse: collapse; font-size: 0.95em; min-width: 600px; }
         th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border-light); transition: background-color 0.3s; }
         th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8em; }
-        td input[type="number"], td input[type="text"] { width: 100px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.95em; font-weight: 500; }
+        td input[type="number"], td input[type="text"], td select { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.95em; font-weight: 500; }
         
         tr.is-paid td { background-color: var(--success-bg); border-bottom-color: #d1fae5; }
         tr.is-paid td:first-child { border-left: 4px solid var(--success); }
@@ -84,7 +84,7 @@
         .badge-ok { background: var(--success-bg); color: var(--success); }
         .badge-risk { background: var(--danger); color: white; animation: pulse 1.5s infinite; }
 
-        .btn-action { padding: 8px 12px; margin: 0 2px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: 0.2s; }
+        .btn-action { padding: 6px 10px; margin: 0 2px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600; transition: 0.2s; }
         .btn-edit { background: #e0f2fe; color: #0284c7; }
         .btn-delete { background: #fee2e2; color: #ef4444; }
 
@@ -98,7 +98,7 @@
         .dynamic-row input { width: 100px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-weight: 500; }
         .btn-remove { background: #fee2e2; color: #ef4444; border: none; border-radius: 6px; cursor: pointer; padding: 8px 12px; font-weight: bold; }
         
-        .add-item-form { display: flex; gap: 10px; margin-top: 25px; padding-top: 15px; border-top: 1px dashed var(--border); flex-wrap: wrap; }
+        .add-item-form { display: flex; gap: 10px; margin-top: 25px; padding-top: 15px; border-top: 1px dashed var(--border); flex-wrap: wrap; align-items: center;}
         .add-item-form input, .add-item-form select { flex: 1; min-width: 120px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; font-family: inherit; }
         .btn-add { background: var(--success); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 600; cursor: pointer; }
 
@@ -106,7 +106,7 @@
         .upload-buttons { display: flex; gap: 10px; margin-bottom: 25px; }
         .upload-buttons .btn-submit { margin-top: 0; }
         
-        .executive-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+        .executive-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px;}
         .stat-box { padding: 20px 16px; background: white; border-radius: 12px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
         .stat-box::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 4px 0 0 4px; }
         .stat-box.blue::before { background: var(--secondary); }
@@ -118,7 +118,23 @@
         .stat-box p { margin: 0; font-size: 1.5em; font-weight: 800; color: var(--text); letter-spacing: -0.03em; }
         .stat-subtitle { font-size: 0.75em; color: var(--text-muted); margin-top: 6px; font-weight: 500; }
         
-        .section-title { font-size: 1.15em; font-weight: 700; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        .section-title { font-size: 1.15em; font-weight: 700; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+        /* Accounts Summary Styles */
+        .accounts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;}
+        .account-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 15px; box-shadow: var(--shadow-sm); }
+        .account-card.acc-cullen { border-top: 4px solid var(--secondary); }
+        .account-card.acc-elize { border-top: 4px solid var(--purple); }
+        .account-card h4 { margin: 0 0 5px 0; font-size: 0.9em; color: var(--primary); }
+        .account-card .acc-owner { font-size: 0.7em; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 8px; display: block;}
+        .account-card .acc-balance { font-size: 1.25em; font-weight: 800; }
+
+        /* Celistina Box Dynamic Styling */
+        details.celistina-box { background: white; border: 1px solid var(--border-light); padding: 15px 24px; border-radius: 16px; margin-bottom: 24px; transition: all 0.2s ease; box-shadow: var(--shadow-md); }
+        details.celistina-box[open] { background: #faf5ff; border: 2px solid var(--purple); }
+        details.celistina-box summary { list-style: none; font-size: 1.15em; font-weight: 700; color: var(--purple); cursor: pointer; outline: none; display: flex; align-items: center; justify-content: space-between; margin: -15px -24px; padding: 15px 24px; border-radius: 16px;}
+        details.celistina-box summary::-webkit-details-marker { display: none; }
+        details.celistina-box[open] summary { border-bottom: 1px dashed #d8b4fe; border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-bottom: 15px; padding-bottom: 15px; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
         .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 20px; padding: 24px; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); max-height: 90vh; overflow-y: auto; }
@@ -138,9 +154,9 @@
             
             .container { grid-template-columns: 1fr; gap: 16px; }
             .span-2, .span-3, .full-width { grid-column: 1 / -1; }
-            .executive-summary { grid-template-columns: 1fr 1fr; }
+            .executive-summary, .accounts-grid { grid-template-columns: 1fr 1fr; }
             
-            .add-item-form { flex-direction: column; gap: 8px; }
+            .add-item-form { flex-direction: column; gap: 8px; align-items: stretch; }
             .add-item-form input, .add-item-form select, .add-item-form button { width: 100%; max-width: none; }
             #celistina-schedule-container { grid-template-columns: 1fr !important; }
             .upload-buttons { flex-direction: column; }
@@ -157,11 +173,14 @@
             thead { display: none; }
             tbody { display: block; width: 100%; }
             tr { display: block; margin-bottom: 15px; background: white; border: 1px solid var(--border-light); border-radius: 12px; box-shadow: var(--shadow-sm); padding: 8px; }
+            tr.category-header { background: #f8fafc; border:none; box-shadow:none; padding: 0; margin-bottom: 5px; margin-top: 15px;}
+            tr.category-header td { background: transparent !important; padding: 5px 0 !important; font-size: 1.1em; }
+            tr.category-header td::before { display: none; }
             tr.is-paid { background-color: var(--success-bg); border-left: 6px solid var(--success); }
             td { display: flex !important; justify-content: space-between; align-items: center; padding: 10px 8px; border-bottom: 1px solid var(--border-light); text-align: right; background: transparent !important; }
             td:last-child { border-bottom: none; }
             td::before { content: attr(data-label); font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.8em; text-align: left; padding-right: 15px; }
-            td input[type="number"], td input[type="text"] { width: 120px; text-align: right; margin-left: auto;}
+            td input[type="number"], td input[type="text"], td select { width: 120px; text-align: right; margin-left: auto;}
             td strong { text-align: right; display: block; }
             td small { text-align: right; display: block; margin-top: 4px; }
         }
@@ -196,6 +215,35 @@
 
 <div id="tab-cfo" class="tab-content active">
     <div class="container">
+        
+        <div class="card full-width" style="padding-bottom: 10px;">
+            <div class="section-title">
+                <span>🏦 Net Account Cash Flow (This Month)</span>
+            </div>
+            <div id="accounts-grid" class="accounts-grid">
+                </div>
+            
+            <details style="margin-top: 10px; margin-bottom: 10px; cursor: pointer;">
+                <summary class="btn-header" style="display: inline-flex; width: auto;">⚙️ Manage Bank Accounts</summary>
+                <div style="background: var(--bg); padding: 15px; border-radius: 12px; margin-top: 10px; border: 1px solid var(--border);">
+                    <h4 style="margin-top:0; margin-bottom: 10px; font-size: 0.9em; color: var(--text-muted);">Existing Accounts</h4>
+                    <div id="account-list-container" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                        </div>
+                    
+                    <h4 style="margin-top:10px; margin-bottom: 10px; font-size: 0.9em; color: var(--text-muted); border-top: 1px dashed var(--border); padding-top: 10px;">Add New Account</h4>
+                    <div class="add-item-form" style="margin-top: 0; padding-top: 0; border-top: none;">
+                        <input type="text" id="new-acc-name" placeholder="Account Name (e.g. FNB Cheque)">
+                        <select id="new-acc-owner">
+                            <option value="Cullen">Owned by Cullen</option>
+                            <option value="Elize">Owned by Elize</option>
+                            <option value="Joint">Joint Account</option>
+                        </select>
+                        <button type="button" class="btn-add" onclick="addAccount()">Add Account</button>
+                    </div>
+                </div>
+            </details>
+        </div>
+
         <div class="card full-width">
             <h2 style="margin-bottom: 20px;">Household Cash Flow</h2>
             <div class="executive-summary">
@@ -219,14 +267,14 @@
         </div>
 
         <div class="card span-2">
-            <h3 class="section-title">Log Daily Spend</h3>
+            <h3 class="section-title">Log Daily Spend / Transfer</h3>
             
             <div class="upload-buttons">
                 <button type="button" class="btn-submit" style="background-color: var(--purple); font-size: 1.05em; flex: 1;" onclick="document.getElementById('camera-input').click()">
-                    📸 Snap Photo
+                    📸 Snap Receipt
                 </button>
                 <button type="button" class="btn-submit" style="background-color: var(--secondary); font-size: 1.05em; flex: 1;" onclick="document.getElementById('upload-input').click()">
-                    📄 Upload Doc / PDF
+                    📄 Upload PDF
                 </button>
             </div>
             
@@ -239,14 +287,26 @@
                 </div>
 
                 <div class="form-grid">
-                    <div class="form-row"><label>Who Paid?</label><select id="exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select></div>
+                    <div class="form-row">
+                        <label>Transaction Type</label>
+                        <select id="exp-type" onchange="toggleFormType()">
+                            <option value="expense">💳 Expense</option>
+                            <option value="transfer">🔄 Transfer</option>
+                        </select>
+                    </div>
+                    <div class="form-row"><label>Who Initiated?</label><select id="exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select></div>
+                    
+                    <div class="form-row" id="col-from-account"><label id="label-from-account">Account Used</label><select id="exp-account" required class="account-dropdown"></select></div>
+                    <div class="form-row" id="col-to-account" style="display:none;"><label>To Account</label><select id="exp-to-account" class="account-dropdown"></select></div>
+                    
                     <div class="form-row"><label>Date</label><input type="date" id="exp-date" required></div>
-                    <div class="form-row"><label>Allocate Category</label><select id="exp-category" required></select></div>
+                    <div class="form-row" id="col-category"><label>Allocate Category</label><select id="exp-category"></select></div>
+                    
                     <div class="form-row"><label>Amount (R)</label><input type="number" id="exp-amount" step="0.01" required></div>
+                    <div class="form-row"><label>Description / Merchant</label><input type="text" id="exp-desc" required></div>
                 </div>
-                <div class="form-row"><label>Description / Merchant</label><input type="text" id="exp-desc" required></div>
                 
-                <div style="display:flex; gap:10px;">
+                <div style="display:flex; gap:10px; margin-top: 10px;">
                     <button type="submit" class="btn-submit" id="btn-submit-tx">Save Manual Record</button>
                     <button type="button" class="btn-submit" id="btn-cancel-edit" style="display:none; background:var(--text-muted); flex:0.4;" onclick="cancelEdit()">Cancel Edit</button>
                 </div>
@@ -262,19 +322,21 @@
                 <button type="button" class="btn-add" onclick="addCategory()">Add</button>
             </div>
             
-            <h3 class="section-title" style="margin-top: 35px;">Forecast vs Actual</h3>
+            <div class="section-title" style="margin-top: 35px; margin-bottom: 15px;">
+                <span>Dashboard View</span>
+                <select id="overview-filter" onchange="updateFinancials()" style="padding: 6px 12px; font-size: 0.8em; border-radius: 8px; border: 1px solid var(--border); font-weight: 600; color: var(--primary);">
+                    <option value="Joint">Household Joint Budget</option>
+                    <option value="Cullen">Cullen's Personal Spend</option>
+                    <option value="Elize">Elize's Personal Spend</option>
+                </select>
+            </div>
+            
             <div style="position: relative; height: 350px; width: 100%; margin-bottom: 25px;"><canvas id="jointChart"></canvas></div>
             
             <div class="table-responsive">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Category</th>
-                            <th>Budget</th>
-                            <th>Spent</th>
-                            <th>Remaining</th>
-                        </tr>
-                    </thead>
+                    <thead id="overview-thead">
+                        </thead>
                     <tbody id="overview-budget-tbody">
                         </tbody>
                 </table>
@@ -302,35 +364,42 @@
             <div class="ledger-table-container">
                 <div class="table-responsive">
                     <table>
-                        <thead><tr><th>Status</th><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
+                        <thead><tr><th>Status</th><th>Type</th><th>Account</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
                         <tbody id="cul-fixed-tbody"></tbody>
                     </table>
                 </div>
             </div>
             <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px;">
                 <select id="new-cul-fixed-type"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
+                <select id="new-cul-fixed-account" class="account-dropdown"></select>
                 <input type="text" id="new-cul-fixed-name" placeholder="Item Name / Description">
                 <input type="number" id="new-cul-fixed-amount" placeholder="Amount (R)" step="0.01">
-                <button type="button" class="btn-add" onclick="addFixedItem('Cullen')">+ Add Item</button>
+                <button type="button" class="btn-add" onclick="addFixedItem('Cullen')">+ Add</button>
             </div>
         </div>
 
-        <div class="card" style="border: 2px solid var(--purple); background: #faf5ff;">
-            <h3 class="section-title" style="color: var(--purple);">Celectina's Wages</h3>
-            <p style="font-size: 0.85em; color: var(--text-muted); margin-top:-10px; margin-bottom: 15px;">Automatically added to Cullen's debits.</p>
-            <div class="form-row" style="margin-bottom: 15px;"><label style="color: var(--purple);">Daily Rate (R)</label><input type="number" id="cel-rate" value="275" step="0.01" onchange="updateCelistinaGlobalRate()" style="border-color: #d8b4fe; background: white;"></div>
-            <label style="font-weight: 600; font-size: 0.85em; color: var(--text-muted); display:block; margin-bottom:10px;">Working Days Checklist:</label>
-            <div id="celistina-schedule-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
-            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d8b4fe; font-weight: 800; font-size: 1.2em; text-align: right; color: var(--purple);">Total Wage: <span id="celistina-total-display">R 0.00</span></div>
-        </div>
+        <details class="celistina-box span-1">
+            <summary>
+                <span>🧹 Celectina's Wages</span>
+                <span style="font-size: 0.65em; background: #f1f5f9; padding: 4px 10px; border-radius: 12px; color: var(--text-muted); font-weight: 600;">Open/Close</span>
+            </summary>
+            <div>
+                <p style="font-size: 0.85em; color: var(--text-muted); margin-top:0px; margin-bottom: 15px; font-weight: 600;">⚠️ Automatically added to Cullen's total debits.</p>
+                <div class="form-row" style="margin-bottom: 15px;"><label style="color: var(--purple);">Daily Rate (R)</label><input type="number" id="cel-rate" value="275" step="0.01" onchange="updateCelistinaGlobalRate()" style="border-color: #d8b4fe; background: white;"></div>
+                <label style="font-weight: 600; font-size: 0.85em; color: var(--text-muted); display:block; margin-bottom:10px;">Working Days Checklist:</label>
+                <div id="celistina-schedule-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d8b4fe; font-weight: 800; font-size: 1.2em; text-align: right; color: var(--purple);">Total Wage: <span id="celistina-total-display">R 0.00</span></div>
+            </div>
+        </details>
 
         <div class="card full-width">
-            <h3 class="section-title">Cullen's Ad-Hoc Spending Ledger</h3>
+            <h3 class="section-title">Cullen's Transaction Ledger</h3>
             <div class="ledger-table-container">
                 <div class="table-responsive">
                     <table>
-                        <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
-                        <tbody id="cul-tbody"></tbody>
+                        <thead><tr><th>Date</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
+                        <tbody id="cul-tbody">
+                            </tbody>
                     </table>
                 </div>
             </div>
@@ -356,26 +425,28 @@
             <div class="ledger-table-container">
                 <div class="table-responsive">
                     <table>
-                        <thead><tr><th>Status</th><th>Type</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
+                        <thead><tr><th>Status</th><th>Type</th><th>Account</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
                         <tbody id="eli-fixed-tbody"></tbody>
                     </table>
                 </div>
             </div>
             <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px;">
                 <select id="new-eli-fixed-type"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
+                <select id="new-eli-fixed-account" class="account-dropdown"></select>
                 <input type="text" id="new-eli-fixed-name" placeholder="Item Name / Description">
                 <input type="number" id="new-eli-fixed-amount" placeholder="Amount (R)" step="0.01">
-                <button type="button" class="btn-add" onclick="addFixedItem('Elize')">+ Add Item</button>
+                <button type="button" class="btn-add" onclick="addFixedItem('Elize')">+ Add</button>
             </div>
         </div>
 
         <div class="card full-width">
-            <h3 class="section-title">Elize's Ad-Hoc Spending Ledger</h3>
+            <h3 class="section-title">Elize's Transaction Ledger</h3>
             <div class="ledger-table-container">
                 <div class="table-responsive">
                     <table>
-                        <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
-                        <tbody id="eli-tbody"></tbody>
+                        <thead><tr><th>Date</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 120px;">Actions</th></tr></thead>
+                        <tbody id="eli-tbody">
+                            </tbody>
                     </table>
                 </div>
             </div>
@@ -429,9 +500,10 @@
                 <div class="form-grid">
                     <div class="form-row"><label>Amount Found (R)</label><input type="number" id="modal-exp-amount" step="0.01" required></div>
                     <div class="form-row"><label>Who Paid?</label><select id="modal-exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select></div>
+                    <div class="form-row"><label>Account Used</label><select id="modal-exp-account" required class="account-dropdown"></select></div>
                     <div class="form-row"><label>Date</label><input type="date" id="modal-exp-date" required></div>
-                    <div class="form-row"><label>Merchant / Desc</label><input type="text" id="modal-exp-desc" required></div>
                 </div>
+                <div class="form-row"><label>Merchant / Desc</label><input type="text" id="modal-exp-desc" required></div>
                 <div style="display: flex; gap: 12px; margin-top: 25px;">
                     <button type="button" class="btn-submit" style="background-color: var(--text-muted); flex: 1; box-shadow:none;" onclick="closeModal()">Cancel</button>
                     <button type="submit" class="btn-submit" style="background-color: var(--success); flex: 2;">Save & Store Receipt</button>
@@ -503,6 +575,7 @@
                 dbCloud.collection("cfo_sync").doc("month_" + currentMonthKey).onSnapshot((doc) => {
                     if (doc.exists && !isSavingLocally) {
                         const data = doc.data();
+                        accounts = data.accounts || accounts;
                         categories = data.categories || categories;
                         cullenFixedItems = data.cullenFixedItems || cullenFixedItems;
                         elizeFixedItems = data.elizeFixedItems || elizeFixedItems;
@@ -511,6 +584,7 @@
                         celistinaDays = data.celistinaDays || generateCelistinaDays(currentMonthKey);
                         
                         document.getElementById('cel-rate').value = celistinaRate;
+                        renderAccounts();
                         renderCategories();
                         renderCelistinaSchedule();
                         renderFixedItems('Cullen');
@@ -527,7 +601,7 @@
     function syncToCloud() {
         if (!cloudEnabled || !dbCloud || !currentMonthKey) return;
         isSavingLocally = true; 
-        const dataToSave = { categories, cullenFixedItems, elizeFixedItems, transactions, celistinaRate, celistinaDays };
+        const dataToSave = { accounts, categories, cullenFixedItems, elizeFixedItems, transactions, celistinaRate, celistinaDays };
         dbCloud.collection("cfo_sync").doc("month_" + currentMonthKey).set(dataToSave)
             .then(() => { setTimeout(() => { isSavingLocally = false; }, 1000); })
             .catch(e => { 
@@ -594,10 +668,14 @@
     // ----- STATE MANAGEMENT & LOCAL STORAGE -----
     let currentMonthKey = "";
     let currentScannedImageBase64 = null; 
+    let accounts = [
+        { id: 'acc_c1', name: 'Cullen FNB Cheque', owner: 'Cullen' },
+        { id: 'acc_e1', name: 'Elize Cheque', owner: 'Elize' }
+    ];
     let categories = [{ id: 'cat1', name: 'Groceries', limit: 5400 }, { id: 'cat2', name: 'Petrol', limit: 4200 }, { id: 'cat3', name: 'Health Care', limit: 2000 }, { id: 'cat4', name: 'Kids / School', limit: 2000 }, { id: 'cat5', name: 'Luxuries', limit: 1500 }, { id: 'cat6', name: 'Maintenance', limit: 1000 }, { id: 'cat7', name: 'Other', limit: 1000 }];
     let celistinaRate = 275; let celistinaDays = [];
-    let cullenFixedItems = [{ id: 'inc1', type: 'income', name: 'Basic Salary', amount: 48642, paid: false }, { id: 'inc2', type: 'income', name: 'Comm/Bonus', amount: 3300, paid: false }, { id: 'cd1', type: 'debit', name: 'Bond Repayment', amount: 17773.29, paid: false }, { id: 'cd2', type: 'debit', name: 'Normandie Levy', amount: 4955, paid: false }, { id: 'cd3', type: 'debit', name: 'Discovery Insure', amount: 2036, paid: false }, { id: 'cd4', type: 'debit', name: 'Crossfit', amount: 1475, paid: false }, { id: 'cd15', type: 'debit', name: 'Kids Creache', amount: 13850, paid: false }];
-    let elizeFixedItems = [{ id: 'einc1', type: 'income', name: 'Basic Salary', amount: 20000, paid: false }, { id: 'einc2', type: 'income', name: 'Comm/Bonus', amount: 3300, paid: false }, { id: 'ed1', type: 'debit', name: 'Liberty RA', amount: 526, paid: false }, { id: 'ed2', type: 'debit', name: 'Disc. Vitality', amount: 559, paid: false }, { id: 'ed4', type: 'debit', name: 'MissFit Gym', amount: 1100, paid: false }];
+    let cullenFixedItems = [{ id: 'inc1', type: 'income', accountId: 'acc_c1', name: 'Basic Salary', amount: 48642, paid: false }, { id: 'cd1', type: 'debit', accountId: 'acc_c1', name: 'Bond Repayment', amount: 17773.29, paid: false }, { id: 'cd2', type: 'debit', accountId: 'acc_c1', name: 'Normandie Levy', amount: 4955, paid: false }];
+    let elizeFixedItems = [{ id: 'einc1', type: 'income', accountId: 'acc_e1', name: 'Basic Salary', amount: 20000, paid: false }, { id: 'ed1', type: 'debit', accountId: 'acc_e1', name: 'Liberty RA', amount: 526, paid: false }];
     let transactions = []; let jointChart = null;
 
     function initSystem() {
@@ -632,6 +710,7 @@
         const savedData = localStorage.getItem('cfo_data_' + currentMonthKey);
         if (savedData) {
             const parsed = JSON.parse(savedData);
+            accounts = parsed.accounts || accounts;
             categories = parsed.categories || categories; transactions = parsed.transactions || [];
             celistinaRate = parsed.celistinaRate !== undefined ? parsed.celistinaRate : 275;
             celistinaDays = parsed.celistinaDays || generateCelistinaDays(currentMonthKey);
@@ -641,12 +720,12 @@
             transactions = []; celistinaRate = 275; celistinaDays = generateCelistinaDays(currentMonthKey);
         }
         document.getElementById('cel-rate').value = celistinaRate;
-        renderCategories(); renderCelistinaSchedule(); renderFixedItems('Cullen'); renderFixedItems('Elize');
+        renderAccounts(); renderCategories(); renderCelistinaSchedule(); renderFixedItems('Cullen'); renderFixedItems('Elize');
     }
 
     function saveData() {
         if (!currentMonthKey || isSavingLocally) return;
-        const dataToSave = { categories, cullenFixedItems, elizeFixedItems, transactions, celistinaRate, celistinaDays };
+        const dataToSave = { accounts, categories, cullenFixedItems, elizeFixedItems, transactions, celistinaRate, celistinaDays };
         localStorage.setItem('cfo_data_' + currentMonthKey, JSON.stringify(dataToSave));
         syncToCloud();
     }
@@ -658,14 +737,83 @@
         const reader = new FileReader();
         reader.onload = function(e) {
             const rows = e.target.result.split('\n'); let newCul = []; let newEli = [];
+            let defaultCA = accounts.find(a => a.owner === 'Cullen')?.id || '';
+            let defaultEA = accounts.find(a => a.owner === 'Elize')?.id || '';
+            
             rows.forEach((row, idx) => {
                 if (idx === 0) return; const cols = row.split(',');
-                if (cols.length >= 2) { let nameC = cols[0].trim(); let amtC = parseFloat(cols[1]); if (nameC && !isNaN(amtC)) { newCul.push({ id: 'fxc_'+Date.now()+Math.random(), type: nameC.toLowerCase().includes('salary')?'income':'debit', name: nameC, amount: amtC, paid: false }); } }
-                if (cols.length >= 5) { let nameE = cols[3].trim(); let amtE = parseFloat(cols[4]); if (nameE && !isNaN(amtE)) { newEli.push({ id: 'fxe_'+Date.now()+Math.random(), type: nameE.toLowerCase().includes('salary')?'income':'debit', name: nameE, amount: amtE, paid: false }); } }
+                if (cols.length >= 2) { let nameC = cols[0].trim(); let amtC = parseFloat(cols[1]); if (nameC && !isNaN(amtC)) { newCul.push({ id: 'fxc_'+Date.now()+Math.random(), type: nameC.toLowerCase().includes('salary')?'income':'debit', accountId: defaultCA, name: nameC, amount: amtC, paid: false }); } }
+                if (cols.length >= 5) { let nameE = cols[3].trim(); let amtE = parseFloat(cols[4]); if (nameE && !isNaN(amtE)) { newEli.push({ id: 'fxe_'+Date.now()+Math.random(), type: nameE.toLowerCase().includes('salary')?'income':'debit', accountId: defaultEA, name: nameE, amount: amtE, paid: false }); } }
             });
             if (confirm(`Successfully read CSV! Found ${newCul.length} items for Cullen and ${newEli.length} for Elize. Overwrite Income/Debits?`)) { cullenFixedItems = newCul; elizeFixedItems = newEli; updateFinancials(); renderFixedItems('Cullen'); renderFixedItems('Elize'); }
         };
         reader.readAsText(file); event.target.value = ''; 
+    }
+
+    // ----- ACCOUNTS LOGIC -----
+    function renderAccounts() {
+        // Update account dropdowns in forms
+        const dropdowns = document.querySelectorAll('.account-dropdown');
+        let optionsHTML = '';
+        accounts.forEach(acc => { optionsHTML += `<option value="${acc.id}">${acc.name} (${acc.owner})</option>`; });
+        dropdowns.forEach(dd => { 
+            let currentVal = dd.value;
+            dd.innerHTML = optionsHTML; 
+            if(currentVal) dd.value = currentVal;
+        });
+
+        // Render Account Management List
+        const managerContainer = document.getElementById('account-list-container');
+        if(managerContainer) {
+            let listHTML = '';
+            accounts.forEach(acc => {
+                listHTML += `
+                <div style="display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-light);">
+                    <div><strong>${acc.name}</strong> <small style="color:var(--text-muted)">(${acc.owner})</small></div>
+                    <div style="display:flex; gap: 8px;">
+                        <button class="btn-action btn-edit" onclick="editAccount('${acc.id}')">✎ Edit</button>
+                        <button class="btn-action btn-delete" onclick="deleteAccount('${acc.id}')">❌</button>
+                    </div>
+                </div>`;
+            });
+            managerContainer.innerHTML = listHTML;
+        }
+
+        updateFinancials();
+    }
+    
+    function addAccount() {
+        const name = document.getElementById('new-acc-name').value;
+        const owner = document.getElementById('new-acc-owner').value;
+        if(!name) return;
+        accounts.push({ id: 'acc_' + Date.now(), name: name, owner: owner });
+        document.getElementById('new-acc-name').value = '';
+        saveData();
+        renderAccounts();
+    }
+
+    function editAccount(id) {
+        let acc = accounts.find(a => a.id === id);
+        if(!acc) return;
+        let newName = prompt("Edit account name:", acc.name);
+        if(newName && newName.trim() !== "") {
+            acc.name = newName.trim();
+            saveData();
+            renderAccounts();
+        }
+    }
+
+    function deleteAccount(id) {
+        if(confirm("Are you sure you want to delete this account? Any transactions already linked to it will not be deleted, but will show as 'Unknown Account' until reassigned.")) {
+            accounts = accounts.filter(a => a.id !== id);
+            saveData();
+            renderAccounts();
+        }
+    }
+    
+    function getAccountName(id) {
+        let acc = accounts.find(a => a.id === id);
+        return acc ? acc.name : 'Unknown Account';
     }
 
     function renderCategories() {
@@ -695,11 +843,13 @@
             const badge = item.type === 'income' ? '<span class="badge badge-income">Income</span>' : '<span class="badge badge-debit">Debit</span>';
             const isPaid = item.paid ? 'checked' : '';
             const rowClass = item.paid ? 'is-paid' : '';
+            const accName = getAccountName(item.accountId);
             
             tbody.innerHTML += `
                 <tr class="${rowClass}">
                     <td data-label="Paid Status" style="text-align: center;"><input type="checkbox" class="checkbox-paid" ${isPaid} onchange="togglePaidStatus('${person}', '${item.id}', this.checked)" title="Mark as Paid"></td>
                     <td data-label="Type" style="white-space:nowrap;">${badge}</td>
+                    <td data-label="Account" style="font-size: 0.85em; color: var(--text-muted);">${accName}</td>
                     <td data-label="Description"><strong>${item.name}</strong></td>
                     <td data-label="Amount (R)"><input type="number" value="${item.amount}" step="0.01" onchange="updateFixedValue('${person}', '${item.id}', this.value)"></td>
                     <td data-label="Action"><button class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">X</button></td>
@@ -720,9 +870,16 @@
     }
 
     function addFixedItem(person) {
-        const prefix = person === 'Cullen' ? 'cul' : 'eli'; const typeInput = document.getElementById(`new-${prefix}-fixed-type`).value; const nameInput = document.getElementById(`new-${prefix}-fixed-name`).value; const amtInput = document.getElementById(`new-${prefix}-fixed-amount`).value;
-        if(!nameInput) return; const newItem = { id: 'fx_' + Date.now(), type: typeInput, name: nameInput, amount: parseFloat(amtInput) || 0, paid: false };
+        const prefix = person === 'Cullen' ? 'cul' : 'eli'; 
+        const typeInput = document.getElementById(`new-${prefix}-fixed-type`).value; 
+        const accInput = document.getElementById(`new-${prefix}-fixed-account`).value;
+        const nameInput = document.getElementById(`new-${prefix}-fixed-name`).value; 
+        const amtInput = document.getElementById(`new-${prefix}-fixed-amount`).value;
+        if(!nameInput) return; 
+        
+        const newItem = { id: 'fx_' + Date.now(), type: typeInput, accountId: accInput, name: nameInput, amount: parseFloat(amtInput) || 0, paid: false };
         if(person === 'Cullen') cullenFixedItems.push(newItem); else elizeFixedItems.push(newItem);
+        
         document.getElementById(`new-${prefix}-fixed-name`).value = ''; document.getElementById(`new-${prefix}-fixed-amount`).value = ''; renderFixedItems(person);
     }
     function updateFixedValue(person, id, newVal) { const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; const item = arr.find(d => d.id === id); if(item) item.amount = parseFloat(newVal) || 0; updateFinancials(); }
@@ -731,11 +888,26 @@
     function removeCategory(id) { categories = categories.filter(c => c.id !== id); renderCategories(); }
     function addCategory() { const nameInput = document.getElementById('new-cat-name'); const amtInput = document.getElementById('new-cat-amount'); if(!nameInput.value) return; categories.push({ id: 'cat_' + Date.now(), name: nameInput.value, limit: parseFloat(amtInput.value) || 0 }); nameInput.value = ''; amtInput.value = ''; renderCategories(); }
 
-    // ----- EDIT / DELETE TRANSACTIONS (WITH VISUAL RECEIPT PREVIEW) -----
+    // ----- EDIT / DELETE TRANSACTIONS (EXPENSE & TRANSFER) -----
+    function toggleFormType() {
+        const type = document.getElementById('exp-type').value;
+        if(type === 'transfer') {
+            document.getElementById('col-category').style.display = 'none';
+            document.getElementById('col-to-account').style.display = 'flex';
+            document.getElementById('label-from-account').innerText = 'From Account';
+        } else {
+            document.getElementById('col-category').style.display = 'flex';
+            document.getElementById('col-to-account').style.display = 'none';
+            document.getElementById('label-from-account').innerText = 'Account Used';
+        }
+    }
+
     function deleteTx(id) { transactions = transactions.filter(t => t.id != id); updateFinancials(); }
     
     function cancelEdit() {
         document.getElementById('expense-form').reset();
+        document.getElementById('exp-type').value = 'expense';
+        toggleFormType();
         document.getElementById('exp-edit-id').value = '';
         document.getElementById('btn-submit-tx').innerText = "Save Manual Record";
         document.getElementById('btn-submit-tx').style.backgroundColor = "var(--secondary)";
@@ -746,12 +918,24 @@
     function editTx(id) {
         const tx = transactions.find(t => t.id == id);
         if(!tx) return;
+        
         document.getElementById('exp-person').value = tx.person;
         document.getElementById('exp-date').value = tx.date;
-        document.getElementById('exp-category').value = tx.category;
         document.getElementById('exp-desc').value = tx.desc;
         document.getElementById('exp-amount').value = tx.amount;
         document.getElementById('exp-edit-id').value = tx.id;
+        
+        if (tx.type === 'transfer') {
+            document.getElementById('exp-type').value = 'transfer';
+            document.getElementById('exp-account').value = tx.fromAccountId;
+            document.getElementById('exp-to-account').value = tx.toAccountId;
+        } else {
+            document.getElementById('exp-type').value = 'expense';
+            document.getElementById('exp-account').value = tx.accountId;
+            document.getElementById('exp-category').value = tx.category;
+        }
+        toggleFormType();
+
         document.getElementById('btn-submit-tx').innerText = "Update Transaction";
         document.getElementById('btn-submit-tx').style.backgroundColor = "var(--purple)";
         document.getElementById('btn-cancel-edit').style.display = "block";
@@ -772,15 +956,31 @@
         e.preventDefault();
         const editId = document.getElementById('exp-edit-id').value;
         if (editId) { transactions = transactions.filter(t => t.id != editId); }
-        transactions.push({
-            id: editId ? parseInt(editId) : Date.now(), person: document.getElementById('exp-person').value,
-            date: document.getElementById('exp-date').value, category: document.getElementById('exp-category').value,
-            desc: document.getElementById('exp-desc').value, amount: parseFloat(document.getElementById('exp-amount').value)
-        });
+        
+        let txType = document.getElementById('exp-type').value;
+        let newTx = {
+            id: editId ? parseInt(editId) : Date.now(), 
+            type: txType,
+            person: document.getElementById('exp-person').value, 
+            date: document.getElementById('exp-date').value, 
+            desc: document.getElementById('exp-desc').value, 
+            amount: parseFloat(document.getElementById('exp-amount').value) 
+        };
+
+        if (txType === 'transfer') {
+            newTx.fromAccountId = document.getElementById('exp-account').value;
+            newTx.toAccountId = document.getElementById('exp-to-account').value;
+            if (newTx.fromAccountId === newTx.toAccountId) return alert("Cannot transfer to the same account.");
+        } else {
+            newTx.accountId = document.getElementById('exp-account').value;
+            newTx.category = document.getElementById('exp-category').value;
+        }
+
+        transactions.push(newTx);
         cancelEdit(); updateFinancials();
     });
 
-    // ----- OCR & IMAGE COMPRESSION -----
+    // ----- OCR LOGIC -----
     function compressImage(file, callback) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -869,7 +1069,16 @@
     document.getElementById('modal-expense-form').addEventListener('submit', function(e) {
         e.preventDefault();
         let txId = Date.now(); let desc = document.getElementById('modal-exp-desc').value; let date = document.getElementById('modal-exp-date').value;
-        transactions.push({ id: txId, person: document.getElementById('modal-exp-person').value, date: date, category: document.getElementById('modal-exp-category').value, desc: desc, amount: parseFloat(document.getElementById('modal-exp-amount').value) });
+        transactions.push({ 
+            id: txId, 
+            type: 'expense', // Scanner is always expense
+            person: document.getElementById('modal-exp-person').value, 
+            accountId: document.getElementById('modal-exp-account').value,
+            date: date, 
+            category: document.getElementById('modal-exp-category').value, 
+            desc: desc, 
+            amount: parseFloat(document.getElementById('modal-exp-amount').value) 
+        });
         if(currentScannedImageBase64) { saveReceiptToDB(txId, currentScannedImageBase64, desc, date); }
         closeModal(); switchTab('tab-cfo', document.getElementById('btn-tab-cfo')); updateFinancials();
     });
@@ -889,7 +1098,9 @@
             options: { 
                 responsive: true, 
                 maintainAspectRatio: false, 
-                plugins: { legend: { position: 'bottom' } }, 
+                plugins: { 
+                    legend: { position: 'bottom' }
+                }, 
                 scales: { 
                     y: { beginAtZero: true, grid: { borderDash: [4, 4] } }, 
                     x: { grid: { display: false } } 
@@ -898,62 +1109,195 @@
         });
     }
 
-    function updateFinancials() {
-        let culInc = 0, culDeb = 0; cullenFixedItems.forEach(i => { if(i.type === 'income') culInc += i.amount; else culDeb += i.amount; });
-        let eliInc = 0, eliDeb = 0; elizeFixedItems.forEach(i => { if(i.type === 'income') eliInc += i.amount; else eliDeb += i.amount; });
+    function generateCategorizedLedger(personName) {
+        let html = '';
+        let personTxs = transactions.filter(t => t.person === personName).sort((a,b) => new Date(b.date) - new Date(a.date));
+        
+        let transfers = personTxs.filter(t => t.type === 'transfer');
+        let expenses = personTxs.filter(t => t.type !== 'transfer');
 
+        categories.forEach(cat => {
+            let catTxs = expenses.filter(t => t.category === cat.name);
+            if(catTxs.length > 0) {
+                html += `<tr class="category-header"><td colspan="5" style="background:#f1f5f9; font-weight:700; color:var(--primary); padding:10px 16px;">📁 ${cat.name}</td></tr>`;
+                catTxs.forEach(tx => {
+                    const actionBtns = `<button type="button" class="btn-action btn-edit" onclick="editTx(${tx.id})">✎</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">❌</button>`;
+                    const accName = getAccountName(tx.accountId);
+                    html += `<tr><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account" style="font-size:0.85em; color:var(--text-muted);">${accName}</td><td data-label="Description"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td><td data-label="Actions">${actionBtns}</td></tr>`;
+                });
+            }
+        });
+        
+        let otherTxs = expenses.filter(t => !categories.find(c => c.name === t.category));
+        if(otherTxs.length > 0) {
+            html += `<tr class="category-header"><td colspan="5" style="background:#fee2e2; font-weight:700; color:var(--danger); padding:10px 16px;">⚠️ Uncategorized</td></tr>`;
+            otherTxs.forEach(tx => {
+                const actionBtns = `<button type="button" class="btn-action btn-edit" onclick="editTx(${tx.id})">✎</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">❌</button>`;
+                const accName = getAccountName(tx.accountId);
+                html += `<tr><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account" style="font-size:0.85em; color:var(--text-muted);">${accName}</td><td data-label="Description"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td><td data-label="Actions">${actionBtns}</td></tr>`;
+            });
+        }
+
+        // Dedicated Transfer Section
+        if(transfers.length > 0) {
+            html += `<tr class="category-header"><td colspan="5" style="background:#e0f2fe; font-weight:700; color:#0284c7; padding:10px 16px;">🔄 Transfers</td></tr>`;
+            transfers.forEach(tx => {
+                const actionBtns = `<button type="button" class="btn-action btn-edit" onclick="editTx(${tx.id})">✎</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">❌</button>`;
+                const accName = `${getAccountName(tx.fromAccountId)} ➔ ${getAccountName(tx.toAccountId)}`;
+                html += `<tr><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account" style="font-size:0.85em; color:var(--text-muted);">${accName}</td><td data-label="Description"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td><td data-label="Actions">${actionBtns}</td></tr>`;
+            });
+        }
+        
+        if(html === '') html = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No transactions logged yet.</td></tr>';
+        return html;
+    }
+
+    function updateFinancials() {
+        // 1. Calculate Account Balances
+        let accBalances = {};
+        accounts.forEach(a => accBalances[a.id] = 0);
+        
+        let culInc = 0, culDeb = 0; 
+        cullenFixedItems.forEach(i => { 
+            if(i.type === 'income') { culInc += i.amount; if(accBalances[i.accountId]!==undefined) accBalances[i.accountId] += i.amount; } 
+            else { culDeb += i.amount; if(accBalances[i.accountId]!==undefined) accBalances[i.accountId] -= i.amount; } 
+        });
+        
+        let eliInc = 0, eliDeb = 0; 
+        elizeFixedItems.forEach(i => { 
+            if(i.type === 'income') { eliInc += i.amount; if(accBalances[i.accountId]!==undefined) accBalances[i.accountId] += i.amount; } 
+            else { eliDeb += i.amount; if(accBalances[i.accountId]!==undefined) accBalances[i.accountId] -= i.amount; } 
+        });
+
+        // Add Celistina to Cullen's Debits
         let celTotal = 0; celistinaDays.forEach(d => { if(d.present) celTotal += celistinaRate; });
-        document.getElementById('celistina-total-display').innerText = `R ${celTotal.toFixed(2)}`; culDeb += celTotal;
+        document.getElementById('celistina-total-display').innerText = `R ${celTotal.toFixed(2)}`; 
+        culDeb += celTotal;
+        let defaultCullenAcc = accounts.find(a => a.owner === 'Cullen');
+        if(defaultCullenAcc && accBalances[defaultCullenAcc.id] !== undefined) {
+            accBalances[defaultCullenAcc.id] -= celTotal;
+        }
 
         const jointInc = culInc + eliInc; const jointDeb = culDeb + eliDeb; const totalCatBudget = categories.reduce((sum, c) => sum + c.limit, 0);
 
-        let culSpent = 0, eliSpent = 0; let catSpendMap = {}; categories.forEach(c => catSpendMap[c.name] = 0);
-        let culHTML = '', eliHTML = '';
-
-        [...transactions].sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(tx => {
-            if (catSpendMap[tx.category] !== undefined) catSpendMap[tx.category] += tx.amount;
-            const actionBtns = `<button type="button" class="btn-action btn-edit" onclick="editTx(${tx.id})">✎</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">❌</button>`;
-            const row = `<tr><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Description"><strong>${tx.desc}</strong><small style="color:var(--text-muted)">${tx.category}</small></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td><td data-label="Actions">${actionBtns}</td></tr>`;
-            if (tx.person === 'Cullen') { culSpent += tx.amount; culHTML += row; } else { eliSpent += tx.amount; eliHTML += row; }
+        // 2. Process Transactions (Expenses vs Transfers) & Update Balances
+        let culSpent = 0, eliSpent = 0; 
+        
+        transactions.forEach(tx => {
+            if (tx.type === 'transfer') {
+                if(accBalances[tx.fromAccountId] !== undefined) accBalances[tx.fromAccountId] -= tx.amount;
+                if(accBalances[tx.toAccountId] !== undefined) accBalances[tx.toAccountId] += tx.amount;
+                // Note: Transfers DO NOT add to culSpent or eliSpent (they don't drain the budget)
+            } else {
+                if(accBalances[tx.accountId] !== undefined) accBalances[tx.accountId] -= tx.amount;
+                if (tx.person === 'Cullen') { culSpent += tx.amount; } else { eliSpent += tx.amount; }
+            }
         });
 
-        document.getElementById('cul-tbody').innerHTML = culHTML; document.getElementById('eli-tbody').innerHTML = eliHTML; const jointSpent = culSpent + eliSpent;
+        // Render Account Balances UI
+        let accGridHTML = '';
+        accounts.forEach(acc => {
+            let bal = accBalances[acc.id] || 0;
+            let balColor = bal >= 0 ? 'var(--success)' : 'var(--danger)';
+            let cardClass = acc.owner === 'Cullen' ? 'acc-cullen' : (acc.owner === 'Elize' ? 'acc-elize' : '');
+            accGridHTML += `
+                <div class="account-card ${cardClass}">
+                    <span class="acc-owner">${acc.owner}</span>
+                    <h4>${acc.name}</h4>
+                    <div class="acc-balance" style="color: ${balColor};">R ${bal.toFixed(2)}</div>
+                </div>
+            `;
+        });
+        document.getElementById('accounts-grid').innerHTML = accGridHTML;
+
+        // Render Categorized Individual Ledgers
+        document.getElementById('cul-tbody').innerHTML = generateCategorizedLedger('Cullen'); 
+        document.getElementById('eli-tbody').innerHTML = generateCategorizedLedger('Elize'); 
+        
+        const jointSpent = culSpent + eliSpent;
 
         document.getElementById('joint-income-display').innerText = `R ${jointInc.toFixed(2)}`; document.getElementById('joint-debits-display').innerText = `R ${jointDeb.toFixed(2)}`; document.getElementById('joint-budget-display').innerText = `R ${totalCatBudget.toFixed(2)}`; document.getElementById('joint-spent-display').innerText = `R ${jointSpent.toFixed(2)}`; setRemUI('joint-remaining-display', 'joint-remaining-box', jointInc - jointDeb - jointSpent);
         document.getElementById('cul-inc-disp').innerText = `R ${culInc.toFixed(2)}`; document.getElementById('cul-deb-disp').innerText = `R ${culDeb.toFixed(2)}`; document.getElementById('cul-avail-disp').innerText = `R ${(culInc - culDeb).toFixed(2)}`; document.getElementById('cul-spent-disp').innerText = `R ${culSpent.toFixed(2)}`; setRemUI('cul-rem-disp', 'cul-rem-box', culInc - culDeb - culSpent);
         document.getElementById('eli-inc-disp').innerText = `R ${eliInc.toFixed(2)}`; document.getElementById('eli-deb-disp').innerText = `R ${eliDeb.toFixed(2)}`; document.getElementById('eli-avail-disp').innerText = `R ${(eliInc - eliDeb).toFixed(2)}`; document.getElementById('eli-spent-disp').innerText = `R ${eliSpent.toFixed(2)}`; setRemUI('eli-rem-disp', 'eli-rem-box', eliInc - eliDeb - eliSpent);
 
-        // --- CHART DATA UPDATE ---
+
+        // --- OVERVIEW FILTER LOGIC ---
+        let overviewFilter = document.getElementById('overview-filter').value; 
+        
+        let filteredExpenses = transactions.filter(t => t.type !== 'transfer'); // Chart ignores transfers
+        if(overviewFilter !== 'Joint') {
+            filteredExpenses = filteredExpenses.filter(t => t.person === overviewFilter);
+        }
+
+        let catSpendMap = {}; categories.forEach(c => catSpendMap[c.name] = 0);
+        filteredExpenses.forEach(tx => {
+            if (catSpendMap[tx.category] !== undefined) catSpendMap[tx.category] += tx.amount;
+        });
+
+        // Update Chart Cleanly - Hide Budget/Remaining bars if not looking at Joint
         jointChart.data.labels = categories.map(c => c.name); 
         jointChart.data.datasets[0].data = categories.map(c => c.limit); 
         jointChart.data.datasets[1].data = categories.map(c => catSpendMap[c.name]); 
-        jointChart.data.datasets[1].backgroundColor = categories.map(c => (catSpendMap[c.name] > c.limit) ? '#ef4444' : '#4f46e5'); 
+        jointChart.data.datasets[1].backgroundColor = categories.map(c => (catSpendMap[c.name] > c.limit && overviewFilter === 'Joint') ? '#ef4444' : (overviewFilter==='Cullen'?'#0284c7':(overviewFilter==='Elize'?'#c026d3':'#4f46e5'))); 
         jointChart.data.datasets[2].data = categories.map(c => c.limit - catSpendMap[c.name]); 
         jointChart.data.datasets[2].backgroundColor = categories.map(c => (c.limit - catSpendMap[c.name] >= 0) ? '#10b981' : '#f59e0b');
+        
+        jointChart.data.datasets[1].label = overviewFilter === 'Joint' ? 'Actual Spend (Household)' : `Total Personal Spend (${overviewFilter})`;
+        
+        if (overviewFilter === 'Joint') {
+            jointChart.data.datasets[0].hidden = false; // Show Budget
+            jointChart.data.datasets[2].hidden = false; // Show Remaining
+        } else {
+            jointChart.data.datasets[0].hidden = true;  // Hide Budget
+            jointChart.data.datasets[2].hidden = true;  // Hide Remaining
+        }
         jointChart.update();
 
-        // --- TABLES GENERATION ---
-        let forecastHTML = ''; 
-        let overviewHTML = ''; // New table for Tab 1
-        let totalProjectedSpend = 0;
+        // --- OVERVIEW TABLE GENERATION ---
+        let theadHTML = '';
+        let overviewHTML = ''; 
         
-        categories.forEach(cat => {
-            const bud = cat.limit; const spend = catSpendMap[cat.name]; const remainingBudget = bud - spend; const projectedSpend = Math.max(bud, spend); totalProjectedSpend += projectedSpend; const projectedVariance = bud - projectedSpend;
-            
-            // Forecast Table Logic (Tab 4)
-            let status = '', textClass = '', remClass = '';
-            if (remainingBudget < 0) { remClass = 'trouble-text'; }
-            if (projectedVariance < 0) { status = `<span class="risk-badge badge-risk">🚨 OVER</span>`; textClass = 'trouble-text'; } else { status = `<span class="risk-badge badge-ok">✅ Safe</span>`; }
-            forecastHTML += `<tr><td data-label="Category"><strong>${cat.name}</strong></td><td data-label="Full Budget" style="white-space:nowrap;">R ${bud.toFixed(2)}</td><td data-label="Current Spend" style="white-space:nowrap;">R ${spend.toFixed(2)}</td><td data-label="Remaining" class="${remClass}" style="white-space:nowrap;">R ${remainingBudget.toFixed(2)}</td><td data-label="Proj. Month-End" class="${textClass}" style="white-space:nowrap; font-weight:700;">R ${projectedSpend.toFixed(2)}</td><td data-label="Proj. Variance" class="${textClass}">R ${projectedVariance.toFixed(2)}</td><td data-label="Status / Risk">${status}</td></tr>`;
-            
-            // Overview Table Logic (Tab 1) - Color code remaining
-            let overviewRemStyle = remainingBudget < 0 ? 'color: var(--danger); font-weight: bold;' : 'color: var(--success); font-weight: bold;';
-            overviewHTML += `<tr><td data-label="Category"><strong>${cat.name}</strong></td><td data-label="Budget" style="white-space:nowrap;">R ${bud.toFixed(2)}</td><td data-label="Spent" style="white-space:nowrap;">R ${spend.toFixed(2)}</td><td data-label="Remaining" style="${overviewRemStyle} white-space:nowrap;">R ${remainingBudget.toFixed(2)}</td></tr>`;
-        });
-        
-        document.getElementById('forecast-tbody').innerHTML = forecastHTML;
-        document.getElementById('overview-budget-tbody').innerHTML = overviewHTML; // Inject into new Tab 1 table
+        if (overviewFilter === 'Joint') {
+            theadHTML = `<tr><th>Category</th><th>Household Budget</th><th>Total Spent</th><th>Remaining</th></tr>`;
+            categories.forEach(cat => {
+                const bud = cat.limit;
+                const spendFiltered = catSpendMap[cat.name];
+                const remainingFiltered = bud - spendFiltered;
+                let overviewRemStyle = remainingFiltered < 0 ? 'color: var(--danger); font-weight: bold;' : 'color: var(--success); font-weight: bold;';
+                overviewHTML += `<tr><td data-label="Category"><strong>${cat.name}</strong></td><td data-label="Budget" style="white-space:nowrap;">R ${bud.toFixed(2)}</td><td data-label="Spent" style="white-space:nowrap;">R ${spendFiltered.toFixed(2)}</td><td data-label="Remaining" style="${overviewRemStyle} white-space:nowrap;">R ${remainingFiltered.toFixed(2)}</td></tr>`;
+            });
+        } else {
+            // View User Transactions only
+            theadHTML = `<tr><th>Date</th><th>Account</th><th>Details</th><th>Amount</th></tr>`;
+            let personTxs = transactions.filter(t => t.person === overviewFilter).sort((a,b) => new Date(b.date) - new Date(a.date));
+            if(personTxs.length === 0) {
+                overviewHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px; color: var(--text-muted);">No transactions logged yet.</td></tr>`;
+            } else {
+                personTxs.forEach(tx => {
+                    let accStr = tx.type === 'transfer' ? `${getAccountName(tx.fromAccountId)} ➔ ${getAccountName(tx.toAccountId)}` : getAccountName(tx.accountId);
+                    let detailType = tx.type === 'transfer' ? '<span style="color:#0284c7">🔄 Transfer</span>' : tx.category;
+                    overviewHTML += `<tr><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account"><span style="font-size:0.85em; color:var(--text-muted);">${accStr}</span></td><td data-label="Details"><strong>${tx.desc}</strong><br><small>${detailType}</small></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td></tr>`;
+                });
+            }
+        }
+        document.getElementById('overview-thead').innerHTML = theadHTML;
+        document.getElementById('overview-budget-tbody').innerHTML = overviewHTML; 
 
+        // --- FORECAST TABLE CALCS (Always Joint Data) ---
+        let forecastHTML = ''; 
+        let totalProjectedSpend = 0;
+        categories.forEach(cat => {
+            let jointCatSpend = transactions.filter(t => t.category === cat.name && t.type !== 'transfer').reduce((sum, t) => sum + t.amount, 0);
+            const bud = cat.limit; const remainingBudgetJoint = bud - jointCatSpend; const projectedSpend = Math.max(bud, jointCatSpend); totalProjectedSpend += projectedSpend; const projectedVariance = bud - projectedSpend;
+            
+            let status = '', textClass = '', remClass = '';
+            if (remainingBudgetJoint < 0) { remClass = 'trouble-text'; }
+            if (projectedVariance < 0) { status = `<span class="risk-badge badge-risk">🚨 OVER</span>`; textClass = 'trouble-text'; } else { status = `<span class="risk-badge badge-ok">✅ Safe</span>`; }
+            forecastHTML += `<tr><td data-label="Category"><strong>${cat.name}</strong></td><td data-label="Full Budget" style="white-space:nowrap;">R ${bud.toFixed(2)}</td><td data-label="Current Spend" style="white-space:nowrap;">R ${jointCatSpend.toFixed(2)}</td><td data-label="Remaining" class="${remClass}" style="white-space:nowrap;">R ${remainingBudgetJoint.toFixed(2)}</td><td data-label="Proj. Month-End" class="${textClass}" style="white-space:nowrap; font-weight:700;">R ${projectedSpend.toFixed(2)}</td><td data-label="Proj. Variance" class="${textClass}">R ${projectedVariance.toFixed(2)}</td><td data-label="Status / Risk">${status}</td></tr>`;
+        });
+        document.getElementById('forecast-tbody').innerHTML = forecastHTML;
+
+        // Executive Projections
         const householdProjectedRemaining = jointInc - jointDeb - totalProjectedSpend;
         document.getElementById('proj-inc').innerText = `R ${jointInc.toFixed(2)}`; document.getElementById('proj-deb').innerText = `R ${jointDeb.toFixed(2)}`; document.getElementById('proj-var').innerText = `R ${totalProjectedSpend.toFixed(2)}`;
         
@@ -973,8 +1317,8 @@
     }
 
     function setRemUI(textId, boxId, amount) { const el = document.getElementById(textId); const box = document.getElementById(boxId); el.innerText = `R ${amount.toFixed(2)}`; if (amount < 0) { el.style.color = 'var(--danger)'; box.style.borderColor = '#fca5a5'; box.style.background = 'var(--danger-bg)'} else { el.style.color = 'var(--text)'; box.style.borderColor = 'var(--border-light)'; box.style.background = 'white'} }
-    function exportCSV() { if (transactions.length === 0) return alert("No transactions."); let csv = "Date,Person,Category,Description,Amount\n"; transactions.forEach(t => { csv += `${t.date},${t.person},${t.category},"${t.desc.replace(/"/g, '""')}",${t.amount}\n`; }); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = `transactions_${currentMonthKey}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
-    function exportBackup() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify({ month: currentMonthKey, categories, cullenFixedItems, elizeFixedItems, celistinaRate, celistinaDays, transactions }, null, 2)], { type: 'application/json' })); a.download = `cfo_backup_${currentMonthKey}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
+    function exportCSV() { if (transactions.length === 0) return alert("No transactions."); let csv = "Date,Type,Person,FromAccount,ToAccount,Category,Description,Amount\n"; transactions.forEach(t => { csv += `${t.date},${t.type||'expense'},${t.person},${t.accountId||t.fromAccountId||''},${t.toAccountId||''},${t.category||''},"${t.desc.replace(/"/g, '""')}",${t.amount}\n`; }); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = `transactions_${currentMonthKey}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
+    function exportBackup() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify({ month: currentMonthKey, accounts, categories, cullenFixedItems, elizeFixedItems, celistinaRate, celistinaDays, transactions }, null, 2)], { type: 'application/json' })); a.download = `cfo_backup_${currentMonthKey}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
 
     window.onload = initSystem;
 </script>
