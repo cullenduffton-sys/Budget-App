@@ -129,6 +129,17 @@
         .account-card .acc-owner { font-size: 0.7em; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 8px; display: block;}
         .account-card .acc-balance { font-size: 1.25em; font-weight: 800; }
 
+        /* Collapsible Standard Cards (Ledgers & Fixed Items) */
+        details.card > summary { list-style: none; cursor: pointer; outline: none; margin: -24px; padding: 24px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; font-size: 1.15em; font-weight: 700; color: var(--primary); transition: background-color 0.2s;}
+        details.card > summary:hover { background-color: #f8fafc; }
+        details.card > summary::-webkit-details-marker { display: none; }
+        details.card[open] > summary { border-bottom: 1px dashed var(--border-light); border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-bottom: 20px; padding-bottom: 20px; background-color: transparent;}
+
+        /* Category Toggling */
+        .category-header { cursor: pointer; user-select: none; transition: background-color 0.2s; }
+        .category-header:hover td { filter: brightness(0.95); }
+        .collapsed-row { display: none !important; }
+
         /* Celistina Box Dynamic Styling */
         details.celistina-box { background: white; border: 1px solid var(--border-light); padding: 15px 24px; border-radius: 16px; margin-bottom: 24px; transition: all 0.2s ease; box-shadow: var(--shadow-md); }
         details.celistina-box[open] { background: #faf5ff; border: 2px solid var(--purple); }
@@ -359,24 +370,29 @@
             </div>
         </div>
 
-        <div class="card span-2">
-            <h3 class="section-title">Income & Fixed Deductions</h3>
-            <div class="ledger-table-container">
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Status</th><th>Type</th><th>Account</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
-                        <tbody id="cul-fixed-tbody"></tbody>
-                    </table>
+        <details class="card span-2" open>
+            <summary>
+                <div style="display:flex; align-items:center; gap:8px;"><span>💳 Income & Fixed Deductions</span></div>
+                <span style="font-size: 0.65em; background: #f1f5f9; padding: 4px 10px; border-radius: 12px; color: var(--text-muted); font-weight: 600;">Open/Close</span>
+            </summary>
+            <div>
+                <div class="ledger-table-container">
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Status</th><th>Type</th><th>Account</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
+                            <tbody id="cul-fixed-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px;">
+                    <select id="new-cul-fixed-type"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
+                    <select id="new-cul-fixed-account" class="account-dropdown"></select>
+                    <input type="text" id="new-cul-fixed-name" placeholder="Item Name / Description">
+                    <input type="number" id="new-cul-fixed-amount" placeholder="Amount (R)" step="0.01">
+                    <button type="button" class="btn-add" onclick="addFixedItem('Cullen')">+ Add</button>
                 </div>
             </div>
-            <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px;">
-                <select id="new-cul-fixed-type"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
-                <select id="new-cul-fixed-account" class="account-dropdown"></select>
-                <input type="text" id="new-cul-fixed-name" placeholder="Item Name / Description">
-                <input type="number" id="new-cul-fixed-amount" placeholder="Amount (R)" step="0.01">
-                <button type="button" class="btn-add" onclick="addFixedItem('Cullen')">+ Add</button>
-            </div>
-        </div>
+        </details>
 
         <details class="celistina-box span-1">
             <summary>
@@ -392,8 +408,11 @@
             </div>
         </details>
 
-        <div class="card full-width">
-            <h3 class="section-title">Cullen's Transaction Ledger</h3>
+        <details class="card full-width" open>
+            <summary>
+                <div style="display:flex; align-items:center; gap:8px;"><span>📖 Cullen's Transaction Ledger</span></div>
+                <span style="font-size: 0.65em; background: #f1f5f9; padding: 4px 10px; border-radius: 12px; color: var(--text-muted); font-weight: 600;">Open/Close</span>
+            </summary>
             <div class="ledger-table-container">
                 <div class="table-responsive">
                     <table>
@@ -403,7 +422,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </details>
     </div>
 </div>
 
@@ -420,27 +439,35 @@
             </div>
         </div>
 
-        <div class="card span-2">
-            <h3 class="section-title">Income & Fixed Deductions</h3>
-            <div class="ledger-table-container">
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Status</th><th>Type</th><th>Account</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
-                        <tbody id="eli-fixed-tbody"></tbody>
-                    </table>
+        <details class="card span-2" open>
+            <summary>
+                <div style="display:flex; align-items:center; gap:8px;"><span>💳 Income & Fixed Deductions</span></div>
+                <span style="font-size: 0.65em; background: #f1f5f9; padding: 4px 10px; border-radius: 12px; color: var(--text-muted); font-weight: 600;">Open/Close</span>
+            </summary>
+            <div>
+                <div class="ledger-table-container">
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Status</th><th>Type</th><th>Account</th><th>Description</th><th>Amount (R)</th><th style="width: 80px;">Action</th></tr></thead>
+                            <tbody id="eli-fixed-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px;">
+                    <select id="new-eli-fixed-type"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
+                    <select id="new-eli-fixed-account" class="account-dropdown"></select>
+                    <input type="text" id="new-eli-fixed-name" placeholder="Item Name / Description">
+                    <input type="number" id="new-eli-fixed-amount" placeholder="Amount (R)" step="0.01">
+                    <button type="button" class="btn-add" onclick="addFixedItem('Elize')">+ Add</button>
                 </div>
             </div>
-            <div class="add-item-form" style="background: var(--bg); padding: 15px; border-radius: 12px;">
-                <select id="new-eli-fixed-type"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
-                <select id="new-eli-fixed-account" class="account-dropdown"></select>
-                <input type="text" id="new-eli-fixed-name" placeholder="Item Name / Description">
-                <input type="number" id="new-eli-fixed-amount" placeholder="Amount (R)" step="0.01">
-                <button type="button" class="btn-add" onclick="addFixedItem('Elize')">+ Add</button>
-            </div>
-        </div>
+        </details>
 
-        <div class="card full-width">
-            <h3 class="section-title">Elize's Transaction Ledger</h3>
+        <details class="card full-width" open>
+            <summary>
+                <div style="display:flex; align-items:center; gap:8px;"><span>📖 Elize's Transaction Ledger</span></div>
+                <span style="font-size: 0.65em; background: #f1f5f9; padding: 4px 10px; border-radius: 12px; color: var(--text-muted); font-weight: 600;">Open/Close</span>
+            </summary>
             <div class="ledger-table-container">
                 <div class="table-responsive">
                     <table>
@@ -450,7 +477,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </details>
     </div>
 </div>
 
@@ -750,9 +777,22 @@
         reader.readAsText(file); event.target.value = ''; 
     }
 
+    // ----- UI TOGGLE LOGIC -----
+    function toggleCatGroup(groupId) {
+        const rows = document.querySelectorAll('.' + groupId);
+        const icon = document.getElementById('icon-' + groupId);
+        let isCollapsed = false;
+        rows.forEach(row => {
+            row.classList.toggle('collapsed-row');
+            if(row.classList.contains('collapsed-row')) isCollapsed = true;
+        });
+        if(icon) {
+            icon.innerText = isCollapsed ? '▶' : '▼';
+        }
+    }
+
     // ----- ACCOUNTS LOGIC -----
     function renderAccounts() {
-        // Update account dropdowns in forms
         const dropdowns = document.querySelectorAll('.account-dropdown');
         let optionsHTML = '';
         accounts.forEach(acc => { optionsHTML += `<option value="${acc.id}">${acc.name} (${acc.owner})</option>`; });
@@ -762,7 +802,6 @@
             if(currentVal) dd.value = currentVal;
         });
 
-        // Render Account Management List
         const managerContainer = document.getElementById('account-list-container');
         if(managerContainer) {
             let listHTML = '';
@@ -1119,32 +1158,43 @@
         categories.forEach(cat => {
             let catTxs = expenses.filter(t => t.category === cat.name);
             if(catTxs.length > 0) {
-                html += `<tr class="category-header"><td colspan="5" style="background:#f1f5f9; font-weight:700; color:var(--primary); padding:10px 16px;">📁 ${cat.name}</td></tr>`;
+                let groupId = `grp-${personName}-${cat.id}`;
+                let catTotal = catTxs.reduce((sum, t) => sum + t.amount, 0);
+                
+                html += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="5" style="background:#f1f5f9; font-weight:700; color:var(--primary); padding:10px 16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><span><span id="icon-${groupId}" style="display:inline-block; width:20px;">▼</span> 📁 ${cat.name}</span><span style="font-size:0.85em; background:white; padding:2px 8px; border-radius:12px; border:1px solid var(--border-light);">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+                
                 catTxs.forEach(tx => {
                     const actionBtns = `<button type="button" class="btn-action btn-edit" onclick="editTx(${tx.id})">✎</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">❌</button>`;
                     const accName = getAccountName(tx.accountId);
-                    html += `<tr><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account" style="font-size:0.85em; color:var(--text-muted);">${accName}</td><td data-label="Description"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td><td data-label="Actions">${actionBtns}</td></tr>`;
+                    html += `<tr class="${groupId}"><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account" style="font-size:0.85em; color:var(--text-muted);">${accName}</td><td data-label="Description"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td><td data-label="Actions">${actionBtns}</td></tr>`;
                 });
             }
         });
         
         let otherTxs = expenses.filter(t => !categories.find(c => c.name === t.category));
         if(otherTxs.length > 0) {
-            html += `<tr class="category-header"><td colspan="5" style="background:#fee2e2; font-weight:700; color:var(--danger); padding:10px 16px;">⚠️ Uncategorized</td></tr>`;
+            let groupId = `grp-${personName}-uncat`;
+            let catTotal = otherTxs.reduce((sum, t) => sum + t.amount, 0);
+            
+            html += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="5" style="background:#fee2e2; font-weight:700; color:var(--danger); padding:10px 16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><span><span id="icon-${groupId}" style="display:inline-block; width:20px;">▼</span> ⚠️ Uncategorized</span><span style="font-size:0.85em; background:white; padding:2px 8px; border-radius:12px; border:1px solid #fca5a5; color:var(--danger);">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+            
             otherTxs.forEach(tx => {
                 const actionBtns = `<button type="button" class="btn-action btn-edit" onclick="editTx(${tx.id})">✎</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">❌</button>`;
                 const accName = getAccountName(tx.accountId);
-                html += `<tr><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account" style="font-size:0.85em; color:var(--text-muted);">${accName}</td><td data-label="Description"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td><td data-label="Actions">${actionBtns}</td></tr>`;
+                html += `<tr class="${groupId}"><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account" style="font-size:0.85em; color:var(--text-muted);">${accName}</td><td data-label="Description"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td><td data-label="Actions">${actionBtns}</td></tr>`;
             });
         }
 
-        // Dedicated Transfer Section
         if(transfers.length > 0) {
-            html += `<tr class="category-header"><td colspan="5" style="background:#e0f2fe; font-weight:700; color:#0284c7; padding:10px 16px;">🔄 Transfers</td></tr>`;
+            let groupId = `grp-${personName}-transfers`;
+            let catTotal = transfers.reduce((sum, t) => sum + t.amount, 0);
+            
+            html += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="5" style="background:#e0f2fe; font-weight:700; color:#0284c7; padding:10px 16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><span><span id="icon-${groupId}" style="display:inline-block; width:20px;">▼</span> 🔄 Transfers</span><span style="font-size:0.85em; background:white; padding:2px 8px; border-radius:12px; border:1px solid #bae6fd;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+            
             transfers.forEach(tx => {
                 const actionBtns = `<button type="button" class="btn-action btn-edit" onclick="editTx(${tx.id})">✎</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">❌</button>`;
                 const accName = `${getAccountName(tx.fromAccountId)} ➔ ${getAccountName(tx.toAccountId)}`;
-                html += `<tr><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account" style="font-size:0.85em; color:var(--text-muted);">${accName}</td><td data-label="Description"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td><td data-label="Actions">${actionBtns}</td></tr>`;
+                html += `<tr class="${groupId}"><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account" style="font-size:0.85em; color:var(--text-muted);">${accName}</td><td data-label="Description"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td><td data-label="Actions">${actionBtns}</td></tr>`;
             });
         }
         
@@ -1187,7 +1237,6 @@
             if (tx.type === 'transfer') {
                 if(accBalances[tx.fromAccountId] !== undefined) accBalances[tx.fromAccountId] -= tx.amount;
                 if(accBalances[tx.toAccountId] !== undefined) accBalances[tx.toAccountId] += tx.amount;
-                // Note: Transfers DO NOT add to culSpent or eliSpent (they don't drain the budget)
             } else {
                 if(accBalances[tx.accountId] !== undefined) accBalances[tx.accountId] -= tx.amount;
                 if (tx.person === 'Cullen') { culSpent += tx.amount; } else { eliSpent += tx.amount; }
@@ -1220,11 +1269,9 @@
         document.getElementById('cul-inc-disp').innerText = `R ${culInc.toFixed(2)}`; document.getElementById('cul-deb-disp').innerText = `R ${culDeb.toFixed(2)}`; document.getElementById('cul-avail-disp').innerText = `R ${(culInc - culDeb).toFixed(2)}`; document.getElementById('cul-spent-disp').innerText = `R ${culSpent.toFixed(2)}`; setRemUI('cul-rem-disp', 'cul-rem-box', culInc - culDeb - culSpent);
         document.getElementById('eli-inc-disp').innerText = `R ${eliInc.toFixed(2)}`; document.getElementById('eli-deb-disp').innerText = `R ${eliDeb.toFixed(2)}`; document.getElementById('eli-avail-disp').innerText = `R ${(eliInc - eliDeb).toFixed(2)}`; document.getElementById('eli-spent-disp').innerText = `R ${eliSpent.toFixed(2)}`; setRemUI('eli-rem-disp', 'eli-rem-box', eliInc - eliDeb - eliSpent);
 
-
         // --- OVERVIEW FILTER LOGIC ---
         let overviewFilter = document.getElementById('overview-filter').value; 
-        
-        let filteredExpenses = transactions.filter(t => t.type !== 'transfer'); // Chart ignores transfers
+        let filteredExpenses = transactions.filter(t => t.type !== 'transfer'); 
         if(overviewFilter !== 'Joint') {
             filteredExpenses = filteredExpenses.filter(t => t.person === overviewFilter);
         }
@@ -1234,22 +1281,19 @@
             if (catSpendMap[tx.category] !== undefined) catSpendMap[tx.category] += tx.amount;
         });
 
-        // Update Chart Cleanly - Hide Budget/Remaining bars if not looking at Joint
+        // Update Chart
         jointChart.data.labels = categories.map(c => c.name); 
         jointChart.data.datasets[0].data = categories.map(c => c.limit); 
         jointChart.data.datasets[1].data = categories.map(c => catSpendMap[c.name]); 
         jointChart.data.datasets[1].backgroundColor = categories.map(c => (catSpendMap[c.name] > c.limit && overviewFilter === 'Joint') ? '#ef4444' : (overviewFilter==='Cullen'?'#0284c7':(overviewFilter==='Elize'?'#c026d3':'#4f46e5'))); 
         jointChart.data.datasets[2].data = categories.map(c => c.limit - catSpendMap[c.name]); 
         jointChart.data.datasets[2].backgroundColor = categories.map(c => (c.limit - catSpendMap[c.name] >= 0) ? '#10b981' : '#f59e0b');
-        
         jointChart.data.datasets[1].label = overviewFilter === 'Joint' ? 'Actual Spend (Household)' : `Total Personal Spend (${overviewFilter})`;
         
         if (overviewFilter === 'Joint') {
-            jointChart.data.datasets[0].hidden = false; // Show Budget
-            jointChart.data.datasets[2].hidden = false; // Show Remaining
+            jointChart.data.datasets[0].hidden = false; jointChart.data.datasets[2].hidden = false;
         } else {
-            jointChart.data.datasets[0].hidden = true;  // Hide Budget
-            jointChart.data.datasets[2].hidden = true;  // Hide Remaining
+            jointChart.data.datasets[0].hidden = true; jointChart.data.datasets[2].hidden = true;
         }
         jointChart.update();
 
@@ -1260,30 +1304,65 @@
         if (overviewFilter === 'Joint') {
             theadHTML = `<tr><th>Category</th><th>Household Budget</th><th>Total Spent</th><th>Remaining</th></tr>`;
             categories.forEach(cat => {
-                const bud = cat.limit;
-                const spendFiltered = catSpendMap[cat.name];
-                const remainingFiltered = bud - spendFiltered;
+                const bud = cat.limit; const spendFiltered = catSpendMap[cat.name]; const remainingFiltered = bud - spendFiltered;
                 let overviewRemStyle = remainingFiltered < 0 ? 'color: var(--danger); font-weight: bold;' : 'color: var(--success); font-weight: bold;';
                 overviewHTML += `<tr><td data-label="Category"><strong>${cat.name}</strong></td><td data-label="Budget" style="white-space:nowrap;">R ${bud.toFixed(2)}</td><td data-label="Spent" style="white-space:nowrap;">R ${spendFiltered.toFixed(2)}</td><td data-label="Remaining" style="${overviewRemStyle} white-space:nowrap;">R ${remainingFiltered.toFixed(2)}</td></tr>`;
             });
         } else {
-            // View User Transactions only
             theadHTML = `<tr><th>Date</th><th>Account</th><th>Details</th><th>Amount</th></tr>`;
             let personTxs = transactions.filter(t => t.person === overviewFilter).sort((a,b) => new Date(b.date) - new Date(a.date));
+            
             if(personTxs.length === 0) {
                 overviewHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px; color: var(--text-muted);">No transactions logged yet.</td></tr>`;
             } else {
-                personTxs.forEach(tx => {
-                    let accStr = tx.type === 'transfer' ? `${getAccountName(tx.fromAccountId)} ➔ ${getAccountName(tx.toAccountId)}` : getAccountName(tx.accountId);
-                    let detailType = tx.type === 'transfer' ? '<span style="color:#0284c7">🔄 Transfer</span>' : tx.category;
-                    overviewHTML += `<tr><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account"><span style="font-size:0.85em; color:var(--text-muted);">${accStr}</span></td><td data-label="Details"><strong>${tx.desc}</strong><br><small>${detailType}</small></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td></tr>`;
+                let expenses = personTxs.filter(t => t.type !== 'transfer');
+                let transfers = personTxs.filter(t => t.type === 'transfer');
+
+                categories.forEach(cat => {
+                    let catTxs = expenses.filter(t => t.category === cat.name);
+                    if(catTxs.length > 0) {
+                        let groupId = `ov-grp-${cat.id}`;
+                        let catTotal = catTxs.reduce((sum, t) => sum + t.amount, 0);
+                        
+                        overviewHTML += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="4" style="background:#f1f5f9; font-weight:700; color:var(--primary); padding:10px 16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><span><span id="icon-${groupId}" style="display:inline-block; width:20px;">▼</span> 📁 ${cat.name}</span><span style="font-size:0.85em; background:white; padding:2px 8px; border-radius:12px; border:1px solid var(--border-light);">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+                        
+                        catTxs.forEach(tx => {
+                            let accStr = getAccountName(tx.accountId);
+                            overviewHTML += `<tr class="${groupId}"><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account"><span style="font-size:0.85em; color:var(--text-muted);">${accStr}</span></td><td data-label="Details"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td></tr>`;
+                        });
+                    }
                 });
+
+                let otherTxs = expenses.filter(t => !categories.find(c => c.name === t.category));
+                if(otherTxs.length > 0) {
+                    let groupId = `ov-grp-uncat`;
+                    let catTotal = otherTxs.reduce((sum, t) => sum + t.amount, 0);
+                    
+                    overviewHTML += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="4" style="background:#fee2e2; font-weight:700; color:var(--danger); padding:10px 16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><span><span id="icon-${groupId}" style="display:inline-block; width:20px;">▼</span> ⚠️ Uncategorized</span><span style="font-size:0.85em; background:white; padding:2px 8px; border-radius:12px; border:1px solid #fca5a5; color:var(--danger);">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+                    
+                    otherTxs.forEach(tx => {
+                        let accStr = getAccountName(tx.accountId);
+                        overviewHTML += `<tr class="${groupId}"><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account"><span style="font-size:0.85em; color:var(--text-muted);">${accStr}</span></td><td data-label="Details"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td></tr>`;
+                    });
+                }
+
+                if(transfers.length > 0) {
+                    let groupId = `ov-grp-transfers`;
+                    let catTotal = transfers.reduce((sum, t) => sum + t.amount, 0);
+                    
+                    overviewHTML += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="4" style="background:#e0f2fe; font-weight:700; color:#0284c7; padding:10px 16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><span><span id="icon-${groupId}" style="display:inline-block; width:20px;">▼</span> 🔄 Transfers</span><span style="font-size:0.85em; background:white; padding:2px 8px; border-radius:12px; border:1px solid #bae6fd;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+                    
+                    transfers.forEach(tx => {
+                        let accStr = `${getAccountName(tx.fromAccountId)} ➔ ${getAccountName(tx.toAccountId)}`;
+                        overviewHTML += `<tr class="${groupId}"><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Account"><span style="font-size:0.85em; color:var(--text-muted);">${accStr}</span></td><td data-label="Details"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td></tr>`;
+                    });
+                }
             }
         }
         document.getElementById('overview-thead').innerHTML = theadHTML;
         document.getElementById('overview-budget-tbody').innerHTML = overviewHTML; 
 
-        // --- FORECAST TABLE CALCS (Always Joint Data) ---
+        // --- FORECAST TABLE CALCS ---
         let forecastHTML = ''; 
         let totalProjectedSpend = 0;
         categories.forEach(cat => {
@@ -1297,7 +1376,6 @@
         });
         document.getElementById('forecast-tbody').innerHTML = forecastHTML;
 
-        // Executive Projections
         const householdProjectedRemaining = jointInc - jointDeb - totalProjectedSpend;
         document.getElementById('proj-inc').innerText = `R ${jointInc.toFixed(2)}`; document.getElementById('proj-deb').innerText = `R ${jointDeb.toFixed(2)}`; document.getElementById('proj-var').innerText = `R ${totalProjectedSpend.toFixed(2)}`;
         
