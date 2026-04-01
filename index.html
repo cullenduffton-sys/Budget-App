@@ -200,9 +200,37 @@
             .header-wrapper { padding: 15px; border-radius: 0 0 16px 16px; margin-bottom: 20px;}
             .header-bar { flex-direction: column; align-items: stretch; gap: 10px; }
             
-            .header-controls { width: 100%; margin-top: 5px; overflow-x: auto; padding-bottom: 8px;}
-            .month-picker-container { background: #FFFFFF; border: 1px solid var(--border); }
+            /* --- THE FIX: STACKED GRID LAYOUT FOR BUTTONS --- */
+            .header-controls { 
+                display: flex; 
+                flex-wrap: wrap; /* Forces buttons to wrap to next line instead of hiding */
+                width: 100%; 
+                margin-top: 5px; 
+                gap: 8px;
+                overflow: visible !important; /* Prevents any clipping */
+                padding-bottom: 0;
+            }
+            .month-picker-container { 
+                width: 100%; /* Makes period selector take the full top row */
+                background: #FFFFFF; 
+                border: 1px solid var(--border); 
+                justify-content: space-between;
+                padding: 12px 15px;
+            }
             .month-picker-container input { color: var(--primary); }
+
+            .btn-header {
+                flex: 1 1 calc(50% - 8px); /* Makes buttons perfectly split 50/50 in columns */
+                justify-content: center;
+                padding: 12px 8px;
+                white-space: normal;
+                text-align: center;
+                font-size: 0.8em;
+            }
+            .btn-header-danger {
+                flex: 1 1 100%; /* Makes the destructive Clear button take the full bottom row */
+            }
+            /* ------------------------------------------------ */
 
             .container { grid-template-columns: 1fr; gap: 16px; padding: 0; }
             .span-2, .span-3, .full-width { grid-column: 1 / -1; }
@@ -265,7 +293,7 @@
             <button type="button" class="btn-header" onclick="rolloverDebits()">⏭ Rollover</button>
             <button type="button" class="btn-header" onclick="openSettingsModal()">⚙️ Settings</button>
             <button type="button" class="btn-header" id="btn-cloud-sync" onclick="openSyncModal()">⟳ Connect</button>
-            <button type="button" class="btn-header btn-header-danger" onclick="resetTransactions()">⚠ Clear</button>
+            <button type="button" class="btn-header btn-header-danger" onclick="resetTransactions()">⚠ Clear Data</button>
         </div>
     </div>
 </div>
@@ -590,7 +618,7 @@
 
     // ----- SETTINGS & NAMES -----
     function applyAppNames() {
-        // Update Tabs (Exact spelling, removed "Ledger" suffix as requested)
+        // Update Tabs
         document.getElementById('btn-tab-cfo').innerText = appNames.dash;
         document.getElementById('main-header-title').innerText = appNames.dash;
         document.getElementById('btn-tab-cullen').innerText = appNames.p1; 
