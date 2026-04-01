@@ -162,10 +162,17 @@
         }
         td input:focus, td select:focus { border-color: var(--accent); outline: none; }
         
-        /* Category Grouping Rows */
+        /* Category Grouping Rows & Badges */
         .category-header { cursor: pointer; user-select: none; transition: background-color 0.2s; }
-        .category-header td { background: #F3F4F6 !important; font-weight: 600; color: var(--primary); font-size: 0.95em; border-top: 1px solid var(--border);}
+        .category-header td { background: #F3F4F6 !important; font-size: 0.95em; border-top: 1px solid var(--border);}
         .category-header:hover td { background: #E5E7EB !important; }
+        .category-header-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .cat-icon { display: inline-block; width: 24px; color: var(--text-muted); font-size: 0.85em; transition: transform 0.2s; }
+        .category-total { 
+            font-size: 0.9em; font-weight: 700; color: var(--primary); background: #FFFFFF; 
+            padding: 4px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); 
+            font-variant-numeric: tabular-nums; box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
+        }
         .collapsed-row { display: none !important; }
 
         tr.is-paid td { background-color: var(--success-bg); color: var(--success); }
@@ -275,9 +282,12 @@
             thead { display: none; }
             tbody { display: block; width: 100%; }
             tr { display: block; margin-bottom: 15px; background: white; border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: 8px; }
+            
+            /* Category Headers adjusted for mobile to ensure padding */
             tr.category-header { background: transparent; border:none; box-shadow:none; padding: 0; margin-bottom: 5px; margin-top: 15px;}
-            tr.category-header td { background: transparent !important; padding: 5px 0 !important; font-size: 1.05em; border: none; }
+            tr.category-header td { background: transparent !important; padding: 12px 8px !important; border: none; }
             tr.category-header td::before { display: none; }
+            
             tr.is-paid { border-left: 4px solid var(--success); }
             td { display: flex !important; justify-content: space-between; align-items: center; padding: 10px 8px; border-bottom: 1px solid var(--border-light); text-align: right; background: transparent !important; }
             td:last-child { border-bottom: none; }
@@ -1262,7 +1272,7 @@
                 let groupId = `grp-${personName}-${cat.id}`;
                 let catTotal = catTxs.reduce((sum, t) => sum + t.amount, 0);
                 
-                html += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="5"><div style="display:flex; justify-content:space-between; align-items:center;"><span><span id="icon-${groupId}" style="display:inline-block; width:20px;">▼</span> ${cat.name}</span><span style="font-size:0.85em; font-family: monospace; font-weight: bold;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+                html += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="5"><div class="category-header-flex"><span style="font-weight: 600;"><span id="icon-${groupId}" class="cat-icon">▼</span> ${cat.name}</span><span class="category-total">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
                 
                 catTxs.forEach(tx => {
                     const actionBtns = `<button type="button" class="btn-action" onclick="editTx(${tx.id})">Edit</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">Del</button>`;
@@ -1277,7 +1287,7 @@
             let groupId = `grp-${personName}-uncat`;
             let catTotal = otherTxs.reduce((sum, t) => sum + t.amount, 0);
             
-            html += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="5" style="border-left: 3px solid var(--danger);"><div style="display:flex; justify-content:space-between; align-items:center;"><span><span id="icon-${groupId}" style="display:inline-block; width:20px; color:var(--danger)">▼</span> Uncategorized</span><span style="font-size:0.85em; color:var(--danger); font-family: monospace; font-weight: bold;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+            html += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="5" style="border-left: 3px solid var(--danger);"><div class="category-header-flex"><span style="font-weight: 600; color: var(--danger);"><span id="icon-${groupId}" class="cat-icon" style="color:var(--danger)">▼</span> Uncategorized</span><span class="category-total" style="color:var(--danger); border-color:var(--danger); background:var(--danger-bg);">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
             
             otherTxs.forEach(tx => {
                 const actionBtns = `<button type="button" class="btn-action" onclick="editTx(${tx.id})">Edit</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">Del</button>`;
@@ -1290,7 +1300,7 @@
             let groupId = `grp-${personName}-transfers`;
             let catTotal = transfers.reduce((sum, t) => sum + t.amount, 0);
             
-            html += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="5" style="border-left: 3px solid var(--accent);"><div style="display:flex; justify-content:space-between; align-items:center;"><span><span id="icon-${groupId}" style="display:inline-block; width:20px; color:var(--accent)">▼</span> Internal Transfers</span><span style="font-size:0.85em; font-family: monospace; font-weight: bold;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+            html += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="5" style="border-left: 3px solid var(--accent);"><div class="category-header-flex"><span style="font-weight: 600; color: var(--accent);"><span id="icon-${groupId}" class="cat-icon" style="color:var(--accent)">▼</span> Internal Transfers</span><span class="category-total" style="color:var(--accent); border-color:var(--accent); background:#EFF6FF;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
             
             transfers.forEach(tx => {
                 const actionBtns = `<button type="button" class="btn-action" onclick="editTx(${tx.id})">Edit</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">Del</button>`;
@@ -1430,7 +1440,7 @@
                         let groupId = `ov-grp-${cat.id}`;
                         let catTotal = catTxs.reduce((sum, t) => sum + t.amount, 0);
                         
-                        overviewHTML += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="4"><div style="display:flex; justify-content:space-between; align-items:center;"><span><span id="icon-${groupId}" style="display:inline-block; width:20px;">▼</span> ${cat.name}</span><span style="font-size:0.85em; font-family: monospace; font-weight: bold;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+                        overviewHTML += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="4"><div class="category-header-flex"><span style="font-weight: 600;"><span id="icon-${groupId}" class="cat-icon">▼</span> ${cat.name}</span><span class="category-total">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
                         
                         catTxs.forEach(tx => {
                             let accStr = getAccountName(tx.accountId);
@@ -1444,7 +1454,7 @@
                     let groupId = `ov-grp-uncat`;
                     let catTotal = otherTxs.reduce((sum, t) => sum + t.amount, 0);
                     
-                    overviewHTML += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="4" style="border-left: 3px solid var(--danger);"><div style="display:flex; justify-content:space-between; align-items:center;"><span><span id="icon-${groupId}" style="display:inline-block; width:20px; color:var(--danger)">▼</span> Uncategorized</span><span style="font-size:0.85em; color:var(--danger); font-family: monospace; font-weight: bold;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+                    overviewHTML += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="4" style="border-left: 3px solid var(--danger);"><div class="category-header-flex"><span style="font-weight: 600; color: var(--danger);"><span id="icon-${groupId}" class="cat-icon" style="color:var(--danger)">▼</span> Uncategorized</span><span class="category-total" style="color:var(--danger); border-color:var(--danger); background:var(--danger-bg);">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
                     
                     otherTxs.forEach(tx => {
                         let accStr = getAccountName(tx.accountId);
@@ -1456,7 +1466,7 @@
                     let groupId = `ov-grp-transfers`;
                     let catTotal = transfers.reduce((sum, t) => sum + t.amount, 0);
                     
-                    overviewHTML += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="4" style="border-left: 3px solid var(--accent);"><div style="display:flex; justify-content:space-between; align-items:center;"><span><span id="icon-${groupId}" style="display:inline-block; width:20px; color:var(--accent)">▼</span> Internal Transfers</span><span style="font-size:0.85em; font-family: monospace; font-weight: bold;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+                    overviewHTML += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="4" style="border-left: 3px solid var(--accent);"><div class="category-header-flex"><span style="font-weight: 600; color: var(--accent);"><span id="icon-${groupId}" class="cat-icon" style="color:var(--accent)">▼</span> Internal Transfers</span><span class="category-total" style="color:var(--accent); border-color:var(--accent); background:#EFF6FF;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
                     
                     transfers.forEach(tx => {
                         let accStr = `${getAccountName(tx.fromAccountId)} → ${getAccountName(tx.toAccountId)}`;
