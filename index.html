@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<index.html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -531,7 +531,6 @@
     // ----- GLOBAL STATE -----
     let currentMonthKey = "";
     
-    // CRITICAL FIX: These must start at 0, NOT Date.now(), so the cloud always wins on a fresh load.
     let localLastUpdated = 0; 
     let globalLastUpdated = 0; 
     
@@ -577,6 +576,7 @@
         let globalData = localStorage.getItem('cfo_global_config');
         if (globalData) {
             let parsed = JSON.parse(globalData);
+            if (parsed.lastUpdated) globalLastUpdated = parsed.lastUpdated;
             accounts = parsed.accounts || accounts;
             categories = parsed.categories || categories;
             appNames = parsed.appNames || appNames;
@@ -640,7 +640,7 @@
         saveGlobalConfig(); applyAppNames(); closeSettingsModal();
     }
 
-    // ----- CLOUD SYNC LOGIC & STRICT CONFLICT RESOLUTION -----
+    // ----- CLOUD SYNC LOGIC -----
     function openSyncModal() { document.getElementById('sync-modal').style.display = 'flex'; }
     function closeSyncModal() { document.getElementById('sync-modal').style.display = 'none'; }
 
@@ -671,29 +671,20 @@
                     if (doc.exists) {
                         const data = doc.data();
                         if (data.lastUpdated && data.lastUpdated > localLastUpdated) {
+                            localLastUpdated = data.lastUpdated;
+                            cullenFixedItems = data.cullenFixedItems || cullenFixedItems; 
+                            elizeFixedItems = data.elizeFixedItems || elizeFixedItems;
+                            transactions = data.transactions || [];
+                            celistinaRate = data.celistinaRate !== undefined ? data.celistinaRate : 275; 
                             
-                            let cloudTxCount = data.transactions ? data.transactions.length : 0;
-                            
-                            // Prevent overwriting local if we just loaded but local has more data somehow.
-                            if (transactions.length > cloudTxCount && localLastUpdated !== 0) {
-                                console.log("Protected local transactions from being wiped.");
-                                saveData(); 
+                            if (data.celistinaDays && data.celistinaDays.length > 0) {
+                                celistinaDays = data.celistinaDays;
                             } else {
-                                localLastUpdated = data.lastUpdated;
-                                cullenFixedItems = data.cullenFixedItems || cullenFixedItems; 
-                                elizeFixedItems = data.elizeFixedItems || elizeFixedItems;
-                                transactions = data.transactions || [];
-                                celistinaRate = data.celistinaRate !== undefined ? data.celistinaRate : 275; 
-                                
-                                if (data.celistinaDays && data.celistinaDays.length > 0) {
-                                    celistinaDays = data.celistinaDays;
-                                } else {
-                                    celistinaDays = generateCelistinaDays(currentMonthKey);
-                                }
-                                
-                                document.getElementById('cel-rate').value = celistinaRate;
-                                renderCelistinaSchedule(); renderFixedItems('Cullen'); renderFixedItems('Elize');
+                                celistinaDays = generateCelistinaDays(currentMonthKey);
                             }
+                            
+                            document.getElementById('cel-rate').value = celistinaRate;
+                            renderCelistinaSchedule(); renderFixedItems('Cullen'); renderFixedItems('Elize');
                         }
                     }
                 });
@@ -703,19 +694,11 @@
                     if (doc.exists) {
                         const data = doc.data();
                         if (data.lastUpdated && data.lastUpdated > globalLastUpdated) {
-                            
-                            let cloudAccCount = data.accounts ? data.accounts.length : 0;
-                            
-                            if (accounts.length > cloudAccCount && globalLastUpdated !== 0) {
-                                console.log("Protected local accounts from being wiped.");
-                                saveGlobalConfig();
-                            } else {
-                                globalLastUpdated = data.lastUpdated;
-                                accounts = data.accounts || accounts;
-                                categories = data.categories || categories;
-                                appNames = data.appNames || appNames;
-                                applyAppNames(); renderAccounts(); renderCategories();
-                            }
+                            globalLastUpdated = data.lastUpdated;
+                            accounts = data.accounts || accounts;
+                            categories = data.categories || categories;
+                            appNames = data.appNames || appNames;
+                            applyAppNames(); renderAccounts(); renderCategories();
                         }
                     }
                 });
@@ -783,11 +766,11 @@
     }
 
     function loadData() {
-        loadGlobalConfig(); 
-
         const savedData = localStorage.getItem('cfo_data_' + currentMonthKey);
         if (savedData) {
             const parsed = JSON.parse(savedData);
+            if (parsed.lastUpdated) localLastUpdated = parsed.lastUpdated; // Keep memory in sync!
+            
             transactions = parsed.transactions || [];
             celistinaRate = parsed.celistinaRate !== undefined ? parsed.celistinaRate : 275; 
             
@@ -800,7 +783,6 @@
             cullenFixedItems = parsed.cullenFixedItems || cullenFixedItems; 
             elizeFixedItems = parsed.elizeFixedItems || elizeFixedItems;
 
-            if (parsed.lastUpdated) localLastUpdated = parsed.lastUpdated;
         } else {
             transactions = []; celistinaRate = 275; celistinaDays = generateCelistinaDays(currentMonthKey);
         }
@@ -877,8 +859,8 @@
         const container = document.getElementById('celistina-schedule-container'); container.innerHTML = '';
         celistinaDays.forEach((day, index) => { container.innerHTML += `<label style="display: flex; align-items: center; gap: 10px; background: #FFFFFF; padding: 12px; border-radius: var(--radius-sm); cursor: pointer; border: 1px solid var(--border); font-size:0.9em; box-shadow: var(--shadow-sm);"><input type="checkbox" style="width: 20px; height: 20px; accent-color: var(--primary);" ${day.present ? 'checked' : ''} onchange="toggleCelistina(${index}, this.checked)">${day.label}</label>`; }); updateFinancials();
     }
-    function toggleCelistina(index, isChecked) { celistinaDays[index].present = isChecked; updateFinancials(); }
-    function updateCelistinaGlobalRate() { celistinaRate = parseFloat(document.getElementById('cel-rate').value) || 0; updateFinancials(); }
+    function toggleCelistina(index, isChecked) { celistinaDays[index].present = isChecked; saveData(); updateFinancials(); }
+    function updateCelistinaGlobalRate() { celistinaRate = parseFloat(document.getElementById('cel-rate').value) || 0; saveData(); updateFinancials(); }
 
 
     // ----- INLINE EDITING LOGIC: FIXED ITEMS -----
@@ -959,7 +941,7 @@
     }
 
     function togglePaidStatus(person, id, isChecked) { const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; const item = arr.find(d => d.id === id); if(item) { item.paid = isChecked; saveData(); renderFixedItems(person); } }
-    function removeFixedItem(person, id) { if(person === 'Cullen') cullenFixedItems = cullenFixedItems.filter(d => d.id !== id); else elizeFixedItems = elizeFixedItems.filter(d => d.id !== id); renderFixedItems(person); }
+    function removeFixedItem(person, id) { if(person === 'Cullen') cullenFixedItems = cullenFixedItems.filter(d => d.id !== id); else elizeFixedItems = elizeFixedItems.filter(d => d.id !== id); saveData(); renderFixedItems(person); }
     function addFixedItem(person) {
         const prefix = person === 'Cullen' ? 'cul' : 'eli'; 
         const typeInput = document.getElementById(`new-${prefix}-fixed-type`).value; 
@@ -969,7 +951,7 @@
         if(!nameInput) return; 
         const newItem = { id: 'fx_' + Date.now(), type: typeInput, accountId: accInput, name: nameInput, amount: parseFloat(amtInput) || 0, paid: false };
         if(person === 'Cullen') cullenFixedItems.push(newItem); else elizeFixedItems.push(newItem);
-        document.getElementById(`new-${prefix}-fixed-name`).value = ''; document.getElementById(`new-${prefix}-fixed-amount`).value = ''; renderFixedItems(person);
+        document.getElementById(`new-${prefix}-fixed-name`).value = ''; document.getElementById(`new-${prefix}-fixed-amount`).value = ''; saveData(); renderFixedItems(person);
     }
 
 
@@ -991,7 +973,7 @@
             tx.category = document.getElementById(`ie-cat-${id}`).value;
         }
         cancelInlineTx(); 
-        saveData(); // Save manually handled here
+        saveData();
     }
 
     document.getElementById('expense-form').addEventListener('submit', function(e) {
@@ -1006,11 +988,11 @@
         }
         transactions.push(newTx);
         document.getElementById('exp-amount').value = ''; document.getElementById('exp-desc').value = '';
-        updateFinancials();
+        saveData(); updateFinancials();
     });
 
-    function deleteTx(id) { transactions = transactions.filter(t => t.id != id); updateFinancials(); }
-    function resetTransactions() { if(confirm("Clear ALL ad-hoc transactions for this month?")) { transactions = []; updateFinancials(); } }
+    function deleteTx(id) { transactions = transactions.filter(t => t.id != id); saveData(); updateFinancials(); }
+    function resetTransactions() { if(confirm("Clear ALL ad-hoc transactions for this month?")) { transactions = []; saveData(); updateFinancials(); } }
 
 
     // ----- RENDERING LEDGERS -----
@@ -1167,8 +1149,6 @@
             document.getElementById('forecast-headline').innerText = 'End of Month Projection'; document.getElementById('forecast-headline').style.color = 'var(--primary)';
             document.getElementById('cfo-proj-end-title').style.color = 'var(--text-muted)'; document.getElementById('cfo-proj-end-title').innerText = 'Proj. Month-End';
         }
-        
-        saveData(); 
     }
 
     function setRemUI(textId, boxId, amount) { 
