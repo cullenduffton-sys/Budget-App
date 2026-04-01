@@ -1,4 +1,4 @@
-<index.html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -68,13 +68,11 @@
         .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
         .header-controls::-webkit-scrollbar { display: none; }
         
-        /* Fixed Period Selector Contrast */
         .month-picker-container { display: flex; align-items: center; gap: 8px; font-weight: 600; background: #FFFFFF !important; padding: 8px 12px; border-radius: var(--radius-sm); border: 2px solid #2563EB !important; cursor: pointer; white-space: nowrap; flex-shrink: 0; box-shadow: var(--shadow-sm);}
         .month-picker-container label { color: #6B7280 !important; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer;}
         .month-picker-container input { background: transparent !important; border: none !important; outline: none !important; font-family: inherit; font-weight: 700; cursor: pointer; color: #0A192F !important; font-size: 1.1em; }
         ::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.8; filter: none !important; }
 
-        /* Fixed Button Contrast */
         .btn-header { padding: 10px 14px; font-size: 0.85em; font-weight: 700; border-radius: var(--radius-sm); border: 1px solid #E5E7EB !important; cursor: pointer; background: #FFFFFF !important; color: #0A192F !important; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; flex-shrink: 0; box-shadow: var(--shadow-sm);}
         .btn-header:hover { background: #F3F4F6 !important; }
         .btn-header-danger { background: #D90429 !important; color: #FFFFFF !important; border: none !important; }
@@ -532,8 +530,11 @@
 <script>
     // ----- GLOBAL STATE -----
     let currentMonthKey = "";
-    let localLastUpdated = Date.now();
-    let globalLastUpdated = Date.now();
+    
+    // CRITICAL FIX: These must start at 0, NOT Date.now(), so the cloud always wins on a fresh load.
+    let localLastUpdated = 0; 
+    let globalLastUpdated = 0; 
+    
     let cloudEnabled = false;
     let dbCloud = null;
     let inlineEditTxId = null;
@@ -665,21 +666,19 @@
                 document.getElementById('btn-cloud-sync').innerText = "✓ Synced";
                 document.getElementById('btn-cloud-sync').style.color = "#00A86B";
                 
-                // Monthly Sync Listener (WITH STRICT DATA LOSS PREVENTION)
+                // Monthly Sync Listener
                 dbCloud.collection("cfo_sync").doc("month_" + currentMonthKey).onSnapshot((doc) => {
                     if (doc.exists) {
                         const data = doc.data();
                         if (data.lastUpdated && data.lastUpdated > localLastUpdated) {
                             
-                            // RULE: Never let the cloud wipe out transactions if phone has more!
                             let cloudTxCount = data.transactions ? data.transactions.length : 0;
                             
-                            if (transactions.length > cloudTxCount) {
-                                // Phone has more. Phone wins. Force push to cloud.
+                            // Prevent overwriting local if we just loaded but local has more data somehow.
+                            if (transactions.length > cloudTxCount && localLastUpdated !== 0) {
                                 console.log("Protected local transactions from being wiped.");
                                 saveData(); 
                             } else {
-                                // Safe to pull from cloud
                                 localLastUpdated = data.lastUpdated;
                                 cullenFixedItems = data.cullenFixedItems || cullenFixedItems; 
                                 elizeFixedItems = data.elizeFixedItems || elizeFixedItems;
@@ -699,21 +698,18 @@
                     }
                 });
 
-                // Global Settings Sync Listener (WITH STRICT DATA LOSS PREVENTION)
+                // Global Settings Sync Listener
                 dbCloud.collection("cfo_sync").doc("global_settings").onSnapshot((doc) => {
                     if (doc.exists) {
                         const data = doc.data();
                         if (data.lastUpdated && data.lastUpdated > globalLastUpdated) {
                             
-                            // RULE: Never let the cloud wipe out accounts if phone has more!
                             let cloudAccCount = data.accounts ? data.accounts.length : 0;
                             
-                            if (accounts.length > cloudAccCount) {
-                                // Phone has more. Phone wins. Force push to cloud.
+                            if (accounts.length > cloudAccCount && globalLastUpdated !== 0) {
                                 console.log("Protected local accounts from being wiped.");
                                 saveGlobalConfig();
                             } else {
-                                // Safe to accept cloud data
                                 globalLastUpdated = data.lastUpdated;
                                 accounts = data.accounts || accounts;
                                 categories = data.categories || categories;
