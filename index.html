@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Personal CFO - Executive Edition</title>
+    <title>Personal CFO</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -64,14 +64,16 @@
         .header-wrapper { background-color: var(--primary); border-bottom: 1px solid var(--primary-light); padding: 16px 5%; margin-bottom: 30px; box-shadow: var(--shadow-sm); }
         .header-bar { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
         .header-bar h1 { margin: 0; font-size: 1.4em; font-weight: 700; color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase;}
-        .header-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         
-        .month-picker-container { display: flex; align-items: center; gap: 8px; font-weight: 500; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1); cursor: pointer;}
-        .month-picker-container label { color: #9CA3AF; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer;}
-        .month-picker-container input { background: transparent; border: none; outline: none; font-family: inherit; font-weight: 600; cursor: pointer; color: #FFFFFF; font-size: 1em; position: relative; z-index: 5;}
-        ::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.7; cursor: pointer; padding: 4px;}
+        .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .header-controls::-webkit-scrollbar { display: none; }
+        
+        .month-picker-container { display: flex; align-items: center; gap: 8px; font-weight: 600; background: #FFFFFF; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); cursor: pointer; white-space: nowrap; flex-shrink: 0; box-shadow: var(--shadow-sm);}
+        .month-picker-container label { color: var(--text-muted); font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer;}
+        .month-picker-container input { background: transparent; border: none; outline: none; font-family: inherit; font-weight: 700; cursor: pointer; color: var(--primary); font-size: 1em; }
+        ::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.6; }
 
-        .btn-header { padding: 8px 14px; font-size: 0.85em; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid transparent; cursor: pointer; background: rgba(255,255,255,0.1); color: #FFFFFF; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; }
+        .btn-header { padding: 8px 14px; font-size: 0.85em; font-weight: 600; border-radius: var(--radius-sm); border: 1px solid transparent; cursor: pointer; background: rgba(255,255,255,0.1); color: #FFFFFF; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0;}
         .btn-header:hover { background: rgba(255,255,255,0.2); }
         .btn-header-danger { background: rgba(217, 4, 41, 0.15); color: #FFA3A3; border-color: rgba(217, 4, 41, 0.3); }
         .btn-header-danger:hover { background: rgba(217, 4, 41, 0.3); }
@@ -81,7 +83,7 @@
         /* --- NAVIGATION --- */
         .tab-nav-wrapper { background: var(--card); border-bottom: 1px solid var(--border); margin-bottom: 30px; }
         .tab-nav { display: flex; gap: 24px; max-width: 1400px; margin: 0 auto; padding: 0 5%; }
-        .tab-btn { padding: 16px 4px; background: transparent; border: none; border-bottom: 2px solid transparent; font-size: 0.95em; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; }
+        .tab-btn { padding: 16px 4px; background: transparent; border: none; border-bottom: 2px solid transparent; font-size: 0.95em; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; white-space: nowrap;}
         .tab-btn:hover { color: var(--primary); }
         .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
         .tab-content { display: none; animation: fadeIn 0.2s ease-in-out; }
@@ -112,7 +114,7 @@
         .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; background: white; }
         table { width: 100%; border-collapse: collapse; font-size: 0.9em; min-width: 600px; }
         th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); }
-        th { background-color: #F9FAFB; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.75em; letter-spacing: 0.05em; position: sticky; top: 0; z-index: 10;}
+        th { background-color: #F9FAFB; font-weight: 700; color: var(--primary); text-transform: uppercase; font-size: 0.75em; letter-spacing: 0.05em; position: sticky; top: 0; z-index: 10;}
         tr:hover td { background-color: #F9FAFB; }
         
         td input[type="number"], td input[type="text"], td input[type="date"], td select { 
@@ -121,7 +123,6 @@
         }
         td input:focus, td select:focus { border-color: var(--accent); outline: none; }
         
-        /* Inline Edit Styling */
         .inline-edit-row td { background-color: #FFFBEB !important; padding: 8px !important; }
         .inline-edit-input { width: 100% !important; max-width: none !important; margin-bottom: 4px; border-color: var(--warning) !important; font-size: 0.9em !important;}
 
@@ -150,7 +151,7 @@
         /* --- FORMS & INPUTS --- */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-        .form-row label { font-weight: 600; font-size: 0.8em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;}
+        .form-row label { font-weight: 700; font-size: 0.8em; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em;}
         .form-row input, .form-row select { padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.95em; transition: border-color 0.2s; }
         .form-row input:focus, .form-row select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         
@@ -199,14 +200,10 @@
             .header-wrapper { padding: 15px; border-radius: 0 0 16px 16px; margin-bottom: 20px;}
             .header-bar { flex-direction: column; align-items: stretch; gap: 10px; }
             
-            /* FIXED MOBILE HEADER GRID */
-            .header-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-top: 5px; }
-            .btn-header { width: 100%; justify-content: center; font-size: 0.8em; padding: 12px 6px; text-align: center; }
-            
-            /* FIXED MOBILE PERIOD SELECTOR */
-            .month-picker-container { grid-column: 1 / -1; width: 100%; justify-content: space-between; padding: 12px 15px; margin: 5px 0 0 0; background: rgba(0,0,0,0.15); border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.15);}
-            .month-picker-container input { font-size: 1.05em; width: auto; background: transparent; padding: 0; min-height: 24px;}
-            
+            .header-controls { width: 100%; margin-top: 5px; overflow-x: auto; padding-bottom: 8px;}
+            .month-picker-container { background: #FFFFFF; border: 1px solid var(--border); }
+            .month-picker-container input { color: var(--primary); }
+
             .container { grid-template-columns: 1fr; gap: 16px; padding: 0; }
             .span-2, .span-3, .full-width { grid-column: 1 / -1; }
             .executive-summary, .accounts-grid { grid-template-columns: 1fr 1fr; }
@@ -217,8 +214,8 @@
             .upload-buttons { flex-direction: column; }
 
             .tab-nav-wrapper { border: none; margin: 0; background: transparent;}
-            .tab-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); margin: 0; padding: 10px 8px 20px 8px; box-shadow: 0 -10px 20px rgba(0,0,0,0.05); z-index: 1000; border-top: 1px solid var(--border); justify-content: space-between; gap: 6px; }
-            .tab-btn { flex: 1; font-size: 0.75em; padding: 10px 4px; border-radius: var(--radius-sm); border: none; background: transparent; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center; }
+            .tab-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); margin: 0; padding: 10px 8px 20px 8px; box-shadow: 0 -10px 20px rgba(0,0,0,0.05); z-index: 1000; border-top: 1px solid var(--border); justify-content: flex-start; gap: 6px; overflow-x: auto;}
+            .tab-btn { flex: 0 0 auto; font-size: 0.75em; padding: 10px 12px; border-radius: var(--radius-sm); border: none; background: transparent; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center; }
             .tab-btn.active { background: #F3F4F6; color: var(--accent); font-weight: 700;}
             
             .form-grid { grid-template-columns: 1fr; gap: 12px; }
@@ -237,7 +234,9 @@
             tr.is-paid { border-left: 4px solid var(--success); }
             td { display: flex !important; justify-content: space-between; align-items: center; padding: 10px 8px; border-bottom: 1px solid var(--border-light); text-align: right; background: transparent !important; flex-wrap: wrap; gap: 5px;}
             td:last-child { border-bottom: none; }
-            td::before { content: attr(data-label); font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.75em; text-align: left; padding-right: 15px; }
+            
+            td::before { content: attr(data-label); font-weight: 700; color: var(--primary); text-transform: uppercase; font-size: 0.75em; text-align: left; padding-right: 15px; }
+            
             td input[type="number"], td input[type="text"], td input[type="date"], td select { width: 100%; text-align: right; margin-left: auto;}
             td strong { text-align: right; display: block; font-weight: 600; width: 100%;}
             td small { text-align: right; display: block; margin-top: 4px; color: var(--text-muted); width: 100%;}
@@ -256,17 +255,17 @@
 
 <div class="header-wrapper">
     <div class="header-bar">
-        <h1>Citibank Executive App</h1>
+        <h1 id="main-header-title">Executive App</h1>
         <div class="header-controls">
-            <button class="btn-header btn-header-primary" onclick="forceSaveAndSync()">💾 Save & Sync</button>
-            <button class="btn-header" onclick="rolloverDebits()">⏭ Rollover</button>
-            <button class="btn-header" id="btn-cloud-sync" onclick="openSyncModal()">⟳ Setup Sync</button>
-            <button class="btn-header btn-header-danger" onclick="resetTransactions()">⚠ Clear Data</button>
-            
             <div class="month-picker-container" onclick="document.getElementById('month-selector').showPicker()">
                 <label for="month-selector">Period</label>
                 <input type="month" id="month-selector" onchange="changeMonth()">
             </div>
+            <button type="button" class="btn-header btn-header-primary" onclick="forceSaveAndSync()">💾 Save & Sync</button>
+            <button type="button" class="btn-header" onclick="rolloverDebits()">⏭ Rollover</button>
+            <button type="button" class="btn-header" onclick="openSettingsModal()">⚙️ Settings</button>
+            <button type="button" class="btn-header" id="btn-cloud-sync" onclick="openSyncModal()">⟳ Connect</button>
+            <button type="button" class="btn-header btn-header-danger" onclick="resetTransactions()">⚠ Clear</button>
         </div>
     </div>
 </div>
@@ -274,8 +273,8 @@
 <div class="tab-nav-wrapper">
     <div class="tab-nav">
         <button class="tab-btn active" onclick="switchTab('tab-cfo', this)" id="btn-tab-cfo">Executive Dashboard</button>
-        <button class="tab-btn" onclick="switchTab('tab-cullen', this)">Cullen Ledger</button>
-        <button class="tab-btn" onclick="switchTab('tab-elize', this)">Elize Ledger</button>
+        <button class="tab-btn" onclick="switchTab('tab-cullen', this)" id="btn-tab-cullen">Cullen</button>
+        <button class="tab-btn" onclick="switchTab('tab-elize', this)" id="btn-tab-elize">Elize</button>
         <button class="tab-btn" onclick="switchTab('tab-forecast', this)" style="color: var(--danger);">Risk Forecast</button>
     </div>
 </div>
@@ -286,7 +285,7 @@
         <div class="card full-width" style="padding-bottom: 10px;">
             <div class="section-title">
                 <span>Net Account Cash Flow</span>
-                <span class="toggle-hint">Current Period</span>
+                <span class="toggle-hint">Global Bank Cards</span>
             </div>
             <div id="accounts-grid" class="accounts-grid"></div>
             
@@ -296,7 +295,7 @@
                     <div id="account-list-container" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;"></div>
                     <div class="add-item-form" style="background: transparent; padding: 0; border: none; border-top: 1px solid var(--border); padding-top: 15px;">
                         <input type="text" id="new-acc-name" placeholder="Account Name (e.g. FNB Cheque)">
-                        <select id="new-acc-owner"><option value="Cullen">Owned by Cullen</option><option value="Elize">Owned by Elize</option><option value="Joint">Joint Account</option></select>
+                        <select id="new-acc-owner" class="owner-dropdown-select"></select>
                         <button type="button" class="btn-add" onclick="addAccount()">Add Account</button>
                     </div>
                 </div>
@@ -325,7 +324,7 @@
             <form id="expense-form" style="border-top: 1px solid var(--border); padding-top: 20px;">
                 <div class="form-grid">
                     <div class="form-row"><label>Transaction Type</label><select id="exp-type" onchange="toggleFormType()"><option value="expense">Expense</option><option value="transfer">Account Transfer</option></select></div>
-                    <div class="form-row"><label>Initiated By</label><select id="exp-person" required><option value="Cullen">Cullen</option><option value="Elize">Elize</option></select></div>
+                    <div class="form-row"><label>Initiated By</label><select id="exp-person" required class="owner-dropdown-select-strict"></select></div>
                     <div class="form-row" id="col-from-account"><label id="label-from-account">Source Account</label><select id="exp-account" required class="account-dropdown"></select></div>
                     <div class="form-row" id="col-to-account" style="display:none;"><label>Destination Account</label><select id="exp-to-account" class="account-dropdown"></select></div>
                     <div class="form-row"><label>Date</label><input type="date" id="exp-date" required></div>
@@ -353,7 +352,9 @@
             <div class="section-title" style="margin-top: 35px; margin-bottom: 15px;">
                 <span>Portfolio View</span>
                 <select id="overview-filter" onchange="updateFinancials()" style="padding: 4px 8px; font-size: 0.8em; border-radius: var(--radius-sm); border: 1px solid var(--border); font-weight: 600; color: var(--primary);">
-                    <option value="Joint">Household Consolidated</option><option value="Cullen">Cullen Individual</option><option value="Elize">Elize Individual</option>
+                    <option value="Joint">Household Consolidated</option>
+                    <option value="Cullen" id="opt-filter-p1">Cullen Individual</option>
+                    <option value="Elize" id="opt-filter-p2">Elize Individual</option>
                 </select>
             </div>
             
@@ -369,7 +370,7 @@
 <div id="tab-cullen" class="tab-content">
     <div class="container">
         <div class="card full-width">
-            <div class="section-title">Cullen's Financial Profile</div>
+            <div class="section-title"><span id="title-p1-profile">Cullen's Financial Profile</span></div>
             <div class="executive-summary">
                 <div class="stat-box green"><h3>Income</h3><p id="cul-inc-disp">R 0</p></div>
                 <div class="stat-box yellow"><h3>Fixed Debits</h3><p id="cul-deb-disp">R 0</p></div>
@@ -401,10 +402,10 @@
         </details>
 
         <details class="card span-1">
-            <summary><span style="color: var(--primary);">Wage Management (Celectina)</span><span class="toggle-hint">Toggle</span></summary>
+            <summary><span style="color: var(--primary);">Wage Management</span><span class="toggle-hint">Toggle</span></summary>
             <div>
                 <div class="form-row" style="margin-bottom: 15px;"><label>Daily Rate (ZAR)</label><input type="number" id="cel-rate" value="275" step="0.01" onchange="updateCelistinaGlobalRate()"></div>
-                <label style="font-weight: 600; font-size: 0.8em; color: var(--text-muted); display:block; margin-bottom:10px; text-transform: uppercase;">Attendance Schedule:</label>
+                <label style="font-weight: 700; font-size: 0.8em; color: var(--primary); display:block; margin-bottom:10px; text-transform: uppercase;">Attendance Schedule:</label>
                 <div id="celistina-schedule-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
                 <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); font-weight: 700; font-size: 1.1em; text-align: right; color: var(--primary);">
                     Calculated Wage: <span id="celistina-total-display" style="font-variant-numeric: tabular-nums;">R 0.00</span>
@@ -413,7 +414,7 @@
         </details>
 
         <details class="card full-width" open>
-            <summary><span>Cullen's General Ledger</span><span class="toggle-hint">Toggle</span></summary>
+            <summary><span id="title-p1-ledger">Cullen's General Ledger</span><span class="toggle-hint">Toggle</span></summary>
             <div class="ledger-table-container">
                 <div class="table-responsive">
                     <table>
@@ -429,7 +430,7 @@
 <div id="tab-elize" class="tab-content">
     <div class="container">
         <div class="card full-width">
-            <div class="section-title">Elize's Financial Profile</div>
+            <div class="section-title"><span id="title-p2-profile">Elize's Financial Profile</span></div>
             <div class="executive-summary">
                 <div class="stat-box green"><h3>Income</h3><p id="eli-inc-disp">R 0</p></div>
                 <div class="stat-box yellow"><h3>Fixed Debits</h3><p id="eli-deb-disp">R 0</p></div>
@@ -461,7 +462,7 @@
         </details>
 
         <details class="card full-width" open>
-            <summary><span>Elize's General Ledger</span><span class="toggle-hint">Toggle</span></summary>
+            <summary><span id="title-p2-ledger">Elize's General Ledger</span><span class="toggle-hint">Toggle</span></summary>
             <div class="ledger-table-container">
                 <div class="table-responsive">
                     <table>
@@ -499,13 +500,27 @@
     </div>
 </div>
 
+<div id="settings-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">Display Settings</div>
+        <p style="font-size:0.9em; color:var(--text-muted);">Customize the names used throughout the application.</p>
+        <div class="form-row"><label>Dashboard Name</label><input type="text" id="set-dash-name"></div>
+        <div class="form-row"><label>Person 1 Tab Name</label><input type="text" id="set-p1-name"></div>
+        <div class="form-row"><label>Person 2 Tab Name</label><input type="text" id="set-p2-name"></div>
+        <div style="display: flex; gap: 12px; margin-top: 20px;">
+            <button type="button" class="btn-submit" style="background:var(--text-muted); flex:1;" onclick="closeSettingsModal()">Cancel</button>
+            <button type="button" class="btn-submit" style="flex:2;" onclick="saveSettings()">Save Names</button>
+        </div>
+    </div>
+</div>
+
 <div id="sync-modal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">System Configuration</div>
         <textarea id="firebase-config-input" placeholder='Paste Firebase Config Here' style="width:100%; height:120px; font-family:monospace; padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border); margin-top:8px;"></textarea>
         <div style="display: flex; gap: 12px; margin-top: 20px;">
-            <button class="btn-submit" style="background:var(--text-muted); flex:1;" onclick="closeSyncModal()">Cancel</button>
-            <button class="btn-submit" style="flex:2;" onclick="saveSyncConfig()">Initialize Connection</button>
+            <button type="button" class="btn-submit" style="background:var(--text-muted); flex:1;" onclick="closeSyncModal()">Cancel</button>
+            <button type="button" class="btn-submit" style="flex:2;" onclick="saveSyncConfig()">Initialize Connection</button>
         </div>
     </div>
 </div>
@@ -514,13 +529,18 @@
     // ----- GLOBAL STATE -----
     let currentMonthKey = "";
     let localLastUpdated = Date.now();
+    let globalLastUpdated = Date.now();
     let cloudEnabled = false;
     let dbCloud = null;
     let inlineEditTxId = null;
     let inlineEditFixedId = null;
 
+    // GLOBALS (Span all months)
+    let appNames = { dash: "Executive Dashboard", p1: "Cullen", p2: "Elize" };
     let accounts = [{ id: 'acc_c1', name: 'Cullen FNB Cheque', owner: 'Cullen' }, { id: 'acc_e1', name: 'Elize Cheque', owner: 'Elize' }];
     let categories = [{ id: 'cat1', name: 'Groceries', limit: 5400 }, { id: 'cat2', name: 'Petrol', limit: 4200 }, { id: 'cat3', name: 'Health Care', limit: 2000 }, { id: 'cat4', name: 'Kids / School', limit: 2000 }, { id: 'cat5', name: 'Luxuries', limit: 1500 }, { id: 'cat6', name: 'Maintenance', limit: 1000 }, { id: 'cat7', name: 'Other', limit: 1000 }];
+    
+    // MONTHLY (Specific to the selected period)
     let celistinaRate = 275; let celistinaDays = [];
     let cullenFixedItems = [{ id: 'inc1', type: 'income', accountId: 'acc_c1', name: 'Basic Salary', amount: 48642, paid: false }, { id: 'cd1', type: 'debit', accountId: 'acc_c1', name: 'Bond Repayment', amount: 17773.29, paid: false }, { id: 'cd2', type: 'debit', accountId: 'acc_c1', name: 'Normandie Levy', amount: 4955, paid: false }];
     let elizeFixedItems = [{ id: 'einc1', type: 'income', accountId: 'acc_e1', name: 'Basic Salary', amount: 20000, paid: false }, { id: 'ed1', type: 'debit', accountId: 'acc_e1', name: 'Liberty RA', amount: 526, paid: false }];
@@ -533,6 +553,7 @@
         const now = new Date(); const month = String(now.getMonth() + 1).padStart(2, '0');
         picker.value = `${now.getFullYear()}-${month}`; 
         document.getElementById('exp-date').valueAsDate = now;
+        
         initChart(); 
         changeMonth(); 
         initCloudSync();
@@ -545,7 +566,80 @@
         if(cloudEnabled) { initCloudSync(); } 
     }
 
-    // ----- CLOUD SYNC & SAVE LOGIC -----
+    // ----- GLOBAL CONFIGURATION SAVING -----
+    function loadGlobalConfig() {
+        let globalData = localStorage.getItem('cfo_global_config');
+        if (globalData) {
+            let parsed = JSON.parse(globalData);
+            accounts = parsed.accounts || accounts;
+            categories = parsed.categories || categories;
+            appNames = parsed.appNames || appNames;
+        }
+        applyAppNames();
+    }
+
+    function saveGlobalConfig() {
+        globalLastUpdated = Date.now();
+        const globalToSave = { accounts, categories, appNames, lastUpdated: globalLastUpdated };
+        localStorage.setItem('cfo_global_config', JSON.stringify(globalToSave));
+        
+        if (cloudEnabled && dbCloud) {
+            dbCloud.collection("cfo_sync").doc("global_settings").set(globalToSave).catch(e => console.error("Sync error", e));
+        }
+    }
+
+    // ----- SETTINGS & NAMES -----
+    function applyAppNames() {
+        // Update Tabs (Exact spelling, removed "Ledger" suffix as requested)
+        document.getElementById('btn-tab-cfo').innerText = appNames.dash;
+        document.getElementById('main-header-title').innerText = appNames.dash;
+        document.getElementById('btn-tab-cullen').innerText = appNames.p1; 
+        document.getElementById('btn-tab-elize').innerText = appNames.p2; 
+        
+        // Update Section Titles
+        document.getElementById('title-p1-profile').innerText = appNames.p1 + "'s Financial Profile";
+        document.getElementById('title-p1-ledger').innerText = appNames.p1 + "'s General Ledger";
+        document.getElementById('title-p2-profile').innerText = appNames.p2 + "'s Financial Profile";
+        document.getElementById('title-p2-ledger').innerText = appNames.p2 + "'s General Ledger";
+
+        // Update Dropdowns
+        document.getElementById('opt-filter-p1').innerText = appNames.p1 + " Individual";
+        document.getElementById('opt-filter-p2').innerText = appNames.p2 + " Individual";
+        
+        let ownerSelects = document.querySelectorAll('.owner-dropdown-select');
+        ownerSelects.forEach(sel => {
+            let current = sel.value;
+            sel.innerHTML = `<option value="Cullen">Owned by ${appNames.p1}</option><option value="Elize">Owned by ${appNames.p2}</option><option value="Joint">Joint Account</option>`;
+            if(current) sel.value = current;
+        });
+
+        let strictSelects = document.querySelectorAll('.owner-dropdown-select-strict');
+        strictSelects.forEach(sel => {
+            let current = sel.value;
+            sel.innerHTML = `<option value="Cullen">${appNames.p1}</option><option value="Elize">${appNames.p2}</option>`;
+            if(current) sel.value = current;
+        });
+        
+        renderAccounts(); 
+    }
+
+    function openSettingsModal() {
+        document.getElementById('set-dash-name').value = appNames.dash;
+        document.getElementById('set-p1-name').value = appNames.p1;
+        document.getElementById('set-p2-name').value = appNames.p2;
+        document.getElementById('settings-modal').style.display = 'flex';
+    }
+    function closeSettingsModal() { document.getElementById('settings-modal').style.display = 'none'; }
+    function saveSettings() {
+        appNames.dash = document.getElementById('set-dash-name').value || "Executive Dashboard";
+        appNames.p1 = document.getElementById('set-p1-name').value || "Cullen";
+        appNames.p2 = document.getElementById('set-p2-name').value || "Elize";
+        saveGlobalConfig(); // Saves to global cache & cloud
+        applyAppNames();
+        closeSettingsModal();
+    }
+
+    // ----- CLOUD SYNC & MONTHLY DATA LOGIC -----
     function openSyncModal() { document.getElementById('sync-modal').style.display = 'flex'; }
     function closeSyncModal() { document.getElementById('sync-modal').style.display = 'none'; }
 
@@ -568,25 +662,39 @@
                 dbCloud = firebase.firestore();
                 cloudEnabled = true;
                 
-                document.getElementById('btn-cloud-sync').innerText = "✓ Sync Active";
+                document.getElementById('btn-cloud-sync').innerText = "✓ Synced";
                 document.getElementById('btn-cloud-sync').style.color = "#00A86B";
                 
-                // Timestamp-based Sync to prevent echoing overwrites
+                // Monthly Sync Listener
                 dbCloud.collection("cfo_sync").doc("month_" + currentMonthKey).onSnapshot((doc) => {
                     if (doc.exists) {
                         const data = doc.data();
                         if (data.lastUpdated && data.lastUpdated > localLastUpdated) {
                             localLastUpdated = data.lastUpdated;
-                            accounts = data.accounts || accounts; categories = data.categories || categories;
                             cullenFixedItems = data.cullenFixedItems || cullenFixedItems; elizeFixedItems = data.elizeFixedItems || elizeFixedItems;
                             transactions = data.transactions || [];
                             celistinaRate = data.celistinaRate !== undefined ? data.celistinaRate : 275; celistinaDays = data.celistinaDays || generateCelistinaDays(currentMonthKey);
                             
                             document.getElementById('cel-rate').value = celistinaRate;
-                            renderAccounts(); renderCategories(); renderCelistinaSchedule(); renderFixedItems('Cullen'); renderFixedItems('Elize');
+                            renderCelistinaSchedule(); renderFixedItems('Cullen'); renderFixedItems('Elize');
                         }
                     }
                 });
+
+                // Global Settings Sync Listener
+                dbCloud.collection("cfo_sync").doc("global_settings").onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data.lastUpdated && data.lastUpdated > globalLastUpdated) {
+                            globalLastUpdated = data.lastUpdated;
+                            accounts = data.accounts || accounts;
+                            categories = data.categories || categories;
+                            appNames = data.appNames || appNames;
+                            applyAppNames(); renderAccounts(); renderCategories();
+                        }
+                    }
+                });
+
             } catch (e) { console.error("Firebase init failed", e); }
         }
     }
@@ -594,7 +702,7 @@
     function saveData() {
         if (!currentMonthKey) return;
         localLastUpdated = Date.now();
-        const dataToSave = { lastUpdated: localLastUpdated, accounts, categories, cullenFixedItems, elizeFixedItems, transactions, celistinaRate, celistinaDays };
+        const dataToSave = { lastUpdated: localLastUpdated, cullenFixedItems, elizeFixedItems, transactions, celistinaRate, celistinaDays };
         localStorage.setItem('cfo_data_' + currentMonthKey, JSON.stringify(dataToSave));
         
         if (cloudEnabled && dbCloud) {
@@ -603,7 +711,8 @@
     }
 
     function forceSaveAndSync() {
-        saveData();
+        saveGlobalConfig(); // Save accounts/categories
+        saveData(); // Save month specific data
         alert("💾 Success! Data saved locally and synced to cloud.");
     }
 
@@ -622,9 +731,6 @@
         nextData.cullenFixedItems = cullenFixedItems.map(i => ({...i, id: 'fx_'+Date.now()+Math.random(), paid: false}));
         nextData.elizeFixedItems = elizeFixedItems.map(i => ({...i, id: 'fx_'+Date.now()+Math.random(), paid: false}));
         
-        // Ensure accounts and categories exist in the new month
-        nextData.accounts = nextData.accounts || accounts;
-        nextData.categories = nextData.categories || categories;
         nextData.celistinaRate = celistinaRate;
         nextData.celistinaDays = generateCelistinaDays(nextMonthKey);
         nextData.lastUpdated = Date.now();
@@ -651,12 +757,24 @@
     }
 
     function loadData() {
+        loadGlobalConfig(); // Crucial: pull accounts/categories from global store before loading month
+
         const savedData = localStorage.getItem('cfo_data_' + currentMonthKey);
         if (savedData) {
             const parsed = JSON.parse(savedData);
-            accounts = parsed.accounts || accounts; categories = parsed.categories || categories; transactions = parsed.transactions || [];
-            celistinaRate = parsed.celistinaRate !== undefined ? parsed.celistinaRate : 275; celistinaDays = parsed.celistinaDays || generateCelistinaDays(currentMonthKey);
-            cullenFixedItems = parsed.cullenFixedItems || cullenFixedItems; elizeFixedItems = parsed.elizeFixedItems || elizeFixedItems;
+            transactions = parsed.transactions || [];
+            celistinaRate = parsed.celistinaRate !== undefined ? parsed.celistinaRate : 275; 
+            celistinaDays = parsed.celistinaDays || generateCelistinaDays(currentMonthKey);
+            cullenFixedItems = parsed.cullenFixedItems || cullenFixedItems; 
+            elizeFixedItems = parsed.elizeFixedItems || elizeFixedItems;
+            
+            // Backup migration strategy: If an older month had accounts but global config wasn't set yet.
+            if (parsed.accounts && !localStorage.getItem('cfo_global_config')) {
+                accounts = parsed.accounts;
+                categories = parsed.categories;
+                saveGlobalConfig(); 
+            }
+
             if (parsed.lastUpdated) localLastUpdated = parsed.lastUpdated;
         } else {
             transactions = []; celistinaRate = 275; celistinaDays = generateCelistinaDays(currentMonthKey);
@@ -694,34 +812,38 @@
 
     function renderAccounts() {
         const dropdowns = document.querySelectorAll('.account-dropdown'); let optionsHTML = '';
-        accounts.forEach(acc => { optionsHTML += `<option value="${acc.id}">${acc.name} (${acc.owner})</option>`; });
+        accounts.forEach(acc => { optionsHTML += `<option value="${acc.id}">${acc.name} (${acc.owner === 'Cullen' ? appNames.p1 : (acc.owner === 'Elize' ? appNames.p2 : acc.owner)})</option>`; });
         dropdowns.forEach(dd => { let currentVal = dd.value; dd.innerHTML = optionsHTML; if(currentVal) dd.value = currentVal; });
 
         const managerContainer = document.getElementById('account-list-container');
         if(managerContainer) {
-            managerContainer.innerHTML = accounts.map(acc => `<div style="display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border);"><div><strong style="color:var(--primary)">${acc.name}</strong> <small style="color:var(--text-muted); text-transform:uppercase; font-size:0.75em;">(${acc.owner})</small></div><div style="display:flex; gap: 8px;"><button class="btn-action btn-delete" onclick="deleteAccount('${acc.id}')">Del</button></div></div>`).join('');
+            managerContainer.innerHTML = accounts.map(acc => {
+                let displayOwner = acc.owner === 'Cullen' ? appNames.p1 : (acc.owner === 'Elize' ? appNames.p2 : acc.owner);
+                return `<div style="display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border);"><div><strong style="color:var(--primary)">${acc.name}</strong> <small style="color:var(--text-muted); text-transform:uppercase; font-size:0.75em;">(${displayOwner})</small></div><div style="display:flex; gap: 8px;"><button type="button" class="btn-action btn-delete" onclick="deleteAccount('${acc.id}')">Del</button></div></div>`;
+            }).join('');
         }
         updateFinancials();
     }
     
     function addAccount() {
         const name = document.getElementById('new-acc-name').value; const owner = document.getElementById('new-acc-owner').value;
-        if(!name) return; accounts.push({ id: 'acc_' + Date.now(), name: name, owner: owner }); document.getElementById('new-acc-name').value = ''; saveData(); renderAccounts();
+        if(!name) return; accounts.push({ id: 'acc_' + Date.now(), name: name, owner: owner }); document.getElementById('new-acc-name').value = ''; 
+        saveGlobalConfig(); renderAccounts();
     }
 
-    function deleteAccount(id) { if(confirm("Delete this account?")) { accounts = accounts.filter(a => a.id !== id); saveData(); renderAccounts(); } }
+    function deleteAccount(id) { if(confirm("Delete this account permanently?")) { accounts = accounts.filter(a => a.id !== id); saveGlobalConfig(); renderAccounts(); } }
 
     function renderCategories() {
         const container = document.getElementById('categories-container'); const dropdown = document.getElementById('exp-category'); 
         container.innerHTML = ''; dropdown.innerHTML = ''; 
         categories.forEach(cat => {
-            container.innerHTML += `<div class="dynamic-row"><span>${cat.name}</span><input type="number" value="${cat.limit}" step="0.01" onchange="updateCatValue('${cat.id}', this.value)"><button class="btn-remove" onclick="removeCategory('${cat.id}')">X</button></div>`;
+            container.innerHTML += `<div class="dynamic-row"><span>${cat.name}</span><input type="number" value="${cat.limit}" step="0.01" onchange="updateCatValue('${cat.id}', this.value)"><button type="button" class="btn-remove" onclick="removeCategory('${cat.id}')">X</button></div>`;
             dropdown.innerHTML += `<option value="${cat.name}">${cat.name}</option>`; 
         }); updateFinancials();
     }
-    function updateCatValue(id, newVal) { const cat = categories.find(c => c.id === id); if(cat) cat.limit = parseFloat(newVal) || 0; updateFinancials(); }
-    function removeCategory(id) { categories = categories.filter(c => c.id !== id); renderCategories(); }
-    function addCategory() { const name = document.getElementById('new-cat-name').value; const amt = document.getElementById('new-cat-amount').value; if(!name) return; categories.push({ id: 'cat_' + Date.now(), name: name, limit: parseFloat(amt) || 0 }); document.getElementById('new-cat-name').value=''; document.getElementById('new-cat-amount').value=''; renderCategories(); }
+    function updateCatValue(id, newVal) { const cat = categories.find(c => c.id === id); if(cat) cat.limit = parseFloat(newVal) || 0; saveGlobalConfig(); updateFinancials(); }
+    function removeCategory(id) { categories = categories.filter(c => c.id !== id); saveGlobalConfig(); renderCategories(); }
+    function addCategory() { const name = document.getElementById('new-cat-name').value; const amt = document.getElementById('new-cat-amount').value; if(!name) return; categories.push({ id: 'cat_' + Date.now(), name: name, limit: parseFloat(amt) || 0 }); document.getElementById('new-cat-name').value=''; document.getElementById('new-cat-amount').value=''; saveGlobalConfig(); renderCategories(); }
 
     // ----- CELISTINA -----
     function renderCelistinaSchedule() {
@@ -768,8 +890,8 @@
                         <td data-label="Description"><input type="text" id="ief-name-${item.id}" value="${item.name}" class="inline-edit-input"></td>
                         <td data-label="Amount (ZAR)"><input type="number" id="ief-amt-${item.id}" value="${item.amount}" step="0.01" class="inline-edit-input"></td>
                         <td data-label="Action" style="display:flex; gap:5px;">
-                            <button class="btn-action" style="color:var(--success); border-color:var(--success);" onclick="saveInlineFixed('${person}', '${item.id}')">Save</button>
-                            <button class="btn-action" onclick="cancelInlineFixed()">Cancel</button>
+                            <button type="button" class="btn-action" style="color:var(--success); border-color:var(--success);" onclick="saveInlineFixed('${person}', '${item.id}')">Save</button>
+                            <button type="button" class="btn-action" onclick="cancelInlineFixed()">Cancel</button>
                         </td>
                     </tr>
                 `;
@@ -785,8 +907,8 @@
                         <td data-label="Description"><strong>${item.name}</strong></td>
                         <td data-label="Amount (ZAR)"><span style="font-weight:600;">R ${item.amount.toFixed(2)}</span></td>
                         <td data-label="Action" style="display:flex; gap:5px;">
-                            <button class="btn-action" onclick="editInlineFixed('${item.id}')">Edit</button>
-                            <button class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">Del</button>
+                            <button type="button" class="btn-action" onclick="editInlineFixed('${item.id}')">Edit</button>
+                            <button type="button" class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">Del</button>
                         </td>
                     </tr>
                 `;
@@ -868,7 +990,7 @@
                     </td>
                     <td data-label="Description"><input type="text" id="ie-desc-${tx.id}" value="${tx.desc}" class="inline-edit-input"></td>
                     <td data-label="Amount"><input type="number" id="ie-amt-${tx.id}" value="${tx.amount}" step="0.01" class="inline-edit-input"></td>
-                    <td data-label="Actions" style="display:flex; gap:5px;"><button class="btn-action" style="color:var(--success); border-color:var(--success);" onclick="saveInlineTx(${tx.id})">Save</button><button class="btn-action" onclick="cancelInlineTx()">Cancel</button></td>
+                    <td data-label="Actions" style="display:flex; gap:5px;"><button type="button" class="btn-action" style="color:var(--success); border-color:var(--success);" onclick="saveInlineTx(${tx.id})">Save</button><button type="button" class="btn-action" onclick="cancelInlineTx()">Cancel</button></td>
                 </tr>`;
             } else {
                 return `<tr class="${groupId} inline-edit-row">
@@ -879,7 +1001,7 @@
                     </td>
                     <td data-label="Description"><input type="text" id="ie-desc-${tx.id}" value="${tx.desc}" class="inline-edit-input"></td>
                     <td data-label="Amount"><input type="number" id="ie-amt-${tx.id}" value="${tx.amount}" step="0.01" class="inline-edit-input"></td>
-                    <td data-label="Actions" style="display:flex; gap:5px;"><button class="btn-action" style="color:var(--success); border-color:var(--success);" onclick="saveInlineTx(${tx.id})">Save</button><button class="btn-action" onclick="cancelInlineTx()">Cancel</button></td>
+                    <td data-label="Actions" style="display:flex; gap:5px;"><button type="button" class="btn-action" style="color:var(--success); border-color:var(--success);" onclick="saveInlineTx(${tx.id})">Save</button><button type="button" class="btn-action" onclick="cancelInlineTx()">Cancel</button></td>
                 </tr>`;
             }
         } else {
@@ -944,7 +1066,7 @@
             else { if(accBalances[tx.accountId] !== undefined) accBalances[tx.accountId] -= tx.amount; if (tx.person === 'Cullen') { culSpent += tx.amount; } else { eliSpent += tx.amount; } }
         });
 
-        document.getElementById('accounts-grid').innerHTML = accounts.map(acc => `<div class="account-card ${acc.owner === 'Cullen' ? 'acc-cullen' : (acc.owner === 'Elize' ? 'acc-elize' : '')}"><span class="acc-owner">${acc.owner}</span><h4>${acc.name}</h4><div class="acc-balance" style="color: ${accBalances[acc.id] >= 0 ? 'var(--primary)' : 'var(--danger)'};">R ${accBalances[acc.id].toFixed(2)}</div></div>`).join('');
+        document.getElementById('accounts-grid').innerHTML = accounts.map(acc => `<div class="account-card ${acc.owner === 'Cullen' ? 'acc-cullen' : (acc.owner === 'Elize' ? 'acc-elize' : '')}"><span class="acc-owner">${acc.owner === 'Cullen' ? appNames.p1 : (acc.owner === 'Elize' ? appNames.p2 : acc.owner)}</span><h4>${acc.name}</h4><div class="acc-balance" style="color: ${accBalances[acc.id] >= 0 ? 'var(--primary)' : 'var(--danger)'};">R ${accBalances[acc.id].toFixed(2)}</div></div>`).join('');
 
         document.getElementById('cul-tbody').innerHTML = generateCategorizedLedger('Cullen'); document.getElementById('eli-tbody').innerHTML = generateCategorizedLedger('Elize'); 
         
@@ -962,7 +1084,9 @@
         jointChart.data.labels = categories.map(c => c.name); jointChart.data.datasets[0].data = categories.map(c => c.limit); jointChart.data.datasets[1].data = categories.map(c => catSpendMap[c.name]); 
         jointChart.data.datasets[1].backgroundColor = categories.map(c => (catSpendMap[c.name] > c.limit && overviewFilter === 'Joint') ? '#D90429' : '#0A192F'); 
         jointChart.data.datasets[2].data = categories.map(c => c.limit - catSpendMap[c.name]); jointChart.data.datasets[2].backgroundColor = categories.map(c => (c.limit - catSpendMap[c.name] >= 0) ? '#00A86B' : '#F59E0B');
-        jointChart.data.datasets[1].label = overviewFilter === 'Joint' ? 'Actual Spend (Household)' : `Total Personal Spend (${overviewFilter})`;
+        
+        let filterLabel = overviewFilter === 'Joint' ? 'Household' : (overviewFilter === 'Cullen' ? appNames.p1 : appNames.p2);
+        jointChart.data.datasets[1].label = overviewFilter === 'Joint' ? 'Actual Spend (Household)' : `Total Personal Spend (${filterLabel})`;
         jointChart.data.datasets[0].hidden = overviewFilter !== 'Joint'; jointChart.data.datasets[2].hidden = overviewFilter !== 'Joint';
         jointChart.update();
 
