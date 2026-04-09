@@ -24,7 +24,7 @@
             --primary-light: #172A45; 
             --accent: #2563EB;        
             --accent-hover: #1D4ED8;
-            --success: #00A86B;       
+            --success: #00A86B;        
             --success-bg: #E6F6F0;
             --danger: #D90429;        
             --danger-bg: #FDE8EC;
@@ -392,7 +392,17 @@
                 
                 <div class="add-item-form" style="margin-top: 15px;">
                     <div style="width: 100%; font-weight: 700; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.05em;">Record New Fixed Item</div>
-                    <select id="new-cul-fixed-type"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
+                    <select id="new-cul-fixed-type" onchange="document.getElementById('new-cul-fixed-cat').style.display = this.value === 'income' ? 'none' : 'block';"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
+                    <select id="new-cul-fixed-cat">
+                        <option value="Uncategorized">Uncategorized</option>
+                        <option value="Housing">Housing & Levies</option>
+                        <option value="Telecommunications">Telecommunications</option>
+                        <option value="Insurance">Insurance & Finance</option>
+                        <option value="Kids">Kids & Education</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Health">Health & Fitness</option>
+                        <option value="Other">Other</option>
+                    </select>
                     <select id="new-cul-fixed-account" class="account-dropdown"></select>
                     <input type="text" id="new-cul-fixed-name" placeholder="Description / Name">
                     <input type="number" id="new-cul-fixed-amount" placeholder="Amount (ZAR)" step="0.01">
@@ -454,7 +464,17 @@
                 
                 <div class="add-item-form" style="margin-top: 15px;">
                     <div style="width: 100%; font-weight: 700; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.05em;">Record New Fixed Item</div>
-                    <select id="new-eli-fixed-type"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
+                    <select id="new-eli-fixed-type" onchange="document.getElementById('new-eli-fixed-cat').style.display = this.value === 'income' ? 'none' : 'block';"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
+                    <select id="new-eli-fixed-cat">
+                        <option value="Uncategorized">Uncategorized</option>
+                        <option value="Housing">Housing & Levies</option>
+                        <option value="Telecommunications">Telecommunications</option>
+                        <option value="Insurance">Insurance & Finance</option>
+                        <option value="Kids">Kids & Education</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Health">Health & Fitness</option>
+                        <option value="Other">Other</option>
+                    </select>
                     <select id="new-eli-fixed-account" class="account-dropdown"></select>
                     <input type="text" id="new-eli-fixed-name" placeholder="Description / Name">
                     <input type="number" id="new-eli-fixed-amount" placeholder="Amount (ZAR)" step="0.01">
@@ -769,7 +789,7 @@
         const savedData = localStorage.getItem('cfo_data_' + currentMonthKey);
         if (savedData) {
             const parsed = JSON.parse(savedData);
-            if (parsed.lastUpdated) localLastUpdated = parsed.lastUpdated; // Keep memory in sync!
+            if (parsed.lastUpdated) localLastUpdated = parsed.lastUpdated; 
             
             transactions = parsed.transactions || [];
             celistinaRate = parsed.celistinaRate !== undefined ? parsed.celistinaRate : 275; 
@@ -866,6 +886,7 @@
     // ----- INLINE EDITING LOGIC: FIXED ITEMS -----
     function editInlineFixed(id) { inlineEditFixedId = id; renderFixedItems('Cullen'); renderFixedItems('Elize'); }
     function cancelInlineFixed() { inlineEditFixedId = null; renderFixedItems('Cullen'); renderFixedItems('Elize'); }
+    
     function saveInlineFixed(person, id) {
         const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems;
         const item = arr.find(i => i.id === id);
@@ -874,26 +895,43 @@
             item.accountId = document.getElementById(`ief-acc-${id}`).value;
             item.name = document.getElementById(`ief-name-${id}`).value;
             item.amount = parseFloat(document.getElementById(`ief-amt-${id}`).value) || 0;
+            if (item.type === 'debit') {
+                item.fixedCategory = document.getElementById(`ief-cat-${id}`).value;
+            } else {
+                item.fixedCategory = ''; // Incomes don't need these categories
+            }
             saveData();
         }
         cancelInlineFixed();
+        updateFinancials(); // Force dashboard update
     }
 
     function renderFixedItems(person) {
         const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; 
         const tbody = document.getElementById(person === 'Cullen' ? 'cul-fixed-tbody' : 'eli-fixed-tbody'); 
-        tbody.innerHTML = '';
-        
-        [...arr].sort((a,b) => (a.type === 'income' ? -1 : 1)).forEach(item => {
-            
+        let html = '';
+
+        const catOptions = ['Uncategorized', 'Housing', 'Telecommunications', 'Insurance', 'Kids', 'Utilities', 'Health', 'Other'];
+
+        // Helper function to build a single row
+        const buildRow = (item, groupId = '') => {
             if (item.id === inlineEditFixedId) {
                 let accOpts = accounts.map(a => `<option value="${a.id}" ${a.id === item.accountId ? 'selected' : ''}>${a.name}</option>`).join('');
                 let typeOpts = `<option value="income" ${item.type==='income'?'selected':''}>Income</option><option value="debit" ${item.type==='debit'?'selected':''}>Debit Order</option>`;
                 
-                tbody.innerHTML += `
-                    <tr class="inline-edit-row">
+                let catDropdown = '';
+                if (item.type === 'debit') {
+                    let currentCat = item.fixedCategory || 'Uncategorized';
+                    let catOptsHTML = catOptions.map(c => `<option value="${c}" ${c === currentCat ? 'selected' : ''}>${c}</option>`).join('');
+                    catDropdown = `<select id="ief-cat-${item.id}" class="inline-edit-input" style="margin-top:4px;">${catOptsHTML}</select>`;
+                } else {
+                    catDropdown = `<input type="hidden" id="ief-cat-${item.id}" value="">`;
+                }
+
+                return `
+                    <tr class="inline-edit-row ${groupId}">
                         <td data-label="Paid Status" style="text-align: center;">-</td>
-                        <td data-label="Type"><select id="ief-type-${item.id}" class="inline-edit-input">${typeOpts}</select></td>
+                        <td data-label="Type"><select id="ief-type-${item.id}" class="inline-edit-input" onchange="document.getElementById('ief-cat-${item.id}').style.display = this.value === 'income' ? 'none' : 'block';">${typeOpts}</select>${catDropdown}</td>
                         <td data-label="Account"><select id="ief-acc-${item.id}" class="inline-edit-input">${accOpts}</select></td>
                         <td data-label="Description"><input type="text" id="ief-name-${item.id}" value="${item.name}" class="inline-edit-input"></td>
                         <td data-label="Amount (ZAR)"><input type="number" id="ief-amt-${item.id}" value="${item.amount}" step="0.01" class="inline-edit-input"></td>
@@ -906,8 +944,8 @@
             } else {
                 const badge = item.type === 'income' ? '<span class="badge badge-income">Income</span>' : '<span class="badge badge-debit">Debit</span>';
                 const isPaid = item.paid ? 'checked' : ''; const rowClass = item.paid ? 'is-paid' : '';
-                tbody.innerHTML += `
-                    <tr class="${rowClass}">
+                return `
+                    <tr class="${rowClass} ${groupId}">
                         <td data-label="Paid Status" style="text-align: center;"><input type="checkbox" class="checkbox-paid" ${isPaid} onchange="togglePaidStatus('${person}', '${item.id}', this.checked)" title="Mark as Paid"></td>
                         <td data-label="Type">${badge}</td>
                         <td data-label="Account" style="font-size: 0.85em; color: var(--text-muted);">${getAccountName(item.accountId)}</td>
@@ -920,15 +958,23 @@
                     </tr>
                 `;
             }
-        }); 
-        
+        };
+
+        // 1. Render Incomes First
+        let incomes = arr.filter(i => i.type === 'income');
+        if (incomes.length > 0) {
+            html += `<tr class="category-header"><td colspan="6" style="background:#E6F6F0!important; border-left: 3px solid var(--success);"><strong style="color:var(--success);">🟢 Income Sources</strong></td></tr>`;
+            incomes.forEach(item => { html += buildRow(item); });
+        }
+
+        // 2. Render Auto-Wages (Cullen Only)
         if (person === 'Cullen' && celistinaDays && celistinaDays.length > 0) {
             let celTotal = celistinaDays.filter(d => d.present).length * celistinaRate;
             let defaultCullenAcc = accounts.find(a => a.owner === 'Cullen');
             let accName = defaultCullenAcc ? defaultCullenAcc.name : "Default Cheque";
-            
-            tbody.innerHTML += `
-                <tr style="background-color: #F8FAFC; border-left: 4px solid var(--primary);">
+            html += `<tr class="category-header"><td colspan="6" style="background:#EFF6FF!important; border-left: 3px solid var(--accent);"><strong style="color:var(--accent);">⚙️ Linked System Deductions</strong></td></tr>`;
+            html += `
+                <tr style="border-left: 3px solid var(--accent);">
                     <td data-label="System Sync" style="text-align: center; font-size: 1.2em;">⚙️</td>
                     <td data-label="Type"><span class="badge badge-debit" style="background:var(--primary); color:white; border:none;">Auto-Debit</span></td>
                     <td data-label="Account" style="font-size: 0.85em; color: var(--text-muted);">${accName}</td>
@@ -938,20 +984,71 @@
                 </tr>
             `;
         }
+
+        // 3. Render Grouped Debits
+        let debits = arr.filter(i => i.type === 'debit');
+        let groups = {};
+        debits.forEach(d => {
+            let cat = d.fixedCategory || 'Uncategorized';
+            if (!groups[cat]) groups[cat] = [];
+            groups[cat].push(d);
+        });
+
+        // Alphabetize the groups, but put Uncategorized and Other at the bottom
+        let sortedCategories = Object.keys(groups).sort((a, b) => {
+            if (a === 'Uncategorized' || a === 'Other') return 1;
+            if (b === 'Uncategorized' || b === 'Other') return -1;
+            return a.localeCompare(b);
+        });
+
+        sortedCategories.forEach(cat => {
+            let catTotal = groups[cat].reduce((sum, item) => sum + item.amount, 0);
+            let groupId = `grp-fix-${person}-${cat.replace(/\s+/g, '')}`;
+            
+            html += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="6" style="background:#FDE8EC!important; border-left: 3px solid var(--danger);"><div class="category-header-flex"><span style="font-weight: 600; color: var(--danger);"><span id="icon-${groupId}" class="cat-icon" style="color:var(--danger)">▼</span> ${cat}</span><span class="category-total" style="color:var(--danger); border-color:var(--danger); background:white;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
+            
+            groups[cat].forEach(item => {
+                html += buildRow(item, groupId);
+            });
+        });
+
+        tbody.innerHTML = html;
     }
 
     function togglePaidStatus(person, id, isChecked) { const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; const item = arr.find(d => d.id === id); if(item) { item.paid = isChecked; saveData(); renderFixedItems(person); } }
-    function removeFixedItem(person, id) { if(person === 'Cullen') cullenFixedItems = cullenFixedItems.filter(d => d.id !== id); else elizeFixedItems = elizeFixedItems.filter(d => d.id !== id); saveData(); renderFixedItems(person); }
+    
+    function removeFixedItem(person, id) { 
+        if(person === 'Cullen') cullenFixedItems = cullenFixedItems.filter(d => d.id !== id); 
+        else elizeFixedItems = elizeFixedItems.filter(d => d.id !== id); 
+        saveData(); 
+        updateFinancials(); // Force dashboard update
+    }
+    
     function addFixedItem(person) {
         const prefix = person === 'Cullen' ? 'cul' : 'eli'; 
         const typeInput = document.getElementById(`new-${prefix}-fixed-type`).value; 
         const accInput = document.getElementById(`new-${prefix}-fixed-account`).value;
         const nameInput = document.getElementById(`new-${prefix}-fixed-name`).value; 
         const amtInput = document.getElementById(`new-${prefix}-fixed-amount`).value;
+        const catInput = document.getElementById(`new-${prefix}-fixed-cat`).value;
+        
         if(!nameInput) return; 
-        const newItem = { id: 'fx_' + Date.now(), type: typeInput, accountId: accInput, name: nameInput, amount: parseFloat(amtInput) || 0, paid: false };
+        
+        const newItem = { 
+            id: 'fx_' + Date.now(), 
+            type: typeInput, 
+            accountId: accInput, 
+            name: nameInput, 
+            amount: parseFloat(amtInput) || 0, 
+            paid: false,
+            fixedCategory: typeInput === 'debit' ? catInput : '' 
+        };
+        
         if(person === 'Cullen') cullenFixedItems.push(newItem); else elizeFixedItems.push(newItem);
-        document.getElementById(`new-${prefix}-fixed-name`).value = ''; document.getElementById(`new-${prefix}-fixed-amount`).value = ''; saveData(); renderFixedItems(person);
+        document.getElementById(`new-${prefix}-fixed-name`).value = ''; 
+        document.getElementById(`new-${prefix}-fixed-amount`).value = ''; 
+        saveData(); 
+        updateFinancials(); // Force dashboard update
     }
 
 
@@ -1073,6 +1170,7 @@
 
     function updateFinancials() {
         renderFixedItems('Cullen');
+        renderFixedItems('Elize'); // Ensure Elize's table redraws too
 
         let accBalances = {}; accounts.forEach(a => accBalances[a.id] = 0);
         let culInc = 0, culDeb = 0; cullenFixedItems.forEach(i => { if(i.type === 'income') { culInc += i.amount; if(accBalances[i.accountId]!==undefined) accBalances[i.accountId] += i.amount; } else { culDeb += i.amount; if(accBalances[i.accountId]!==undefined) accBalances[i.accountId] -= i.amount; } });
