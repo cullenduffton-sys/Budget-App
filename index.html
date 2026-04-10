@@ -393,16 +393,7 @@
                 <div class="add-item-form" style="margin-top: 15px;">
                     <div style="width: 100%; font-weight: 700; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.05em;">Record New Fixed Item</div>
                     <select id="new-cul-fixed-type" onchange="document.getElementById('new-cul-fixed-cat').style.display = this.value === 'income' ? 'none' : 'block';"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
-                    <select id="new-cul-fixed-cat">
-                        <option value="Uncategorized">Uncategorized</option>
-                        <option value="Housing">Housing & Levies</option>
-                        <option value="Telecommunications">Telecommunications</option>
-                        <option value="Insurance">Insurance & Finance</option>
-                        <option value="Kids">Kids & Education</option>
-                        <option value="Utilities">Utilities</option>
-                        <option value="Health">Health & Fitness</option>
-                        <option value="Other">Other</option>
-                    </select>
+                    <select id="new-cul-fixed-cat"></select>
                     <select id="new-cul-fixed-account" class="account-dropdown"></select>
                     <input type="text" id="new-cul-fixed-name" placeholder="Description / Name">
                     <input type="number" id="new-cul-fixed-amount" placeholder="Amount (ZAR)" step="0.01">
@@ -465,16 +456,7 @@
                 <div class="add-item-form" style="margin-top: 15px;">
                     <div style="width: 100%; font-weight: 700; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.05em;">Record New Fixed Item</div>
                     <select id="new-eli-fixed-type" onchange="document.getElementById('new-eli-fixed-cat').style.display = this.value === 'income' ? 'none' : 'block';"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
-                    <select id="new-eli-fixed-cat">
-                        <option value="Uncategorized">Uncategorized</option>
-                        <option value="Housing">Housing & Levies</option>
-                        <option value="Telecommunications">Telecommunications</option>
-                        <option value="Insurance">Insurance & Finance</option>
-                        <option value="Kids">Kids & Education</option>
-                        <option value="Utilities">Utilities</option>
-                        <option value="Health">Health & Fitness</option>
-                        <option value="Other">Other</option>
-                    </select>
+                    <select id="new-eli-fixed-cat"></select>
                     <select id="new-eli-fixed-account" class="account-dropdown"></select>
                     <input type="text" id="new-eli-fixed-name" placeholder="Description / Name">
                     <input type="number" id="new-eli-fixed-amount" placeholder="Amount (ZAR)" step="0.01">
@@ -524,14 +506,23 @@
 
 <div id="settings-modal" class="modal-overlay">
     <div class="modal-content">
-        <div class="modal-header">Display Settings</div>
-        <p style="font-size:0.9em; color:var(--text-muted);">Customize the names used throughout the application.</p>
+        <div class="modal-header">System Settings</div>
+        
+        <div class="modal-subheader" style="margin-bottom: 10px; color: var(--primary); font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 8px;">Display Names</div>
         <div class="form-row"><label>Dashboard Name</label><input type="text" id="set-dash-name"></div>
         <div class="form-row"><label>Person 1 Tab Name</label><input type="text" id="set-p1-name"></div>
         <div class="form-row"><label>Person 2 Tab Name</label><input type="text" id="set-p2-name"></div>
-        <div style="display: flex; gap: 12px; margin-top: 20px;">
+        
+        <div class="modal-subheader" style="margin-top: 25px; margin-bottom: 10px; color: var(--primary); font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 8px;">Debit Order Categories</div>
+        <div id="settings-fixed-cats-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; max-height: 150px; overflow-y: auto;"></div>
+        <div style="display: flex; gap: 8px;">
+            <input type="text" id="new-fixed-cat-name" placeholder="New Category Name" style="flex: 1; padding: 8px; border: 1px solid var(--border); border-radius: var(--radius-sm);">
+            <button type="button" class="btn-action" style="background: var(--success-bg); color: var(--success); border-color: var(--success); font-weight: 600;" onclick="addFixedCat()">+ Add</button>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 30px;">
             <button type="button" class="btn-submit" style="background:var(--text-muted); flex:1;" onclick="closeSettingsModal()">Cancel</button>
-            <button type="button" class="btn-submit" style="flex:2;" onclick="saveSettings()">Save Names</button>
+            <button type="button" class="btn-submit" style="flex:2;" onclick="saveSettings()">Save Configuration</button>
         </div>
     </div>
 </div>
@@ -561,13 +552,14 @@
 
     // GLOBALS (Span all months)
     let appNames = { dash: "Executive Dashboard", p1: "Cullen", p2: "Elize" };
+    let fixedCategories = ['Housing', 'Telecommunications', 'Insurance', 'Kids', 'Utilities', 'Health'];
     let accounts = [{ id: 'acc_c1', name: 'Cullen FNB Cheque', owner: 'Cullen' }, { id: 'acc_e1', name: 'Elize Cheque', owner: 'Elize' }];
     let categories = [{ id: 'cat1', name: 'Groceries', limit: 5400 }, { id: 'cat2', name: 'Petrol', limit: 4200 }, { id: 'cat3', name: 'Health Care', limit: 2000 }, { id: 'cat4', name: 'Kids / School', limit: 2000 }, { id: 'cat5', name: 'Luxuries', limit: 1500 }, { id: 'cat6', name: 'Maintenance', limit: 1000 }, { id: 'cat7', name: 'Other', limit: 1000 }];
     
     // MONTHLY (Specific to the selected period)
     let celistinaRate = 275; let celistinaDays = [];
-    let cullenFixedItems = [{ id: 'inc1', type: 'income', accountId: 'acc_c1', name: 'Basic Salary', amount: 48642, paid: false }, { id: 'cd1', type: 'debit', accountId: 'acc_c1', name: 'Bond Repayment', amount: 17773.29, paid: false }, { id: 'cd2', type: 'debit', accountId: 'acc_c1', name: 'Normandie Levy', amount: 4955, paid: false }];
-    let elizeFixedItems = [{ id: 'einc1', type: 'income', accountId: 'acc_e1', name: 'Basic Salary', amount: 20000, paid: false }, { id: 'ed1', type: 'debit', accountId: 'acc_e1', name: 'Liberty RA', amount: 526, paid: false }];
+    let cullenFixedItems = [{ id: 'inc1', type: 'income', accountId: 'acc_c1', name: 'Basic Salary', amount: 48642, paid: false }, { id: 'cd1', type: 'debit', accountId: 'acc_c1', name: 'Bond Repayment', amount: 17773.29, paid: false, fixedCategory: 'Housing' }, { id: 'cd2', type: 'debit', accountId: 'acc_c1', name: 'Normandie Levy', amount: 4955, paid: false, fixedCategory: 'Housing' }];
+    let elizeFixedItems = [{ id: 'einc1', type: 'income', accountId: 'acc_e1', name: 'Basic Salary', amount: 20000, paid: false }, { id: 'ed1', type: 'debit', accountId: 'acc_e1', name: 'Liberty RA', amount: 526, paid: false, fixedCategory: 'Insurance' }];
     let transactions = []; 
     let jointChart = null;
 
@@ -600,13 +592,14 @@
             accounts = parsed.accounts || accounts;
             categories = parsed.categories || categories;
             appNames = parsed.appNames || appNames;
+            fixedCategories = parsed.fixedCategories || fixedCategories;
         }
         applyAppNames();
     }
 
     function saveGlobalConfig() {
         globalLastUpdated = Date.now();
-        const globalToSave = { accounts, categories, appNames, lastUpdated: globalLastUpdated };
+        const globalToSave = { accounts, categories, appNames, fixedCategories, lastUpdated: globalLastUpdated };
         localStorage.setItem('cfo_global_config', JSON.stringify(globalToSave));
         
         if (cloudEnabled && dbCloud) {
@@ -644,12 +637,14 @@
         });
         
         renderAccounts(); 
+        populateFixedCategoryDropdowns();
     }
 
     function openSettingsModal() {
         document.getElementById('set-dash-name').value = appNames.dash;
         document.getElementById('set-p1-name').value = appNames.p1;
         document.getElementById('set-p2-name').value = appNames.p2;
+        renderSettingsFixedCats();
         document.getElementById('settings-modal').style.display = 'flex';
     }
     function closeSettingsModal() { document.getElementById('settings-modal').style.display = 'none'; }
@@ -658,6 +653,57 @@
         appNames.p1 = document.getElementById('set-p1-name').value || "Cullen";
         appNames.p2 = document.getElementById('set-p2-name').value || "Elize";
         saveGlobalConfig(); applyAppNames(); closeSettingsModal();
+    }
+
+    // ----- DEBIT CATEGORY MANAGER -----
+    function renderSettingsFixedCats() {
+        const container = document.getElementById('settings-fixed-cats-list');
+        if(!container) return;
+        container.innerHTML = fixedCategories.map(cat => {
+            return `<div class="dynamic-row"><span>${cat}</span><button type="button" class="btn-remove" onclick="removeFixedCat('${cat}')">X</button></div>`;
+        }).join('');
+    }
+
+    function addFixedCat() {
+        const input = document.getElementById('new-fixed-cat-name');
+        const val = input.value.trim();
+        if(val && !fixedCategories.includes(val) && val !== 'Uncategorized' && val !== 'Other') {
+            fixedCategories.push(val);
+            input.value = '';
+            saveGlobalConfig();
+            renderSettingsFixedCats();
+            populateFixedCategoryDropdowns();
+            updateFinancials(); 
+        }
+    }
+
+    function removeFixedCat(catName) {
+        if(confirm(`Remove '${catName}'? Any debit orders using this will revert to 'Uncategorized'.`)) {
+            fixedCategories = fixedCategories.filter(c => c !== catName);
+            cullenFixedItems.forEach(i => { if(i.fixedCategory === catName) i.fixedCategory = 'Uncategorized'; });
+            elizeFixedItems.forEach(i => { if(i.fixedCategory === catName) i.fixedCategory = 'Uncategorized'; });
+            saveData();
+            saveGlobalConfig();
+            renderSettingsFixedCats();
+            populateFixedCategoryDropdowns();
+            updateFinancials();
+        }
+    }
+
+    function populateFixedCategoryDropdowns() {
+        const selects = [document.getElementById('new-cul-fixed-cat'), document.getElementById('new-eli-fixed-cat')];
+        let opts = '<option value="Uncategorized">Uncategorized</option>';
+        fixedCategories.forEach(c => opts += `<option value="${c}">${c}</option>`);
+        opts += '<option value="Other">Other</option>';
+        
+        selects.forEach(s => { 
+            if(s) { 
+                let val = s.value; 
+                s.innerHTML = opts; 
+                if(val && (fixedCategories.includes(val) || val==='Uncategorized' || val==='Other')) s.value = val; 
+                else s.value = 'Uncategorized';
+            }
+        });
     }
 
     // ----- CLOUD SYNC LOGIC -----
@@ -718,6 +764,7 @@
                             accounts = data.accounts || accounts;
                             categories = data.categories || categories;
                             appNames = data.appNames || appNames;
+                            fixedCategories = data.fixedCategories || fixedCategories;
                             applyAppNames(); renderAccounts(); renderCategories();
                         }
                     }
@@ -911,7 +958,7 @@
         const tbody = document.getElementById(person === 'Cullen' ? 'cul-fixed-tbody' : 'eli-fixed-tbody'); 
         let html = '';
 
-        const catOptions = ['Uncategorized', 'Housing', 'Telecommunications', 'Insurance', 'Kids', 'Utilities', 'Health', 'Other'];
+        const catOptions = ['Uncategorized', ...fixedCategories, 'Other'];
 
         // Helper function to build a single row
         const buildRow = (item, groupId = '') => {
