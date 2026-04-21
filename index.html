@@ -1,4 +1,4 @@
-<!index.html>
+<index.html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -88,11 +88,11 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* --- LAYOUT & CARDS --- */
-        .container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; padding: 0 5%; width: 100%;}
+        .container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; padding: 0 5%; width: 100%;}
         .card { background: var(--card); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); width: 100%;}
         .full-width { grid-column: 1 / -1; }
         .span-2 { grid-column: span 2; }
-        .section-title { font-size: 1.05em; font-weight: 700; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; justify-content: space-between; gap: 8px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+        .section-title { font-size: 1.05em; font-weight: 700; margin-bottom: 24px; color: var(--primary); display: flex; align-items: center; justify-content: space-between; gap: 8px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
 
         .executive-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 10px;}
         .stat-box { padding: 16px; background: var(--card); border-radius: var(--radius-sm); border: 1px solid var(--border); border-top: 3px solid var(--border); }
@@ -105,6 +105,46 @@
         .stat-box h3 { margin: 0 0 6px 0; font-size: 0.7em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; border: none; padding: 0;}
         .stat-box p { margin: 0; font-size: 1.4em; font-weight: 700; color: var(--primary); }
         .stat-subtitle { font-size: 0.7em; color: var(--text-muted); margin-top: 6px; font-weight: 500; }
+
+        /* --- TRANSACTION ENTRY FORM (CEO ALIGNED) --- */
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px 24px; }
+        .form-row { display: flex; flex-direction: column; gap: 6px; }
+        .form-row label { font-weight: 700; font-size: 0.75em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;}
+        .form-row input, .form-row select { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 0.95em; transition: all 0.2s; background: #F9FAFB; color: var(--text); }
+        .form-row input:focus, .form-row select:focus { border-color: var(--accent); background: #FFFFFF; outline: none; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        
+        .btn-submit { width: 100%; background-color: var(--accent); color: white; font-weight: 700; border: none; cursor: pointer; padding: 14px; border-radius: var(--radius-md); margin-top: 10px; font-size: 0.95em; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: var(--shadow-sm); }
+        .btn-submit:hover { background-color: var(--accent-hover); box-shadow: var(--shadow-md); transform: translateY(-1px);}
+
+        /* --- BUDGET ALLOCATION (SaaS STACKED CARDS) --- */
+        #categories-container { display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto; padding-right: 6px;}
+        
+        .budget-list-item { background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); transition: border-color 0.2s;}
+        .budget-list-item:hover { border-color: #D1D5DB; }
+        .bli-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .bli-title { font-weight: 700; color: var(--primary); font-size: 0.95em; display: flex; align-items: center; gap: 8px;}
+        .bli-title::before { content: ""; display: block; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
+        
+        .bli-inputs { display: flex; gap: 12px; width: 100%; }
+        .bli-inputs select { flex: 2; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.9em; background: #F9FAFB; color: var(--text); outline: none; transition: all 0.2s;}
+        .bli-inputs select:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(37,99,235,0.1);}
+        
+        .input-with-icon { flex: 1.2; position: relative; display: flex; align-items: center; }
+        .input-with-icon .currency-symbol { position: absolute; left: 12px; color: var(--text-muted); font-size: 0.9em; font-weight: 600;}
+        .input-with-icon input { width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 10px 10px 28px; font-size: 0.9em; background: #F9FAFB; color: var(--text); outline: none; transition: all 0.2s; font-variant-numeric: tabular-nums; font-weight: 500;}
+        .input-with-icon input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(37,99,235,0.1);}
+        
+        .btn-icon-del { width: 28px; height: 28px; background: var(--danger-bg); color: var(--danger); border: none; border-radius: var(--radius-sm); display: flex; justify-content: center; align-items: center; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 1.2em; line-height: 1;}
+        .btn-icon-del:hover { background: var(--danger); color: white; }
+
+        .budget-add-card { background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: var(--radius-md); padding: 20px; margin-top: 20px; transition: background 0.2s;}
+        .budget-add-card:hover { background: #F1F5F9; border-color: #94A3B8;}
+        .budget-add-card input, .budget-add-card select { width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 12px; font-size: 0.9em; outline: none; background: white; transition: all 0.2s;}
+        .budget-add-card input:focus, .budget-add-card select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1);}
+        .budget-add-card .row-flex { display: flex; gap: 12px; margin: 12px 0;}
+        
+        .btn-add-category { width: 100%; background: #E0E7FF; color: var(--accent-hover); font-weight: 700; border: none; padding: 12px; border-radius: var(--radius-sm); cursor: pointer; transition: 0.2s; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.05em;}
+        .btn-add-category:hover { background: var(--accent); color: white; }
 
         /* --- MODERN BUDGET TRACKER --- */
         .modern-budget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 15px; }
@@ -158,32 +198,19 @@
         .inline-edit-row td { background-color: #FFFBEB !important; padding: 8px !important; }
         .inline-edit-input { width: 100% !important; max-width: none !important; margin-bottom: 4px; border-color: var(--warning) !important; font-size: 0.9em !important;}
 
-        /* --- FORMS & MODALS --- */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-        .form-row label { font-weight: 700; font-size: 0.8em; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em;}
-        .form-row input, .form-row select { padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.95em; transition: border-color 0.2s; }
-        
-        .add-item-form { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: #EFF6FF; padding: 16px; border-radius: var(--radius-sm); border: 2px solid var(--accent);}
-        .add-item-form input, .add-item-form select { flex: 1; min-width: 140px; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.95em; background: #FFFFFF; }
-        .btn-add { background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); padding: 12px 20px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1.05em; flex: 1; min-width: 200px; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);}
-        .btn-add:hover { background: var(--accent-hover); }
-
-        .btn-submit { width: 100%; background-color: var(--accent); color: white; font-weight: 600; border: none; cursor: pointer; padding: 12px; border-radius: var(--radius-sm); margin-top: 10px; font-size: 0.95em; transition: background-color 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
-        .btn-submit:hover { background-color: var(--accent-hover); }
-
         details.card > summary { list-style: none; cursor: pointer; outline: none; margin: -24px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; font-size: 1.05em; font-weight: 600; color: var(--primary); transition: background-color 0.2s; text-transform: uppercase; letter-spacing: 0.05em; }
         details.card > summary:hover { background-color: #F9FAFB; }
         details.card > summary::-webkit-details-marker { display: none; }
         details.card[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 20px; background-color: transparent;}
 
-        .accounts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;}
-        .account-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; border-left: 4px solid var(--border); }
+        .accounts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px;}
+        .account-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; border-left: 4px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; }
+        .account-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .account-card.acc-cullen { border-left-color: var(--accent); }
         .account-card.acc-elize { border-left-color: #6366F1; }
-        .account-card h4 { margin: 0 0 4px 0; font-size: 0.9em; color: var(--primary); text-transform: none; font-weight: 600; border: none; padding: 0;}
+        .account-card h4 { margin: 0 0 4px 0; font-size: 0.95em; color: var(--primary); text-transform: none; font-weight: 700; border: none; padding: 0;}
         .account-card .acc-owner { font-size: 0.65em; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 8px; display: block;}
-        .account-card .acc-balance { font-size: 1.35em; font-weight: 700; }
+        .account-card .acc-balance { font-size: 1.5em; font-weight: 800; letter-spacing: -0.02em;}
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 25, 47, 0.7); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
         .modal-content { background: white; width: 100%; max-width: 500px; border-radius: var(--radius-lg); padding: 30px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); max-height: 90vh; overflow-y: auto; border: 1px solid var(--border); }
@@ -200,7 +227,7 @@
             .btn-header-danger { flex: 1 1 100%; }
 
             .container { grid-template-columns: 1fr; gap: 16px; padding: 0; }
-            .card { padding: 16px; }
+            .card { padding: 20px; }
             .span-2, .full-width { grid-column: 1 / -1; }
             .executive-summary { grid-template-columns: 1fr 1fr; gap: 8px;}
             
@@ -209,7 +236,9 @@
             .tab-btn { flex: 0 0 auto; font-size: 0.75em; padding: 10px 12px; border-radius: var(--radius-sm); border: none; background: transparent; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center; }
             .tab-btn.active { background: #F3F4F6; color: var(--accent); font-weight: 700;}
             
-            .form-grid { grid-template-columns: 1fr; gap: 12px; }
+            .form-grid { grid-template-columns: 1fr; gap: 16px; }
+            .bli-inputs { flex-direction: column; gap: 8px; }
+
             .ledger-table-container { max-height: none; overflow: visible; border: none; }
             table { min-width: 100%; display: block; border: none; }
             thead { display: none; } 
@@ -271,7 +300,7 @@
                     <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; border-top: 1px solid var(--border); padding-top: 15px;">
                         <input type="text" id="new-acc-name" placeholder="Account Name" style="flex: 1; min-width: 140px; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm);">
                         <select id="new-acc-owner" class="owner-dropdown-select" style="flex: 1; min-width: 140px; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm);"></select>
-                        <button type="button" class="btn-add" style="padding: 10px 16px; min-width: 120px;" onclick="addAccount()">Add Account</button>
+                        <button type="button" class="btn-add-category" style="padding: 10px 16px; min-width: 120px;" onclick="addAccount()">Add Account</button>
                     </div>
                 </div>
             </details>
@@ -291,7 +320,7 @@
 
         <div class="card span-2">
             <h3 class="section-title">Transaction Entry</h3>
-            <form id="expense-form" style="border-top: 1px solid var(--border); padding-top: 10px;">
+            <form id="expense-form" style="margin-top: 10px;">
                 <div class="form-grid">
                     <div class="form-row"><label>Transaction Type</label><select id="exp-type" onchange="toggleFormType()"><option value="expense">Expense</option><option value="transfer">Account Transfer</option></select></div>
                     <div class="form-row"><label>Initiated By</label><select id="exp-person" required class="owner-dropdown-select-strict"></select></div>
@@ -299,33 +328,34 @@
                     <div class="form-row" id="col-to-account" style="display:none;"><label>Destination Account</label><select id="exp-to-account" class="account-dropdown"></select></div>
                     <div class="form-row"><label>Date</label><input type="date" id="exp-date" required></div>
                     <div class="form-row" id="col-category"><label>Budget Category</label><select id="exp-category"></select></div>
-                    <div class="form-row"><label>Amount (ZAR)</label><input type="number" id="exp-amount" step="0.01" required></div>
-                    <div class="form-row"><label>Description</label><input type="text" id="exp-desc" required></div>
+                    <div class="form-row"><label>Amount (ZAR)</label><input type="number" id="exp-amount" step="0.01" placeholder="e.g. 500.00" required></div>
+                    <div class="form-row"><label>Description</label><input type="text" id="exp-desc" placeholder="What was this for?" required></div>
                 </div>
-                <div style="display:flex; gap:10px; margin-top: 15px;">
-                    <button type="submit" class="btn-submit" id="btn-submit-tx" style="padding: 16px; font-size: 1.1em;">Record Transaction</button>
+                <div style="margin-top: 28px;">
+                    <button type="submit" class="btn-submit" id="btn-submit-tx">Record Transaction</button>
                 </div>
             </form>
         </div>
 
         <div class="card">
             <h3 class="section-title">Budget Allocation</h3>
-            <div id="categories-container" style="max-height: 250px; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; gap: 8px;"></div>
             
-            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border);">
-                <div style="display:flex; gap: 8px; flex-wrap: wrap;">
-                    <input type="text" id="new-cat-name" placeholder="Name" style="flex:2; padding: 10px; border: 1px solid var(--border); border-radius: 4px; min-width: 120px;">
-                    <input type="number" id="new-cat-amount" placeholder="Limit" step="0.01" style="flex:1; padding: 10px; border: 1px solid var(--border); border-radius: 4px; min-width: 80px;">
-                    <select id="new-cat-account" class="account-dropdown" style="flex:2; padding: 10px; border: 1px solid var(--border); border-radius: 4px; min-width: 120px;"></select>
-                    <button type="button" class="btn-add" style="min-width: 80px; flex: 1;" onclick="addCategory()">Add</button>
+            <div id="categories-container"></div>
+            
+            <div class="budget-add-card">
+                <input type="text" id="new-cat-name" placeholder="New Category Name (e.g. Groceries)">
+                <div class="row-flex">
+                    <input type="number" id="new-cat-amount" placeholder="Limit (ZAR)" step="0.01">
+                    <select id="new-cat-account" class="account-dropdown"></select>
                 </div>
+                <button type="button" class="btn-add-category" onclick="addCategory()">+ Add Category</button>
             </div>
         </div>
 
         <div class="card full-width">
             <div class="section-title" style="margin-bottom: 15px;">
                 <span>Modern Portfolio View (Actual vs Budget)</span>
-                <select id="overview-filter" onchange="updateFinancials()" style="padding: 6px 10px; font-size: 0.8em; border-radius: var(--radius-sm); border: 1px solid var(--border); font-weight: 600; color: var(--primary);">
+                <select id="overview-filter" onchange="updateFinancials()" style="padding: 8px 12px; font-size: 0.85em; border-radius: var(--radius-sm); border: 1.5px solid var(--border); font-weight: 600; color: var(--primary); background: #F9FAFB; outline: none;">
                     <option value="Joint">Household Consolidated</option>
                     <option value="Cullen" id="opt-filter-p1">Cullen Individual</option>
                     <option value="Elize" id="opt-filter-p2">Elize Individual</option>
@@ -333,7 +363,6 @@
             </div>
             
             <div id="modern-budget-container" class="modern-budget-grid"></div>
-
         </div>
     </div>
 </div>
@@ -348,11 +377,11 @@
                     <tbody id="cul-income-tbody"></tbody>
                 </table>
             </div>
-            <div class="add-item-form" style="margin-top: 15px;">
-                <select id="new-cul-inc-account" class="account-dropdown"></select>
-                <input type="text" id="new-cul-inc-name" placeholder="Income Source Name">
-                <input type="number" id="new-cul-inc-amount" placeholder="Amount (ZAR)" step="0.01">
-                <button type="button" class="btn-add" style="background:var(--success); min-width: 120px;" onclick="addSpecificFixedItem('Cullen', 'income')">➕ Add Income</button>
+            <div class="budget-add-card" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; padding: 15px;">
+                <select id="new-cul-inc-account" class="account-dropdown" style="flex: 1; margin: 0;"></select>
+                <input type="text" id="new-cul-inc-name" placeholder="Income Source Name" style="flex: 1; margin: 0;">
+                <input type="number" id="new-cul-inc-amount" placeholder="Amount (ZAR)" step="0.01" style="flex: 1; margin: 0;">
+                <button type="button" class="btn-add-category" style="flex: 1; background:var(--success-bg); color:var(--success);" onclick="addSpecificFixedItem('Cullen', 'income')">➕ Add Income</button>
             </div>
         </div>
 
@@ -364,19 +393,19 @@
                     <tbody id="cul-debit-tbody"></tbody>
                 </table>
             </div>
-            <div class="add-item-form" style="margin-top: 15px;">
-                <select id="new-cul-deb-cat"></select>
-                <select id="new-cul-deb-account" class="account-dropdown"></select>
-                <input type="text" id="new-cul-deb-name" placeholder="Debit Description">
-                <input type="number" id="new-cul-deb-amount" placeholder="Amount (ZAR)" step="0.01">
-                <button type="button" class="btn-add" style="background:var(--danger); min-width: 120px;" onclick="addSpecificFixedItem('Cullen', 'debit')">➕ Add Debit</button>
+            <div class="budget-add-card" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; padding: 15px;">
+                <select id="new-cul-deb-cat" style="flex: 1; margin: 0;"></select>
+                <select id="new-cul-deb-account" class="account-dropdown" style="flex: 1; margin: 0;"></select>
+                <input type="text" id="new-cul-deb-name" placeholder="Debit Description" style="flex: 1.5; margin: 0;">
+                <input type="number" id="new-cul-deb-amount" placeholder="Amount (ZAR)" step="0.01" style="flex: 1; margin: 0;">
+                <button type="button" class="btn-add-category" style="flex: 1; background:var(--danger-bg); color:var(--danger);" onclick="addSpecificFixedItem('Cullen', 'debit')">➕ Add Debit</button>
             </div>
-            <details style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+            <details style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
                 <summary style="font-weight: 700; cursor: pointer; color: var(--primary); font-size: 0.9em; text-transform: uppercase;">⚙️ Wage Management (Celistina)</summary>
                 <div style="margin-top: 15px;">
-                    <div class="form-row" style="margin-bottom: 15px;"><label>Daily Rate (ZAR)</label><input type="number" id="cel-rate" value="275" step="0.01" onchange="updateCelistinaGlobalRate()"></div>
+                    <div style="margin-bottom: 15px; max-width: 200px;"><label style="font-size: 0.75em; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Daily Rate (ZAR)</label><input type="number" id="cel-rate" value="275" step="0.01" style="width: 100%; padding: 10px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); margin-top: 4px;" onchange="updateCelistinaGlobalRate()"></div>
                     <label style="font-weight: 700; font-size: 0.8em; color: var(--primary); display:block; margin-bottom:10px; text-transform: uppercase;">Attendance Schedule:</label>
-                    <div id="celistina-schedule-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
+                    <div id="celistina-schedule-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px;"></div>
                     <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); font-weight: 700; font-size: 1.1em; text-align: right; color: var(--primary);">Calculated Wage: <span id="celistina-total-display" style="font-variant-numeric: tabular-nums;">R 0.00</span></div>
                 </div>
             </details>
@@ -431,11 +460,11 @@
                     <tbody id="eli-income-tbody"></tbody>
                 </table>
             </div>
-            <div class="add-item-form" style="margin-top: 15px;">
-                <select id="new-eli-inc-account" class="account-dropdown"></select>
-                <input type="text" id="new-eli-inc-name" placeholder="Income Source Name">
-                <input type="number" id="new-eli-inc-amount" placeholder="Amount (ZAR)" step="0.01">
-                <button type="button" class="btn-add" style="background:var(--success); min-width: 120px;" onclick="addSpecificFixedItem('Elize', 'income')">➕ Add Income</button>
+            <div class="budget-add-card" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; padding: 15px;">
+                <select id="new-eli-inc-account" class="account-dropdown" style="flex: 1; margin: 0;"></select>
+                <input type="text" id="new-eli-inc-name" placeholder="Income Source Name" style="flex: 1; margin: 0;">
+                <input type="number" id="new-eli-inc-amount" placeholder="Amount (ZAR)" step="0.01" style="flex: 1; margin: 0;">
+                <button type="button" class="btn-add-category" style="flex: 1; background:var(--success-bg); color:var(--success);" onclick="addSpecificFixedItem('Elize', 'income')">➕ Add Income</button>
             </div>
         </div>
 
@@ -447,12 +476,12 @@
                     <tbody id="eli-debit-tbody"></tbody>
                 </table>
             </div>
-            <div class="add-item-form" style="margin-top: 15px;">
-                <select id="new-eli-deb-cat"></select>
-                <select id="new-eli-deb-account" class="account-dropdown"></select>
-                <input type="text" id="new-eli-deb-name" placeholder="Debit Description">
-                <input type="number" id="new-eli-deb-amount" placeholder="Amount (ZAR)" step="0.01">
-                <button type="button" class="btn-add" style="background:var(--danger); min-width: 120px;" onclick="addSpecificFixedItem('Elize', 'debit')">➕ Add Debit</button>
+            <div class="budget-add-card" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; padding: 15px;">
+                <select id="new-eli-deb-cat" style="flex: 1; margin: 0;"></select>
+                <select id="new-eli-deb-account" class="account-dropdown" style="flex: 1; margin: 0;"></select>
+                <input type="text" id="new-eli-deb-name" placeholder="Debit Description" style="flex: 1.5; margin: 0;">
+                <input type="number" id="new-eli-deb-amount" placeholder="Amount (ZAR)" step="0.01" style="flex: 1; margin: 0;">
+                <button type="button" class="btn-add-category" style="flex: 1; background:var(--danger-bg); color:var(--danger);" onclick="addSpecificFixedItem('Elize', 'debit')">➕ Add Debit</button>
             </div>
         </div>
 
@@ -531,8 +560,8 @@
         <div class="modal-subheader" style="margin-top: 25px; margin-bottom: 10px; color: var(--primary); font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 8px;">Debit Order Categories</div>
         <div id="settings-fixed-cats-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; max-height: 150px; overflow-y: auto;"></div>
         <div style="display: flex; gap: 8px;">
-            <input type="text" id="new-fixed-cat-name" placeholder="New Category Name" style="flex: 1; padding: 8px; border: 1px solid var(--border); border-radius: var(--radius-sm);">
-            <button type="button" class="btn-action" style="background: var(--success-bg); color: var(--success); border-color: var(--success); font-weight: 600;" onclick="addFixedCat()">+ Add</button>
+            <input type="text" id="new-fixed-cat-name" placeholder="New Category Name" style="flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit;">
+            <button type="button" class="btn-add-category" style="background: var(--success-bg); color: var(--success); font-weight: 600; width: auto;" onclick="addFixedCat()">+ Add</button>
         </div>
 
         <div style="display: flex; gap: 12px; margin-top: 30px;">
@@ -666,7 +695,7 @@
 
     function renderSettingsFixedCats() {
         const container = document.getElementById('settings-fixed-cats-list'); if(!container) return;
-        container.innerHTML = fixedCategories.map(cat => `<div class="dynamic-row"><span>${cat}</span><button type="button" class="btn-remove" onclick="removeFixedCat('${cat}')">X</button></div>`).join('');
+        container.innerHTML = fixedCategories.map(cat => `<div style="display:flex; justify-content:space-between; align-items:center; background:#F9FAFB; padding:8px 12px; border-radius:var(--radius-sm); border:1px solid var(--border);"><span>${cat}</span><button type="button" style="background:transparent; border:none; color:var(--danger); font-weight:bold; cursor:pointer;" onclick="removeFixedCat('${cat}')">X</button></div>`).join('');
     }
     function addFixedCat() {
         const val = document.getElementById('new-fixed-cat-name').value.trim();
@@ -814,7 +843,8 @@
     function deleteAccount(id) { if(confirm("Delete this account permanently?")) { accounts = accounts.filter(a => a.id !== id); saveGlobalConfig(); renderAccounts(); updateFinancials(); } }
 
     function renderCategories() {
-        const container = document.getElementById('categories-container'); const dropdown = document.getElementById('exp-category'); 
+        const container = document.getElementById('categories-container'); 
+        const dropdown = document.getElementById('exp-category'); 
         container.innerHTML = ''; dropdown.innerHTML = ''; 
         
         categories.forEach(cat => {
@@ -822,14 +852,22 @@
             let defaultOpt = `<option value="" ${!cat.accountId ? 'selected' : ''}>Unlinked Account</option>`;
 
             container.innerHTML += `
-            <div class="dynamic-row" style="flex-wrap: wrap; align-items: center; background: #F9FAFB; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-light);">
-                <span style="flex: 2; min-width: 100px; font-weight: 600;">${cat.name}</span>
-                <input style="flex: 1; min-width: 80px;" type="number" value="${cat.limit}" step="0.01" onchange="updateCatValue('${cat.id}', 'limit', this.value)">
-                <select style="flex: 2; min-width: 120px; padding: 6px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.9em;" onchange="updateCatValue('${cat.id}', 'account', this.value)">
-                    ${defaultOpt} ${accOpts}
-                </select>
-                <button type="button" class="btn-remove" onclick="removeCategory('${cat.id}')">X</button>
+            <div class="budget-list-item">
+                <div class="bli-header">
+                    <span class="bli-title">${cat.name}</span>
+                    <button type="button" class="btn-icon-del" onclick="removeCategory('${cat.id}')" title="Remove Category">×</button>
+                </div>
+                <div class="bli-inputs">
+                    <div class="input-with-icon">
+                        <span class="currency-symbol">R</span>
+                        <input type="number" value="${cat.limit}" step="0.01" onchange="updateCatValue('${cat.id}', 'limit', this.value)">
+                    </div>
+                    <select onchange="updateCatValue('${cat.id}', 'account', this.value)">
+                        ${defaultOpt} ${accOpts}
+                    </select>
+                </div>
             </div>`;
+            
             dropdown.innerHTML += `<option value="${cat.name}">${cat.name}</option>`; 
         });
     }
@@ -1010,8 +1048,8 @@
     }
 
     function updateFinancials() {
-        let accBalancesCurrent = {}; let accBalancesProjected = {}; 
-        accounts.forEach(a => { accBalancesCurrent[a.id] = 0; accBalancesProjected[a.id] = 0; });
+        let accBalancesCurrent = {}; let accBalancesProjected = {}; let accReservedBudgets = {};
+        accounts.forEach(a => { accBalancesCurrent[a.id] = 0; accBalancesProjected[a.id] = 0; accReservedBudgets[a.id] = 0; });
 
         let culInc = 0, culDeb = 0, culPaidInc = 0, culPaidDeb = 0; 
         cullenFixedItems.forEach(i => { 
@@ -1063,7 +1101,7 @@
             }
         });
 
-        // Calculate Reserved Budget
+        // Calculate Reserved Budget & Deduct from Projections
         let totalUnspentBud = 0;
 
         categories.forEach(cat => {
@@ -1073,11 +1111,12 @@
 
             if (cat.accountId && accBalancesProjected[cat.accountId] !== undefined) {
                 accBalancesProjected[cat.accountId] -= unspent;
+                accReservedBudgets[cat.accountId] += unspent;
             }
         });
 
         // -------------------------------------------------------------
-        // FIXED PERSONAL BASELINE MATH (Income - Debits - Budgets - Outward Transfers)
+        // FIXED PERSONAL BASELINE MATH
         // -------------------------------------------------------------
         
         let culTransfersOut = transactions.filter(t => t.type === 'transfer' && accounts.find(a => a.id === t.fromAccountId)?.owner === 'Cullen' && accounts.find(a => a.id === t.toAccountId)?.owner !== 'Cullen').reduce((sum, t) => sum + t.amount, 0);
@@ -1100,14 +1139,27 @@
         let culNetFinal = culInc - culDeb - culTransfersOut - culLinkedBudgets;
         let eliNetFinal = eliInc - eliDeb - eliTransfersOut - eliLinkedBudgets;
 
-        // Render New UI Accounts
-        document.getElementById('accounts-grid').innerHTML = accounts.map(acc => `
-            <div class="account-card ${acc.owner === 'Cullen' ? 'acc-cullen' : (acc.owner === 'Elize' ? 'acc-elize' : '')}">
-                <span class="acc-owner">${acc.owner === 'Cullen' ? appNames.p1 : (acc.owner === 'Elize' ? appNames.p2 : acc.owner)}</span>
+        // Render UI Accounts with Built-in Transparency
+        document.getElementById('accounts-grid').innerHTML = accounts.map(acc => {
+            let displayOwner = acc.owner === 'Cullen' ? appNames.p1 : (acc.owner === 'Elize' ? appNames.p2 : acc.owner);
+            let reserved = accReservedBudgets[acc.id] || 0;
+            let eomColor = accBalancesProjected[acc.id] < 0 ? 'var(--danger)' : 'var(--primary)';
+            
+            return `<div class="account-card ${acc.owner === 'Cullen' ? 'acc-cullen' : (acc.owner === 'Elize' ? 'acc-elize' : '')}">
+                <span class="acc-owner">${displayOwner}</span>
                 <h4>${acc.name}</h4>
                 <div class="acc-balance" style="color: ${accBalancesCurrent[acc.id] >= 0 ? 'var(--primary)' : 'var(--danger)'};">R ${accBalancesCurrent[acc.id].toFixed(2)}</div>
-                <div style="font-size: 0.75em; color: var(--text-muted); margin-top: 8px; font-weight: 600; border-top: 1px solid var(--border-light); padding-top: 6px;">Proj. EOM: R ${accBalancesProjected[acc.id].toFixed(2)}</div>
-            </div>`).join('');
+                
+                <div style="margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 10px; font-size: 0.75em;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-muted); margin-bottom: 6px;">
+                        <span>Reserved Budgets:</span> <span style="font-variant-numeric: tabular-nums;">-R ${reserved.toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: 700; color: ${eomColor};">
+                        <span title="(Current Cash) + (Unpaid Income) - (Unpaid Debits) - (Reserved Budgets)">Proj. EOM:</span> <span style="font-variant-numeric: tabular-nums;">R ${accBalancesProjected[acc.id].toFixed(2)}</span>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
 
         // Joint Summary Updates
         let jointInc = culInc + eliInc; 
