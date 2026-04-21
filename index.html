@@ -44,7 +44,7 @@
         * { box-sizing: border-box; }
         
         html, body {
-            overflow-x: hidden; /* Absolutely prevent horizontal scrolling */
+            overflow-x: hidden; 
             width: 100%;
         }
 
@@ -107,6 +107,7 @@
         .stat-box.green { border-top-color: var(--success); }
         .stat-box.yellow { border-top-color: var(--warning); }
         .stat-box.red { border-top-color: var(--danger); }
+        .stat-box.orange { border-top-color: #F97316; }
         .stat-box.purple { border-top-color: #6366F1; }
         .stat-box h3 { margin: 0 0 6px 0; font-size: 0.7em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; border: none; padding: 0;}
         .stat-box p { margin: 0; font-size: 1.4em; font-weight: 700; color: var(--primary); }
@@ -207,13 +208,12 @@
             .card { padding: 16px; }
             .span-2, .span-3, .full-width { grid-column: 1 / -1; }
             
-            /* Squeeze top stat boxes properly */
             .executive-summary { grid-template-columns: 1fr 1fr; gap: 8px;}
             .stat-box { padding: 12px; }
             .stat-box p { font-size: 1.15em; word-break: break-all; }
             .stat-box h3 { font-size: 0.65em; }
 
-            .accounts-grid { grid-template-columns: 1fr; } /* Stack accounts vertically on mobile */
+            .accounts-grid { grid-template-columns: 1fr; }
             
             .add-item-form { flex-direction: column; gap: 10px; align-items: stretch; }
             .add-item-form input, .add-item-form select, .add-item-form button { width: 100%; max-width: none; }
@@ -226,43 +226,31 @@
             
             .form-grid { grid-template-columns: 1fr; gap: 12px; }
             
-            /* --- COMPLETELY REWRITTEN MOBILE TABLES --- */
             .ledger-table-container { max-height: none; overflow: visible; border: none; }
             .table-responsive { border: none; background: transparent; overflow-x: visible; }
             table { min-width: 100%; display: block; border: none; }
-            thead { display: none; } /* Hide headers */
+            thead { display: none; } 
             tbody { display: block; width: 100%; }
             
-            /* Make rows look like cards */
             tr { display: block; margin-bottom: 15px; background: white; border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: 12px 10px; position: relative;}
             
-            /* Category row styling */
             tr.category-header { background: transparent; border:none; box-shadow:none; padding: 0; margin-bottom: 8px; margin-top: 20px;}
             tr.category-header td { background: transparent !important; padding: 12px 0px !important; border: none; }
             tr.category-header td::before { display: none !important; }
             
             tr.is-paid { border-left: 4px solid var(--success); }
             
-            /* Stack columns vertically inside the row-card */
             td { display: flex !important; flex-direction: column !important; align-items: flex-start !important; text-align: left !important; border: none !important; padding: 6px 0 !important; background: transparent !important; }
-            
-            /* Add pseudo-labels */
             td::before { content: attr(data-label); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: 0.7em; letter-spacing: 0.05em; margin-bottom: 4px; }
-            
-            /* Ensure text wraps nicely */
             td strong, td span { width: 100%; display: block; word-wrap: break-word; font-size: 0.95em;}
-            
-            /* Inputs span full width */
             td input, td select { width: 100%; max-width: 100%; margin-top: 4px; }
             
-            /* Action Buttons side by side */
             td[data-label="Action"], td[data-label="Actions"] { flex-direction: row !important; flex-wrap: wrap; gap: 8px; margin-top: 8px; padding-top: 10px !important; border-top: 1px solid var(--border-light) !important;}
-            td[data-label="Action"]::before, td[data-label="Actions"]::before { display: none; } /* Hide label for buttons */
+            td[data-label="Action"]::before, td[data-label="Actions"]::before { display: none; } 
 
             .inline-edit-row { padding: 15px !important; border: 2px solid var(--warning) !important; }
             .inline-edit-input { font-size: 1em !important; padding: 10px !important;}
             
-            /* Paid Checkbox Alignment */
             td[data-label="Paid Status"] { flex-direction: row !important; align-items: center !important; justify-content: space-between !important; border-bottom: 1px solid var(--border-light) !important; padding-bottom: 10px !important; margin-bottom: 5px; }
             td[data-label="Paid Status"]::before { margin-bottom: 0; }
         }
@@ -329,6 +317,7 @@
                 <div class="stat-box green"><h3>Total Income</h3><p id="joint-income-display">R 0.00</p></div>
                 <div class="stat-box yellow"><h3>Total Debits</h3><p id="joint-debits-display">R 0.00</p></div>
                 <div class="stat-box red"><h3>Ad-Hoc Logged</h3><p id="joint-spent-display">R 0.00</p></div>
+                <div class="stat-box orange"><h3>Reserved Budget</h3><p id="joint-bud-display">R 0.00</p></div>
                 <div class="stat-box purple" id="cfo-proj-end-box"><h3 id="cfo-proj-end-title">Proj. Month-End</h3><p id="cfo-proj-end-val">R 0.00</p><div class="stat-subtitle">Expected at EOM</div></div>
                 <div class="stat-box blue" id="joint-remaining-box"><h3 title="Cleared Income - Cleared Debits - Ad-Hoc Spend">Current Liquid Cash</h3><p id="joint-remaining-display">R 0.00</p><div class="stat-subtitle">Actual Bank Balance</div></div>
             </div>
@@ -355,12 +344,14 @@
 
         <div class="card">
             <h3 class="section-title">Budget Allocation</h3>
-            <div id="categories-container" style="max-height: 200px; overflow-y: auto; padding-right: 5px;"></div>
+            <div id="categories-container" style="max-height: 250px; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; gap: 8px;"></div>
+            
             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border);">
-                <div style="display:flex; gap: 8px;">
-                    <input type="text" id="new-cat-name" placeholder="Name" style="flex:1; padding: 10px; border: 1px solid var(--border); border-radius: 4px;">
-                    <input type="number" id="new-cat-amount" placeholder="Limit" step="0.01" style="width: 90px; padding: 10px; border: 1px solid var(--border); border-radius: 4px;">
-                    <button type="button" class="btn-add" style="min-width: 80px;" onclick="addCategory()">Add</button>
+                <div style="display:flex; gap: 8px; flex-wrap: wrap;">
+                    <input type="text" id="new-cat-name" placeholder="Name" style="flex:2; padding: 10px; border: 1px solid var(--border); border-radius: 4px; min-width: 120px;">
+                    <input type="number" id="new-cat-amount" placeholder="Limit" step="0.01" style="flex:1; padding: 10px; border: 1px solid var(--border); border-radius: 4px; min-width: 80px;">
+                    <select id="new-cat-account" class="account-dropdown" style="flex:2; padding: 10px; border: 1px solid var(--border); border-radius: 4px; min-width: 120px;"></select>
+                    <button type="button" class="btn-add" style="min-width: 80px; flex: 1;" onclick="addCategory()">Add</button>
                 </div>
             </div>
             
@@ -390,6 +381,7 @@
                 <div class="stat-box green"><h3>Total Income</h3><p id="cul-inc-disp">R 0</p></div>
                 <div class="stat-box yellow"><h3>Total Debits</h3><p id="cul-deb-disp">R 0</p></div>
                 <div class="stat-box red"><h3>Ad-Hoc Spend</h3><p id="cul-spent-disp">R 0</p></div>
+                <div class="stat-box orange"><h3>Reserved Budget</h3><p id="cul-bud-disp">R 0</p></div>
                 <div class="stat-box purple"><h3>Proj. Month-End</h3><p id="cul-proj-disp">R 0</p></div>
                 <div class="stat-box blue" id="cul-rem-box"><h3>Current Liquid</h3><p id="cul-liquid-disp">R 0</p></div>
             </div>
@@ -453,6 +445,7 @@
                 <div class="stat-box green"><h3>Total Income</h3><p id="eli-inc-disp">R 0</p></div>
                 <div class="stat-box yellow"><h3>Total Debits</h3><p id="eli-deb-disp">R 0</p></div>
                 <div class="stat-box red"><h3>Ad-Hoc Spend</h3><p id="eli-spent-disp">R 0</p></div>
+                <div class="stat-box orange"><h3>Reserved Budget</h3><p id="eli-bud-disp">R 0</p></div>
                 <div class="stat-box purple"><h3>Proj. Month-End</h3><p id="eli-proj-disp">R 0</p></div>
                 <div class="stat-box blue" id="eli-rem-box"><h3>Current Liquid</h3><p id="eli-liquid-disp">R 0</p></div>
             </div>
@@ -513,7 +506,7 @@
             <h3 class="section-title">Category Overspend Risk Matrix</h3>
             <div class="table-responsive">
                 <table>
-                    <thead><tr><th>Category</th><th>Full Limit</th><th>Current Spend</th><th>Remaining</th><th>Proj. Final</th><th>Proj. Variance</th><th>Status</th></tr></thead>
+                    <thead><tr><th>Category</th><th>Linked Account</th><th>Full Limit</th><th>Current Spend</th><th>Remaining</th><th>Proj. Final</th><th>Proj. Variance</th><th>Status</th></tr></thead>
                     <tbody id="forecast-tbody"></tbody>
                 </table>
             </div>
@@ -567,7 +560,16 @@
     let appNames = { dash: "Executive Dashboard", p1: "Cullen", p2: "Elize" };
     let fixedCategories = ['Housing', 'Telecommunications', 'Insurance', 'Kids', 'Utilities', 'Health'];
     let accounts = [{ id: 'acc_c1', name: 'Cullen FNB Cheque', owner: 'Cullen' }, { id: 'acc_e1', name: 'Elize Cheque', owner: 'Elize' }];
-    let categories = [{ id: 'cat1', name: 'Groceries', limit: 5400 }, { id: 'cat2', name: 'Petrol', limit: 4200 }, { id: 'cat3', name: 'Health Care', limit: 2000 }, { id: 'cat4', name: 'Kids / School', limit: 2000 }, { id: 'cat5', name: 'Luxuries', limit: 1500 }, { id: 'cat6', name: 'Maintenance', limit: 1000 }, { id: 'cat7', name: 'Other', limit: 1000 }];
+    
+    let categories = [
+        { id: 'cat1', name: 'Groceries', limit: 5400, accountId: 'acc_e1' }, 
+        { id: 'cat2', name: 'Petrol', limit: 4200, accountId: 'acc_c1' }, 
+        { id: 'cat3', name: 'Health Care', limit: 2000, accountId: 'acc_c1' }, 
+        { id: 'cat4', name: 'Kids / School', limit: 2000, accountId: 'acc_e1' }, 
+        { id: 'cat5', name: 'Luxuries', limit: 1500, accountId: 'acc_e1' }, 
+        { id: 'cat6', name: 'Maintenance', limit: 1000, accountId: 'acc_c1' }, 
+        { id: 'cat7', name: 'Other', limit: 1000, accountId: 'acc_c1' }
+    ];
     
     let celistinaRate = 275; let celistinaDays = [];
     let cullenFixedItems = [{ id: 'inc1', type: 'income', accountId: 'acc_c1', name: 'Basic Salary', amount: 48642, paid: false }, { id: 'cd1', type: 'debit', accountId: 'acc_c1', name: 'Bond Repayment', amount: 17773.29, paid: false, fixedCategory: 'Housing' }, { id: 'cd2', type: 'debit', accountId: 'acc_c1', name: 'Normandie Levy', amount: 4955, paid: false, fixedCategory: 'Housing' }];
@@ -662,7 +664,6 @@
         saveGlobalConfig(); applyAppNames(); closeSettingsModal();
     }
 
-    // --- DEBIT CATEGORIES ---
     function renderSettingsFixedCats() {
         const container = document.getElementById('settings-fixed-cats-list'); if(!container) return;
         container.innerHTML = fixedCategories.map(cat => `<div class="dynamic-row"><span>${cat}</span><button type="button" class="btn-remove" onclick="removeFixedCat('${cat}')">X</button></div>`).join('');
@@ -689,7 +690,6 @@
         selects.forEach(s => { if(s) { let val = s.value; s.innerHTML = opts; if(val) s.value = val; else s.value = 'Uncategorized'; } });
     }
 
-    // --- ROLLOVER & SYNC ---
     function rolloverDebits() {
         if(!confirm("Copy Debits & Income to next month?")) return;
         let [y, m] = currentMonthKey.split('-'); let date = new Date(parseInt(y), parseInt(m), 1); 
@@ -769,7 +769,6 @@
         document.getElementById('cel-rate').value = celistinaRate; renderAccounts(); renderCategories(); renderCelistinaSchedule(); updateFinancials();
     }
 
-    // --- UI TOGGLES ---
     function switchTab(tabId, btnElement) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -789,7 +788,6 @@
         else { document.getElementById('col-category').style.display = 'flex'; document.getElementById('col-to-account').style.display = 'none'; document.getElementById('label-from-account').innerText = 'Source Account'; }
     }
 
-    // --- ACCOUNTS & CATEGORIES ---
     function getAccountName(id) { let acc = accounts.find(a => a.id === id); return acc ? acc.name : 'Unknown Account'; }
 
     function renderAccounts() {
@@ -807,6 +805,7 @@
                 </div>`;
             }).join('');
         }
+        renderCategories(); 
     }
 
     function editAccount(id) {
@@ -826,14 +825,44 @@
     function renderCategories() {
         const container = document.getElementById('categories-container'); const dropdown = document.getElementById('exp-category'); 
         container.innerHTML = ''; dropdown.innerHTML = ''; 
+        
         categories.forEach(cat => {
-            container.innerHTML += `<div class="dynamic-row"><span>${cat.name}</span><input type="number" value="${cat.limit}" step="0.01" onchange="updateCatValue('${cat.id}', this.value)"><button type="button" class="btn-remove" onclick="removeCategory('${cat.id}')">X</button></div>`;
+            let accOpts = accounts.map(a => `<option value="${a.id}" ${a.id === cat.accountId ? 'selected' : ''}>${a.name}</option>`).join('');
+            let defaultOpt = `<option value="" ${!cat.accountId ? 'selected' : ''}>Unlinked Account</option>`;
+
+            container.innerHTML += `
+            <div class="dynamic-row" style="flex-wrap: wrap; align-items: center; background: #F9FAFB; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-light);">
+                <span style="flex: 2; min-width: 100px; font-weight: 600;">${cat.name}</span>
+                <input style="flex: 1; min-width: 80px;" type="number" value="${cat.limit}" step="0.01" onchange="updateCatValue('${cat.id}', 'limit', this.value)">
+                <select style="flex: 2; min-width: 120px; padding: 6px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.9em;" onchange="updateCatValue('${cat.id}', 'account', this.value)">
+                    ${defaultOpt} ${accOpts}
+                </select>
+                <button type="button" class="btn-remove" onclick="removeCategory('${cat.id}')">X</button>
+            </div>`;
             dropdown.innerHTML += `<option value="${cat.name}">${cat.name}</option>`; 
         });
     }
-    function updateCatValue(id, newVal) { const cat = categories.find(c => c.id === id); if(cat) cat.limit = parseFloat(newVal) || 0; saveGlobalConfig(); updateFinancials(); }
+
+    function updateCatValue(id, field, newVal) { 
+        const cat = categories.find(c => c.id === id); 
+        if(cat) {
+            if (field === 'limit') cat.limit = parseFloat(newVal) || 0;
+            if (field === 'account') cat.accountId = newVal;
+            saveGlobalConfig(); updateFinancials(); 
+        }
+    }
+
     function removeCategory(id) { categories = categories.filter(c => c.id !== id); saveGlobalConfig(); renderCategories(); updateFinancials(); }
-    function addCategory() { const name = document.getElementById('new-cat-name').value; const amt = document.getElementById('new-cat-amount').value; if(!name) return; categories.push({ id: 'cat_' + Date.now(), name: name, limit: parseFloat(amt) || 0 }); document.getElementById('new-cat-name').value=''; document.getElementById('new-cat-amount').value=''; saveGlobalConfig(); renderCategories(); updateFinancials(); }
+    
+    function addCategory() { 
+        const name = document.getElementById('new-cat-name').value; 
+        const amt = document.getElementById('new-cat-amount').value; 
+        const accId = document.getElementById('new-cat-account').value;
+        if(!name) return; 
+        categories.push({ id: 'cat_' + Date.now(), name: name, limit: parseFloat(amt) || 0, accountId: accId }); 
+        document.getElementById('new-cat-name').value=''; document.getElementById('new-cat-amount').value=''; 
+        saveGlobalConfig(); renderCategories(); updateFinancials(); 
+    }
 
     function renderCelistinaSchedule() {
         const container = document.getElementById('celistina-schedule-container'); container.innerHTML = '';
@@ -843,7 +872,6 @@
     function updateCelistinaGlobalRate() { celistinaRate = parseFloat(document.getElementById('cel-rate').value) || 0; saveData(); updateFinancials(); }
 
 
-    // --- INLINE EDITING ---
     function editInlineFixed(id) { inlineEditFixedId = id; renderFixedItems('Cullen'); renderFixedItems('Elize'); }
     function cancelInlineFixed() { inlineEditFixedId = null; renderFixedItems('Cullen'); renderFixedItems('Elize'); }
     function saveInlineFixed(person, id) {
@@ -905,7 +933,6 @@
     function deleteTx(id) { transactions = transactions.filter(t => t.id != id); saveData(); updateFinancials(); }
     function resetTransactions() { if(confirm("Clear ALL transactions?")) { transactions = []; saveData(); updateFinancials(); } }
 
-    // --- HTML RENDERERS ---
     function renderFixedItems(person) {
         const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; 
         const tbody = document.getElementById(person === 'Cullen' ? 'cul-fixed-tbody' : 'eli-fixed-tbody'); 
@@ -1008,7 +1035,6 @@
         return html === '' ? '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding: 20px;">No records found for this period.</td></tr>' : html;
     }
 
-    // --- CORE MATH ---
     function initChart() {
         if (jointChart) { jointChart.destroy(); }
         jointChart = new Chart(document.getElementById('jointChart').getContext('2d'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Budget Limit', data: [], backgroundColor: '#E5E7EB', borderRadius: 4 }, { label: 'Actual Spend', data: [], backgroundColor: '#0A192F', borderRadius: 4 }, { label: 'Remaining', data: [], backgroundColor: '#00A86B', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: "'Inter', sans-serif" } } } }, scales: { y: { beginAtZero: true, grid: { color: '#F3F4F6' } }, x: { grid: { display: false } } } } });
@@ -1017,11 +1043,9 @@
     function updateFinancials() {
         renderFixedItems('Cullen'); renderFixedItems('Elize'); 
         
-        // 1. Account Balances Prep
         let accBalancesCurrent = {}; let accBalancesProjected = {}; 
         accounts.forEach(a => { accBalancesCurrent[a.id] = 0; accBalancesProjected[a.id] = 0; });
 
-        // 2. Cullen Math
         let culInc = 0, culDeb = 0, culPaidInc = 0, culPaidDeb = 0; 
         cullenFixedItems.forEach(i => { 
             if(i.type === 'income') { 
@@ -1037,11 +1061,10 @@
 
         let celTotal = 0; celistinaDays.forEach(d => { if(d.present) celTotal += celistinaRate; }); 
         document.getElementById('celistina-total-display').innerText = `R ${celTotal.toFixed(2)}`; 
-        culDeb += celTotal; // Celistina impacts PROJECTIONS but NOT actual liquid cash until paid via a manual transaction.
+        culDeb += celTotal; 
         let defaultCullenAcc = accounts.find(a => a.owner === 'Cullen'); 
         if(defaultCullenAcc && accBalancesProjected[defaultCullenAcc.id] !== undefined) { accBalancesProjected[defaultCullenAcc.id] -= celTotal; }
 
-        // 3. Elize Math
         let eliInc = 0, eliDeb = 0, eliPaidInc = 0, eliPaidDeb = 0; 
         elizeFixedItems.forEach(i => { 
             if(i.type === 'income') { 
@@ -1055,8 +1078,9 @@
             } 
         });
 
-        // 4. Transaction Math
         let culSpent = 0, eliSpent = 0; 
+        let catSpendMap = {}; categories.forEach(c => catSpendMap[c.name] = 0);
+        
         transactions.forEach(tx => {
             if (tx.type === 'transfer') { 
                 if(accBalancesProjected[tx.fromAccountId] !== undefined) accBalancesProjected[tx.fromAccountId] -= tx.amount; 
@@ -1067,11 +1091,33 @@
             else { 
                 if(accBalancesProjected[tx.accountId] !== undefined) accBalancesProjected[tx.accountId] -= tx.amount; 
                 if(accBalancesCurrent[tx.accountId] !== undefined) accBalancesCurrent[tx.accountId] -= tx.amount; 
-                if (tx.person === 'Cullen') { culSpent += tx.amount; } else { eliSpent += tx.amount; } 
+                if (tx.person === 'Cullen') { culSpent += tx.amount; } else { eliSpent += tx.amount; }
+                if (catSpendMap[tx.category] !== undefined) catSpendMap[tx.category] += tx.amount;
             }
         });
 
-        // 5. Account Balances Render
+        // Calculate Reserved Budget
+        let totalUnspentBud = 0;
+        let culUnspentBud = 0;
+        let eliUnspentBud = 0;
+
+        categories.forEach(cat => {
+            let spent = catSpendMap[cat.name] || 0;
+            let unspent = Math.max(0, cat.limit - spent);
+            totalUnspentBud += unspent;
+
+            if (cat.accountId && accBalancesProjected[cat.accountId] !== undefined) {
+                accBalancesProjected[cat.accountId] -= unspent;
+
+                let acc = accounts.find(a => a.id === cat.accountId);
+                if (acc) {
+                    if (acc.owner === 'Cullen') culUnspentBud += unspent;
+                    else if (acc.owner === 'Elize') eliUnspentBud += unspent;
+                }
+            }
+        });
+
+        // 5. Render Account Balances
         document.getElementById('accounts-grid').innerHTML = accounts.map(acc => `
             <div class="account-card ${acc.owner === 'Cullen' ? 'acc-cullen' : (acc.owner === 'Elize' ? 'acc-elize' : '')}">
                 <span class="acc-owner">${acc.owner === 'Cullen' ? appNames.p1 : (acc.owner === 'Elize' ? appNames.p2 : acc.owner)}</span>
@@ -1081,33 +1127,65 @@
             </div>`).join('');
 
         // 6. Ledgers & Summaries Render
-        document.getElementById('cul-tbody').innerHTML = generateCategorizedLedger('Cullen'); document.getElementById('eli-tbody').innerHTML = generateCategorizedLedger('Elize'); 
+        document.getElementById('cul-tbody').innerHTML = generateCategorizedLedger('Cullen'); 
+        document.getElementById('eli-tbody').innerHTML = generateCategorizedLedger('Elize'); 
         
-        const jointInc = culInc + eliInc; const jointDeb = culDeb + eliDeb; const jointSpent = culSpent + eliSpent;
-        const totalCatBudget = categories.reduce((sum, c) => sum + c.limit, 0);
+        let jointInc = culInc + eliInc; 
+        let jointDeb = culDeb + eliDeb; 
+        let jointSpent = culSpent + eliSpent;
+        let jointPaidInc = culPaidInc + eliPaidInc;
+        let jointPaidDeb = culPaidDeb + eliPaidDeb;
         
-        // Executive Summaries
-        setRemUI('joint-income-display', null, jointInc); setRemUI('joint-debits-display', null, jointDeb); setRemUI('joint-spent-display', null, jointSpent); 
-        setRemUI('joint-remaining-display', 'joint-remaining-box', (culPaidInc + eliPaidInc) - (culPaidDeb + eliPaidDeb) - jointSpent);
+        // --- PERFECTLY BALANCED EXPLICIT MATH ---
         
-        setRemUI('cul-inc-disp', null, culInc); setRemUI('cul-deb-disp', null, culDeb); setRemUI('cul-spent-disp', null, culSpent); 
-        setRemUI('cul-proj-disp', null, culInc - culDeb - culSpent); setRemUI('cul-liquid-disp', 'cul-rem-box', culPaidInc - culPaidDeb - culSpent);
+        // Joint Summary
+        setRemUI('joint-income-display', null, jointInc); 
+        setRemUI('joint-debits-display', null, jointDeb); 
+        setRemUI('joint-spent-display', null, jointSpent); 
+        setRemUI('joint-bud-display', null, totalUnspentBud);
         
-        setRemUI('eli-inc-disp', null, eliInc); setRemUI('eli-deb-disp', null, eliDeb); setRemUI('eli-spent-disp', null, eliSpent); 
-        setRemUI('eli-proj-disp', null, eliInc - eliDeb - eliSpent); setRemUI('eli-liquid-disp', 'eli-rem-box', eliPaidInc - eliPaidDeb - eliSpent);
+        let jointMathProj = jointInc - jointDeb - jointSpent - totalUnspentBud;
+        let jointMathLiquid = jointPaidInc - jointPaidDeb - jointSpent;
+
+        setRemUI('cfo-proj-end-val', 'cfo-proj-end-box', jointMathProj); 
+        setRemUI('joint-remaining-display', 'joint-remaining-box', jointMathLiquid);
+
+        // Cullen Summary
+        setRemUI('cul-inc-disp', null, culInc); 
+        setRemUI('cul-deb-disp', null, culDeb); 
+        setRemUI('cul-spent-disp', null, culSpent); 
+        setRemUI('cul-bud-disp', null, culUnspentBud);
+        
+        let culMathProj = culInc - culDeb - culSpent - culUnspentBud;
+        let culMathLiquid = culPaidInc - culPaidDeb - culSpent;
+        
+        setRemUI('cul-proj-disp', null, culMathProj); 
+        setRemUI('cul-liquid-disp', 'cul-rem-box', culMathLiquid);
+        
+        // Elize Summary
+        setRemUI('eli-inc-disp', null, eliInc); 
+        setRemUI('eli-deb-disp', null, eliDeb); 
+        setRemUI('eli-spent-disp', null, eliSpent); 
+        setRemUI('eli-bud-disp', null, eliUnspentBud);
+
+        let eliMathProj = eliInc - eliDeb - eliSpent - eliUnspentBud;
+        let eliMathLiquid = eliPaidInc - eliPaidDeb - eliSpent;
+
+        setRemUI('eli-proj-disp', null, eliMathProj); 
+        setRemUI('eli-liquid-disp', 'eli-rem-box', eliMathLiquid);
 
         // 7. Filter & Chart Math
         let overviewFilter = document.getElementById('overview-filter').value; let filteredExpenses = transactions.filter(t => t.type !== 'transfer'); 
         if(overviewFilter !== 'Joint') { filteredExpenses = filteredExpenses.filter(t => t.person === overviewFilter); }
 
-        let catSpendMap = {}; categories.forEach(c => catSpendMap[c.name] = 0); filteredExpenses.forEach(tx => { if (catSpendMap[tx.category] !== undefined) catSpendMap[tx.category] += tx.amount; });
+        let filteredCatSpendMap = {}; categories.forEach(c => filteredCatSpendMap[c.name] = 0); filteredExpenses.forEach(tx => { if (filteredCatSpendMap[tx.category] !== undefined) filteredCatSpendMap[tx.category] += tx.amount; });
 
         if (jointChart && jointChart.data) {
             jointChart.data.labels = categories.map(c => c.name); jointChart.data.datasets[0].data = categories.map(c => c.limit); 
-            jointChart.data.datasets[1].data = categories.map(c => catSpendMap[c.name]); 
-            jointChart.data.datasets[1].backgroundColor = categories.map(c => (catSpendMap[c.name] > c.limit && overviewFilter === 'Joint') ? '#D90429' : '#0A192F'); 
-            jointChart.data.datasets[2].data = categories.map(c => c.limit - catSpendMap[c.name]); 
-            jointChart.data.datasets[2].backgroundColor = categories.map(c => (c.limit - catSpendMap[c.name] >= 0) ? '#00A86B' : '#F59E0B');
+            jointChart.data.datasets[1].data = categories.map(c => filteredCatSpendMap[c.name]); 
+            jointChart.data.datasets[1].backgroundColor = categories.map(c => (filteredCatSpendMap[c.name] > c.limit && overviewFilter === 'Joint') ? '#D90429' : '#0A192F'); 
+            jointChart.data.datasets[2].data = categories.map(c => c.limit - filteredCatSpendMap[c.name]); 
+            jointChart.data.datasets[2].backgroundColor = categories.map(c => (c.limit - filteredCatSpendMap[c.name] >= 0) ? '#00A86B' : '#F59E0B');
             jointChart.data.datasets[1].label = overviewFilter === 'Joint' ? 'Actual Spend (Household)' : `Total Personal Spend`;
             jointChart.data.datasets[0].hidden = overviewFilter !== 'Joint'; jointChart.data.datasets[2].hidden = overviewFilter !== 'Joint'; jointChart.update();
         }
@@ -1117,28 +1195,29 @@
         if (overviewFilter === 'Joint') {
             document.getElementById('overview-thead').innerHTML = `<tr><th>Category</th><th>Household Limit</th><th>Total Spend</th><th>Remaining</th></tr>`;
             categories.forEach(cat => {
-                const bud = cat.limit; const spendFiltered = catSpendMap[cat.name]; const remainingFiltered = bud - spendFiltered;
+                const bud = cat.limit; const spendFiltered = filteredCatSpendMap[cat.name]; const remainingFiltered = bud - spendFiltered;
                 overviewHTML += `<tr><td data-label="Category"><strong>${cat.name}</strong></td><td data-label="Limit" style="white-space:nowrap; font-variant-numeric: tabular-nums;">R ${bud.toFixed(2)}</td><td data-label="Spend" style="white-space:nowrap; font-variant-numeric: tabular-nums;">R ${spendFiltered.toFixed(2)}</td><td data-label="Remaining" style="${remainingFiltered < 0 ? 'color: var(--danger)' : 'color: var(--success)'}; font-weight: bold; white-space:nowrap; font-variant-numeric: tabular-nums;">R ${remainingFiltered.toFixed(2)}</td></tr>`;
             });
         }
         document.getElementById('overview-budget-tbody').innerHTML = overviewHTML; 
 
-        let forecastHTML = ''; let totalProjectedSpend = 0;
+        let forecastHTML = '';
         categories.forEach(cat => {
             let jointCatSpend = transactions.filter(t => t.category === cat.name && t.type !== 'transfer').reduce((sum, t) => sum + t.amount, 0);
-            const bud = cat.limit; const projectedSpend = Math.max(bud, jointCatSpend); totalProjectedSpend += projectedSpend; const projectedVariance = bud - projectedSpend;
-            forecastHTML += `<tr><td data-label="Category"><strong>${cat.name}</strong></td><td data-label="Full Limit" style="white-space:nowrap; font-variant-numeric: tabular-nums;">R ${bud.toFixed(2)}</td><td data-label="Current Spend" style="white-space:nowrap; font-variant-numeric: tabular-nums;">R ${jointCatSpend.toFixed(2)}</td><td data-label="Remaining" style="color:${(bud - jointCatSpend) < 0 ? 'var(--danger)' : 'inherit'}; white-space:nowrap; font-variant-numeric: tabular-nums;">R ${(bud - jointCatSpend).toFixed(2)}</td><td data-label="Proj. Final" style="color:${projectedVariance < 0 ? 'var(--danger)' : 'inherit'}; white-space:nowrap; font-weight:700; font-variant-numeric: tabular-nums;">R ${projectedSpend.toFixed(2)}</td><td data-label="Proj. Variance" style="color:${projectedVariance < 0 ? 'var(--danger)' : 'inherit'}; font-variant-numeric: tabular-nums;">R ${projectedVariance.toFixed(2)}</td><td data-label="Status">${projectedVariance < 0 ? `<span class="risk-badge badge-risk">ALERT</span>` : `<span class="risk-badge badge-ok">OK</span>`}</td></tr>`;
+            const bud = cat.limit; const projectedSpend = Math.max(bud, jointCatSpend); const projectedVariance = bud - projectedSpend;
+            forecastHTML += `<tr><td data-label="Category"><strong>${cat.name}</strong></td><td data-label="Account"><span class="badge badge-income" style="background:#F3F4F6; color:var(--text); border-color:var(--border);">${getAccountName(cat.accountId) || 'Unlinked'}</span></td><td data-label="Full Limit" style="white-space:nowrap; font-variant-numeric: tabular-nums;">R ${bud.toFixed(2)}</td><td data-label="Current Spend" style="white-space:nowrap; font-variant-numeric: tabular-nums;">R ${jointCatSpend.toFixed(2)}</td><td data-label="Remaining" style="color:${(bud - jointCatSpend) < 0 ? 'var(--danger)' : 'inherit'}; white-space:nowrap; font-variant-numeric: tabular-nums;">R ${(bud - jointCatSpend).toFixed(2)}</td><td data-label="Proj. Final" style="color:${projectedVariance < 0 ? 'var(--danger)' : 'inherit'}; white-space:nowrap; font-weight:700; font-variant-numeric: tabular-nums;">R ${projectedSpend.toFixed(2)}</td><td data-label="Proj. Variance" style="color:${projectedVariance < 0 ? 'var(--danger)' : 'inherit'}; font-variant-numeric: tabular-nums;">R ${projectedVariance.toFixed(2)}</td><td data-label="Status">${projectedVariance < 0 ? `<span class="risk-badge badge-risk">ALERT</span>` : `<span class="risk-badge badge-ok">OK</span>`}</td></tr>`;
         });
         document.getElementById('forecast-tbody').innerHTML = forecastHTML;
 
-        const householdProjectedRemaining = jointInc - jointDeb - totalProjectedSpend;
-        setRemUI('proj-inc', null, jointInc); setRemUI('proj-deb', null, jointDeb); setRemUI('proj-var', null, totalProjectedSpend);
-        setRemUI('proj-end-val', 'proj-end-box', householdProjectedRemaining); setRemUI('cfo-proj-end-val', 'cfo-proj-end-box', householdProjectedRemaining);
+        setRemUI('proj-inc', null, jointInc); 
+        setRemUI('proj-deb', null, jointDeb); 
+        setRemUI('proj-var', null, jointSpent + totalUnspentBud);
+        setRemUI('proj-end-val', 'proj-end-box', jointMathProj); 
         
-        document.getElementById('forecast-headline').innerText = householdProjectedRemaining < 0 ? 'Deficit Risk Detected' : 'End of Month Projection';
-        document.getElementById('forecast-headline').style.color = householdProjectedRemaining < 0 ? 'var(--danger)' : 'var(--primary)';
-        document.getElementById('cfo-proj-end-title').style.color = householdProjectedRemaining < 0 ? 'var(--danger)' : 'var(--text-muted)';
-        document.getElementById('cfo-proj-end-title').innerText = householdProjectedRemaining < 0 ? 'Proj. Deficit' : 'Proj. Month-End';
+        document.getElementById('forecast-headline').innerText = jointMathProj < 0 ? 'Deficit Risk Detected' : 'End of Month Projection';
+        document.getElementById('forecast-headline').style.color = jointMathProj < 0 ? 'var(--danger)' : 'var(--primary)';
+        document.getElementById('cfo-proj-end-title').style.color = jointMathProj < 0 ? 'var(--danger)' : 'var(--text-muted)';
+        document.getElementById('cfo-proj-end-title').innerText = jointMathProj < 0 ? 'Proj. Deficit' : 'Proj. Month-End';
     }
 
     function setRemUI(textId, boxId, amount) { 
