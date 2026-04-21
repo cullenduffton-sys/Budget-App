@@ -1,4 +1,4 @@
-<index.html>
+<!index.html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -43,10 +43,7 @@
 
         * { box-sizing: border-box; }
         
-        html, body {
-            overflow-x: hidden; 
-            width: 100%;
-        }
+        html, body { overflow-x: hidden; width: 100%; }
 
         body { 
             font-family: 'Inter', system-ui, sans-serif; 
@@ -59,11 +56,11 @@
 
         h1, h2, h3, h4 { color: var(--primary); margin-top: 0; font-weight: 600; letter-spacing: -0.01em; }
         
-        td[data-label="Amount"], p[id$="-disp"], p[id$="-val"], p[id$="-display"], .acc-balance {
+        td[data-label="Amount"], p[id$="-disp"], p[id$="-val"], p[id$="-display"], .acc-balance, .tabular-nums {
             font-variant-numeric: tabular-nums;
         }
 
-        /* --- HEADER --- */
+        /* --- HEADER & NAV --- */
         .header-wrapper { background-color: #0A192F !important; border-bottom: 1px solid #172A45 !important; padding: 16px 5%; margin-bottom: 30px; box-shadow: var(--shadow-sm); width: 100%;}
         .header-bar { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
         .header-bar h1 { margin: 0; font-size: 1.4em; font-weight: 700; color: #FFFFFF !important; letter-spacing: 0.05em; text-transform: uppercase;}
@@ -79,11 +76,8 @@
         .btn-header { padding: 10px 14px; font-size: 0.85em; font-weight: 700; border-radius: var(--radius-sm); border: 1px solid #E5E7EB !important; cursor: pointer; background: #FFFFFF !important; color: #0A192F !important; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; flex-shrink: 0; box-shadow: var(--shadow-sm);}
         .btn-header:hover { background: #F3F4F6 !important; }
         .btn-header-danger { background: #D90429 !important; color: #FFFFFF !important; border: none !important; }
-        .btn-header-danger:hover { background: #9b021c !important; }
         .btn-header-primary { background: #2563EB !important; color: #FFFFFF !important; border: none !important; }
-        .btn-header-primary:hover { background: #1D4ED8 !important; }
 
-        /* --- NAVIGATION --- */
         .tab-nav-wrapper { background: var(--card); border-bottom: 1px solid var(--border); margin-bottom: 30px; width: 100%;}
         .tab-nav { display: flex; gap: 24px; max-width: 1400px; margin: 0 auto; padding: 0 5%; }
         .tab-btn { padding: 16px 4px; background: transparent; border: none; border-bottom: 2px solid transparent; font-size: 0.95em; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; white-space: nowrap;}
@@ -93,14 +87,13 @@
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- MAIN LAYOUT --- */
+        /* --- LAYOUT & CARDS --- */
         .container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; padding: 0 5%; width: 100%;}
         .card { background: var(--card); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); width: 100%;}
         .full-width { grid-column: 1 / -1; }
         .span-2 { grid-column: span 2; }
         .section-title { font-size: 1.05em; font-weight: 700; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; justify-content: space-between; gap: 8px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
 
-        /* --- EXECUTIVE KPI SUMMARIES --- */
         .executive-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 10px;}
         .stat-box { padding: 16px; background: var(--card); border-radius: var(--radius-sm); border: 1px solid var(--border); border-top: 3px solid var(--border); }
         .stat-box.blue { border-top-color: var(--accent); }
@@ -112,6 +105,23 @@
         .stat-box h3 { margin: 0 0 6px 0; font-size: 0.7em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; border: none; padding: 0;}
         .stat-box p { margin: 0; font-size: 1.4em; font-weight: 700; color: var(--primary); }
         .stat-subtitle { font-size: 0.7em; color: var(--text-muted); margin-top: 6px; font-weight: 500; }
+
+        /* --- MODERN BUDGET TRACKER --- */
+        .modern-budget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 15px; }
+        .budget-tracker-card { background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s; }
+        .budget-tracker-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btc-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; }
+        .btc-title { font-weight: 700; color: var(--primary); font-size: 1.05em; display: flex; flex-direction: column; gap: 4px;}
+        .btc-account-badge { font-size: 0.65em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); background: #F3F4F6; padding: 2px 6px; border-radius: 4px; width: fit-content;}
+        .btc-amounts { text-align: right; font-size: 0.85em; color: var(--text-muted); font-weight: 500; }
+        .btc-amounts strong { color: var(--primary); font-size: 1.1em; }
+        .progress-track { width: 100%; height: 10px; background: #E5E7EB; border-radius: 99px; overflow: hidden; margin-bottom: 12px; position: relative;}
+        .progress-fill { height: 100%; background: var(--success); border-radius: 99px; transition: width 0.4s ease-out; }
+        .progress-fill.warning { background: var(--warning); }
+        .progress-fill.danger { background: var(--danger); }
+        .btc-footer { display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; font-weight: 600; }
+        .btc-remaining { color: var(--success); }
+        .btc-remaining.over { color: var(--danger); }
 
         /* --- DATA TABLES --- */
         .ledger-table-container { max-height: 450px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); width: 100%;}
@@ -125,10 +135,6 @@
             padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); 
             font-family: inherit; font-size: 0.95em; width: 100%; max-width: 150px;
         }
-        td input:focus, td select:focus { border-color: var(--accent); outline: none; }
-        
-        .inline-edit-row td { background-color: #FFFBEB !important; padding: 8px !important; }
-        .inline-edit-input { width: 100% !important; max-width: none !important; margin-bottom: 4px; border-color: var(--warning) !important; font-size: 0.9em !important;}
 
         .category-header { cursor: pointer; user-select: none; transition: background-color 0.2s; }
         .category-header td { background: #F3F4F6 !important; font-size: 0.95em; border-top: 1px solid var(--border);}
@@ -144,20 +150,19 @@
         .badge { padding: 4px 8px; border-radius: var(--radius-sm); font-size: 0.75em; font-weight: 600; display: inline-block; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.05em;}
         .badge-income { background: var(--success-bg); color: var(--success); border: 1px solid rgba(0, 168, 107, 0.2); }
         .badge-debit { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(217, 4, 41, 0.2); }
-        .risk-badge { display: inline-block; padding: 4px 8px; border-radius: var(--radius-sm); font-size: 0.75em; font-weight: 700; white-space: nowrap; text-transform: uppercase;}
-        .badge-ok { background: var(--success-bg); color: var(--success); border: 1px solid rgba(0, 168, 107, 0.2);}
-        .badge-risk { background: var(--danger); color: white; }
-
+        
         .btn-action { padding: 6px 10px; margin: 0 2px; border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; font-size: 0.85em; font-weight: 500; transition: 0.2s; background: white; color: var(--text-muted); }
         .btn-action:hover { background: #F3F4F6; color: var(--primary); }
         .btn-delete:hover { background: var(--danger-bg); color: var(--danger); border-color: rgba(217, 4, 41, 0.3); }
 
-        /* --- FORMS & INPUTS --- */
+        .inline-edit-row td { background-color: #FFFBEB !important; padding: 8px !important; }
+        .inline-edit-input { width: 100% !important; max-width: none !important; margin-bottom: 4px; border-color: var(--warning) !important; font-size: 0.9em !important;}
+
+        /* --- FORMS & MODALS --- */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
         .form-row label { font-weight: 700; font-size: 0.8em; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em;}
         .form-row input, .form-row select { padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.95em; transition: border-color 0.2s; }
-        .form-row input:focus, .form-row select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         
         .add-item-form { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: #EFF6FF; padding: 16px; border-radius: var(--radius-sm); border: 2px solid var(--accent);}
         .add-item-form input, .add-item-form select { flex: 1; min-width: 140px; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.95em; background: #FFFFFF; }
@@ -167,14 +172,11 @@
         .btn-submit { width: 100%; background-color: var(--accent); color: white; font-weight: 600; border: none; cursor: pointer; padding: 12px; border-radius: var(--radius-sm); margin-top: 10px; font-size: 0.95em; transition: background-color 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn-submit:hover { background-color: var(--accent-hover); }
 
-        /* --- COLLAPSIBLE CARDS --- */
         details.card > summary { list-style: none; cursor: pointer; outline: none; margin: -24px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; font-size: 1.05em; font-weight: 600; color: var(--primary); transition: background-color 0.2s; text-transform: uppercase; letter-spacing: 0.05em; }
         details.card > summary:hover { background-color: #F9FAFB; }
         details.card > summary::-webkit-details-marker { display: none; }
         details.card[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 20px; background-color: transparent;}
-        .toggle-hint { font-size: 0.65em; font-weight: 600; color: var(--text-muted); border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; background: white;}
 
-        /* --- ACCOUNTS GRID --- */
         .accounts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;}
         .account-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; border-left: 4px solid var(--border); }
         .account-card.acc-cullen { border-left-color: var(--accent); }
@@ -183,22 +185,15 @@
         .account-card .acc-owner { font-size: 0.65em; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 8px; display: block;}
         .account-card .acc-balance { font-size: 1.35em; font-weight: 700; }
 
-        /* --- MODALS --- */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 25, 47, 0.7); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
         .modal-content { background: white; width: 100%; max-width: 500px; border-radius: var(--radius-lg); padding: 30px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); max-height: 90vh; overflow-y: auto; border: 1px solid var(--border); }
         .modal-header { font-size: 1.2em; font-weight: 700; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em;}
-        .modal-subheader { color: var(--text-muted); margin-bottom: 20px; font-size: 0.9em; }
 
-        .dynamic-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; border-bottom: 1px solid var(--border-light); padding-bottom: 8px; }
-        .dynamic-row span { flex: 1; font-weight: 500; font-size: 0.9em; }
-        .dynamic-row input { width: 120px; padding: 6px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-weight: 500; font-size: 0.9em;}
-
-        /* --- MOBILE RESPONSIVE REDESIGN --- */
+        /* --- MOBILE --- */
         @media (max-width: 768px) {
             body { padding: 8px; padding-bottom: 90px; }
             .header-wrapper { padding: 15px 10px; border-radius: 0 0 16px 16px; margin-bottom: 20px;}
             .header-bar { flex-direction: column; align-items: stretch; gap: 10px; }
-            
             .header-controls { display: flex; flex-wrap: wrap; width: 100%; margin-top: 5px; gap: 8px; overflow: visible !important; padding-bottom: 0; }
             .month-picker-container { width: 100%; padding: 14px 15px; justify-content: space-between; }
             .btn-header { flex: 1 1 calc(50% - 8px); padding: 12px 8px; font-size: 0.9em; }
@@ -206,61 +201,35 @@
 
             .container { grid-template-columns: 1fr; gap: 16px; padding: 0; }
             .card { padding: 16px; }
-            .span-2, .span-3, .full-width { grid-column: 1 / -1; }
-            
+            .span-2, .full-width { grid-column: 1 / -1; }
             .executive-summary { grid-template-columns: 1fr 1fr; gap: 8px;}
-            .stat-box { padding: 12px; }
-            .stat-box p { font-size: 1.15em; word-break: break-all; }
-            .stat-box h3 { font-size: 0.65em; }
-
-            .accounts-grid { grid-template-columns: 1fr; }
             
-            .add-item-form { flex-direction: column; gap: 10px; align-items: stretch; }
-            .add-item-form input, .add-item-form select, .add-item-form button { width: 100%; max-width: none; }
-            #celistina-schedule-container { grid-template-columns: 1fr !important; }
-
             .tab-nav-wrapper { border: none; margin: 0; background: transparent;}
             .tab-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); margin: 0; padding: 10px 8px 20px 8px; box-shadow: 0 -10px 20px rgba(0,0,0,0.05); z-index: 1000; border-top: 1px solid var(--border); justify-content: flex-start; gap: 6px; overflow-x: auto;}
             .tab-btn { flex: 0 0 auto; font-size: 0.75em; padding: 10px 12px; border-radius: var(--radius-sm); border: none; background: transparent; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center; }
             .tab-btn.active { background: #F3F4F6; color: var(--accent); font-weight: 700;}
             
             .form-grid { grid-template-columns: 1fr; gap: 12px; }
-            
             .ledger-table-container { max-height: none; overflow: visible; border: none; }
-            .table-responsive { border: none; background: transparent; overflow-x: visible; }
             table { min-width: 100%; display: block; border: none; }
             thead { display: none; } 
             tbody { display: block; width: 100%; }
-            
             tr { display: block; margin-bottom: 15px; background: white; border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: 12px 10px; position: relative;}
-            
             tr.category-header { background: transparent; border:none; box-shadow:none; padding: 0; margin-bottom: 8px; margin-top: 20px;}
             tr.category-header td { background: transparent !important; padding: 12px 0px !important; border: none; }
             tr.category-header td::before { display: none !important; }
-            
-            tr.is-paid { border-left: 4px solid var(--success); }
-            
             td { display: flex !important; flex-direction: column !important; align-items: flex-start !important; text-align: left !important; border: none !important; padding: 6px 0 !important; background: transparent !important; }
             td::before { content: attr(data-label); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: 0.7em; letter-spacing: 0.05em; margin-bottom: 4px; }
             td strong, td span { width: 100%; display: block; word-wrap: break-word; font-size: 0.95em;}
-            td input, td select { width: 100%; max-width: 100%; margin-top: 4px; }
-            
             td[data-label="Action"], td[data-label="Actions"] { flex-direction: row !important; flex-wrap: wrap; gap: 8px; margin-top: 8px; padding-top: 10px !important; border-top: 1px solid var(--border-light) !important;}
             td[data-label="Action"]::before, td[data-label="Actions"]::before { display: none; } 
-
+            
             .inline-edit-row { padding: 15px !important; border: 2px solid var(--warning) !important; }
             .inline-edit-input { font-size: 1em !important; padding: 10px !important;}
-            
-            td[data-label="Paid Status"] { flex-direction: row !important; align-items: center !important; justify-content: space-between !important; border-bottom: 1px solid var(--border-light) !important; padding-bottom: 10px !important; margin-bottom: 5px; }
-            td[data-label="Paid Status"]::before { margin-bottom: 0; }
         }
     </style>
 </head>
 <body>
-
-<input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none;">
-<input type="file" id="upload-input" accept="image/*,application/pdf" style="display:none;">
-<input type="file" id="csv-upload" accept=".csv" style="display:none;">
 
 <div class="header-wrapper">
     <div class="header-bar">
@@ -292,10 +261,7 @@
     <div class="container">
         
         <div class="card full-width" style="padding-bottom: 10px;">
-            <div class="section-title">
-                <span>Net Account Cash Flow</span>
-                <span class="toggle-hint">Global Bank Cards</span>
-            </div>
+            <div class="section-title"><span>Net Account Cash Flow</span><span class="toggle-hint">Global Bank Cards</span></div>
             <div id="accounts-grid" class="accounts-grid"></div>
             
             <details style="margin-top: 10px; margin-bottom: 10px; cursor: pointer;">
@@ -354,9 +320,11 @@
                     <button type="button" class="btn-add" style="min-width: 80px; flex: 1;" onclick="addCategory()">Add</button>
                 </div>
             </div>
-            
-            <div class="section-title" style="margin-top: 35px; margin-bottom: 15px;">
-                <span>Portfolio View</span>
+        </div>
+
+        <div class="card full-width">
+            <div class="section-title" style="margin-bottom: 15px;">
+                <span>Modern Portfolio View (Actual vs Budget)</span>
                 <select id="overview-filter" onchange="updateFinancials()" style="padding: 6px 10px; font-size: 0.8em; border-radius: var(--radius-sm); border: 1px solid var(--border); font-weight: 600; color: var(--primary);">
                     <option value="Joint">Household Consolidated</option>
                     <option value="Cullen" id="opt-filter-p1">Cullen Individual</option>
@@ -364,11 +332,8 @@
                 </select>
             </div>
             
-            <div style="position: relative; height: 300px; width: 100%; margin-bottom: 25px;"><canvas id="jointChart"></canvas></div>
-            
-            <div class="table-responsive">
-                <table><thead id="overview-thead"></thead><tbody id="overview-budget-tbody"></tbody></table>
-            </div>
+            <div id="modern-budget-container" class="modern-budget-grid"></div>
+
         </div>
     </div>
 </div>
@@ -376,55 +341,74 @@
 <div id="tab-cullen" class="tab-content">
     <div class="container">
         <div class="card full-width">
-            <div class="section-title"><span id="title-p1-profile">Cullen's Financial Profile</span></div>
-            <div class="executive-summary">
-                <div class="stat-box green"><h3>Total Income</h3><p id="cul-inc-disp">R 0</p></div>
-                <div class="stat-box yellow"><h3>Total Debits</h3><p id="cul-deb-disp">R 0</p></div>
-                <div class="stat-box red"><h3>Ad-Hoc Spend</h3><p id="cul-spent-disp">R 0</p></div>
-                <div class="stat-box orange"><h3>Reserved Budget</h3><p id="cul-bud-disp">R 0</p></div>
-                <div class="stat-box purple"><h3>Proj. Month-End</h3><p id="cul-proj-disp">R 0</p></div>
-                <div class="stat-box blue" id="cul-rem-box"><h3>Current Liquid</h3><p id="cul-liquid-disp">R 0</p></div>
+            <div class="section-title"><span style="color: var(--success);">Income Overview</span><span id="cul-tab-inc" style="font-variant-numeric: tabular-nums;">R 0.00</span></div>
+            <div class="ledger-table-container" style="max-height: 250px;">
+                <table class="table-responsive">
+                    <thead><tr><th>Status</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 80px;">Action</th></tr></thead>
+                    <tbody id="cul-income-tbody"></tbody>
+                </table>
+            </div>
+            <div class="add-item-form" style="margin-top: 15px;">
+                <select id="new-cul-inc-account" class="account-dropdown"></select>
+                <input type="text" id="new-cul-inc-name" placeholder="Income Source Name">
+                <input type="number" id="new-cul-inc-amount" placeholder="Amount (ZAR)" step="0.01">
+                <button type="button" class="btn-add" style="background:var(--success); min-width: 120px;" onclick="addSpecificFixedItem('Cullen', 'income')">➕ Add Income</button>
             </div>
         </div>
 
-        <details class="card span-2" open>
-            <summary><span>Income & Fixed Deductions Schedule</span><span class="toggle-hint">Toggle</span></summary>
-            <div>
-                <div class="ledger-table-container">
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>Status</th><th>Type</th><th>Account</th><th>Description</th><th>Amount (ZAR)</th><th style="width: 140px;">Action</th></tr></thead>
-                            <tbody id="cul-fixed-tbody"></tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="add-item-form" style="margin-top: 15px;">
-                    <div style="width: 100%; font-weight: 700; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.05em;">Record New Fixed Item</div>
-                    <select id="new-cul-fixed-type" onchange="document.getElementById('new-cul-fixed-cat').style.display = this.value === 'income' ? 'none' : 'block';"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
-                    <select id="new-cul-fixed-cat"></select>
-                    <select id="new-cul-fixed-account" class="account-dropdown"></select>
-                    <input type="text" id="new-cul-fixed-name" placeholder="Description / Name">
-                    <input type="number" id="new-cul-fixed-amount" placeholder="Amount (ZAR)" step="0.01">
-                    <button type="button" class="btn-add" onclick="addFixedItem('Cullen')">➕ Submit Entry</button>
-                </div>
+        <div class="card full-width">
+            <div class="section-title"><span style="color: var(--danger);">Debit Overview</span><span id="cul-tab-deb" style="font-variant-numeric: tabular-nums;">R 0.00</span></div>
+            <div class="ledger-table-container" style="max-height: 350px;">
+                <table class="table-responsive">
+                    <thead><tr><th>Status</th><th>Category</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 80px;">Action</th></tr></thead>
+                    <tbody id="cul-debit-tbody"></tbody>
+                </table>
             </div>
-        </details>
+            <div class="add-item-form" style="margin-top: 15px;">
+                <select id="new-cul-deb-cat"></select>
+                <select id="new-cul-deb-account" class="account-dropdown"></select>
+                <input type="text" id="new-cul-deb-name" placeholder="Debit Description">
+                <input type="number" id="new-cul-deb-amount" placeholder="Amount (ZAR)" step="0.01">
+                <button type="button" class="btn-add" style="background:var(--danger); min-width: 120px;" onclick="addSpecificFixedItem('Cullen', 'debit')">➕ Add Debit</button>
+            </div>
+            <details style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+                <summary style="font-weight: 700; cursor: pointer; color: var(--primary); font-size: 0.9em; text-transform: uppercase;">⚙️ Wage Management (Celistina)</summary>
+                <div style="margin-top: 15px;">
+                    <div class="form-row" style="margin-bottom: 15px;"><label>Daily Rate (ZAR)</label><input type="number" id="cel-rate" value="275" step="0.01" onchange="updateCelistinaGlobalRate()"></div>
+                    <label style="font-weight: 700; font-size: 0.8em; color: var(--primary); display:block; margin-bottom:10px; text-transform: uppercase;">Attendance Schedule:</label>
+                    <div id="celistina-schedule-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); font-weight: 700; font-size: 1.1em; text-align: right; color: var(--primary);">Calculated Wage: <span id="celistina-total-display" style="font-variant-numeric: tabular-nums;">R 0.00</span></div>
+                </div>
+            </details>
+        </div>
 
-        <details class="card span-1" open>
-            <summary><span style="color: var(--primary);">Wage Management</span><span class="toggle-hint">Toggle</span></summary>
-            <div>
-                <div class="form-row" style="margin-bottom: 15px;"><label>Daily Rate (ZAR)</label><input type="number" id="cel-rate" value="275" step="0.01" onchange="updateCelistinaGlobalRate()"></div>
-                <label style="font-weight: 700; font-size: 0.8em; color: var(--primary); display:block; margin-bottom:10px; text-transform: uppercase;">Attendance Schedule:</label>
-                <div id="celistina-schedule-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
-                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); font-weight: 700; font-size: 1.1em; text-align: right; color: var(--primary);">
-                    Calculated Wage: <span id="celistina-total-display" style="font-variant-numeric: tabular-nums;">R 0.00</span>
-                </div>
+        <div class="card full-width">
+            <div class="section-title"><span style="color: var(--primary);">Baseline Net Available Position</span></div>
+            <div class="table-responsive">
+                <table style="font-size: 1.05em; border: none;">
+                    <tbody>
+                        <tr><td style="border:none; padding: 10px 0;"><strong>Total Income</strong></td><td style="border:none; text-align: right; color: var(--success);" id="cul-net-inc">R 0.00</td></tr>
+                        <tr><td style="border:none; padding: 10px 0;"><strong>Minus: Fixed Debits</strong></td><td style="border:none; text-align: right; color: var(--danger);" id="cul-net-deb">- R 0.00</td></tr>
+                        <tr><td style="border:none; padding: 10px 0;"><strong>Minus: Outward Transfers</strong><div style="font-size:0.75em; color:var(--text-muted); font-weight:normal;">Sent from Cullen's accounts</div></td><td style="border:none; text-align: right; color: var(--warning);" id="cul-net-trans-out">- R 0.00</td></tr>
+                        <tr>
+                            <td style="border:none; padding: 10px 0; vertical-align: top;">
+                                <strong>Minus: Allocated Budgets (Full Limit)</strong>
+                                <div style="font-size:0.75em; color:var(--text-muted); font-weight:normal; margin-bottom: 8px;">Reserved full allowance for categories linked to Cullen</div>
+                                <div id="cul-bud-breakdown" style="background: #F9FAFB; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-light);"></div>
+                            </td>
+                            <td style="border:none; text-align: right; color: var(--warning); vertical-align: top; padding-top: 10px;" id="cul-net-bud">- R 0.00</td>
+                        </tr>
+                        <tr style="background: #F9FAFB;">
+                            <td style="padding: 15px 10px; border-top: 2px solid var(--border);"><strong style="font-size: 1.1em;">Projected Available (Baseline)</strong></td>
+                            <td style="padding: 15px 10px; border-top: 2px solid var(--border); text-align: right; font-weight: 800; font-size: 1.2em;" id="cul-net-final">R 0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </details>
+        </div>
 
         <details class="card full-width" open>
-            <summary><span id="title-p1-ledger">Cullen's General Ledger</span><span class="toggle-hint">Toggle</span></summary>
+            <summary><span id="title-p1-ledger">Cullen's Captured Transactions</span><span class="toggle-hint">Toggle</span></summary>
             <div class="ledger-table-container">
                 <div class="table-responsive">
                     <table>
@@ -440,43 +424,65 @@
 <div id="tab-elize" class="tab-content">
     <div class="container">
         <div class="card full-width">
-            <div class="section-title"><span id="title-p2-profile">Elize's Financial Profile</span></div>
-            <div class="executive-summary">
-                <div class="stat-box green"><h3>Total Income</h3><p id="eli-inc-disp">R 0</p></div>
-                <div class="stat-box yellow"><h3>Total Debits</h3><p id="eli-deb-disp">R 0</p></div>
-                <div class="stat-box red"><h3>Ad-Hoc Spend</h3><p id="eli-spent-disp">R 0</p></div>
-                <div class="stat-box orange"><h3>Reserved Budget</h3><p id="eli-bud-disp">R 0</p></div>
-                <div class="stat-box purple"><h3>Proj. Month-End</h3><p id="eli-proj-disp">R 0</p></div>
-                <div class="stat-box blue" id="eli-rem-box"><h3>Current Liquid</h3><p id="eli-liquid-disp">R 0</p></div>
+            <div class="section-title"><span style="color: var(--success);">Income Overview</span><span id="eli-tab-inc" style="font-variant-numeric: tabular-nums;">R 0.00</span></div>
+            <div class="ledger-table-container" style="max-height: 250px;">
+                <table class="table-responsive">
+                    <thead><tr><th>Status</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 80px;">Action</th></tr></thead>
+                    <tbody id="eli-income-tbody"></tbody>
+                </table>
+            </div>
+            <div class="add-item-form" style="margin-top: 15px;">
+                <select id="new-eli-inc-account" class="account-dropdown"></select>
+                <input type="text" id="new-eli-inc-name" placeholder="Income Source Name">
+                <input type="number" id="new-eli-inc-amount" placeholder="Amount (ZAR)" step="0.01">
+                <button type="button" class="btn-add" style="background:var(--success); min-width: 120px;" onclick="addSpecificFixedItem('Elize', 'income')">➕ Add Income</button>
             </div>
         </div>
 
-        <details class="card span-2" open>
-            <summary><span>Income & Fixed Deductions Schedule</span><span class="toggle-hint">Toggle</span></summary>
-            <div>
-                <div class="ledger-table-container">
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>Status</th><th>Type</th><th>Account</th><th>Description</th><th>Amount (ZAR)</th><th style="width: 140px;">Action</th></tr></thead>
-                            <tbody id="eli-fixed-tbody"></tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="add-item-form" style="margin-top: 15px;">
-                    <div style="width: 100%; font-weight: 700; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.05em;">Record New Fixed Item</div>
-                    <select id="new-eli-fixed-type" onchange="document.getElementById('new-eli-fixed-cat').style.display = this.value === 'income' ? 'none' : 'block';"><option value="income">Income</option><option value="debit" selected>Debit Order</option></select>
-                    <select id="new-eli-fixed-cat"></select>
-                    <select id="new-eli-fixed-account" class="account-dropdown"></select>
-                    <input type="text" id="new-eli-fixed-name" placeholder="Description / Name">
-                    <input type="number" id="new-eli-fixed-amount" placeholder="Amount (ZAR)" step="0.01">
-                    <button type="button" class="btn-add" onclick="addFixedItem('Elize')">➕ Submit Entry</button>
-                </div>
+        <div class="card full-width">
+            <div class="section-title"><span style="color: var(--danger);">Debit Overview</span><span id="eli-tab-deb" style="font-variant-numeric: tabular-nums;">R 0.00</span></div>
+            <div class="ledger-table-container" style="max-height: 350px;">
+                <table class="table-responsive">
+                    <thead><tr><th>Status</th><th>Category</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 80px;">Action</th></tr></thead>
+                    <tbody id="eli-debit-tbody"></tbody>
+                </table>
             </div>
-        </details>
+            <div class="add-item-form" style="margin-top: 15px;">
+                <select id="new-eli-deb-cat"></select>
+                <select id="new-eli-deb-account" class="account-dropdown"></select>
+                <input type="text" id="new-eli-deb-name" placeholder="Debit Description">
+                <input type="number" id="new-eli-deb-amount" placeholder="Amount (ZAR)" step="0.01">
+                <button type="button" class="btn-add" style="background:var(--danger); min-width: 120px;" onclick="addSpecificFixedItem('Elize', 'debit')">➕ Add Debit</button>
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <div class="section-title"><span style="color: var(--primary);">Baseline Net Available Position</span></div>
+            <div class="table-responsive">
+                <table style="font-size: 1.05em; border: none;">
+                    <tbody>
+                        <tr><td style="border:none; padding: 10px 0;"><strong>Total Income</strong></td><td style="border:none; text-align: right; color: var(--success);" id="eli-net-inc">R 0.00</td></tr>
+                        <tr><td style="border:none; padding: 10px 0;"><strong>Minus: Fixed Debits</strong></td><td style="border:none; text-align: right; color: var(--danger);" id="eli-net-deb">- R 0.00</td></tr>
+                        <tr><td style="border:none; padding: 10px 0;"><strong>Minus: Outward Transfers</strong><div style="font-size:0.75em; color:var(--text-muted); font-weight:normal;">Sent from Elize's accounts</div></td><td style="border:none; text-align: right; color: var(--warning);" id="eli-net-trans-out">- R 0.00</td></tr>
+                        <tr>
+                            <td style="border:none; padding: 10px 0; vertical-align: top;">
+                                <strong>Minus: Allocated Budgets (Full Limit)</strong>
+                                <div style="font-size:0.75em; color:var(--text-muted); font-weight:normal; margin-bottom: 8px;">Reserved full allowance for categories linked to Elize</div>
+                                <div id="eli-bud-breakdown" style="background: #F9FAFB; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-light);"></div>
+                            </td>
+                            <td style="border:none; text-align: right; color: var(--warning); vertical-align: top; padding-top: 10px;" id="eli-net-bud">- R 0.00</td>
+                        </tr>
+                        <tr style="background: #F9FAFB;">
+                            <td style="padding: 15px 10px; border-top: 2px solid var(--border);"><strong style="font-size: 1.1em;">Projected Available (Baseline)</strong></td>
+                            <td style="padding: 15px 10px; border-top: 2px solid var(--border); text-align: right; font-weight: 800; font-size: 1.2em;" id="eli-net-final">R 0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <details class="card full-width" open>
-            <summary><span id="title-p2-ledger">Elize's General Ledger</span><span class="toggle-hint">Toggle</span></summary>
+            <summary><span id="title-p2-ledger">Elize's Captured Transactions</span><span class="toggle-hint">Toggle</span></summary>
             <div class="ledger-table-container">
                 <div class="table-responsive">
                     <table>
@@ -555,7 +561,6 @@
     let cloudEnabled = false;
     let dbCloud = null;
     let inlineEditTxId = null;
-    let inlineEditFixedId = null;
 
     let appNames = { dash: "Executive Dashboard", p1: "Cullen", p2: "Elize" };
     let fixedCategories = ['Housing', 'Telecommunications', 'Insurance', 'Kids', 'Utilities', 'Health'];
@@ -575,19 +580,18 @@
     let cullenFixedItems = [{ id: 'inc1', type: 'income', accountId: 'acc_c1', name: 'Basic Salary', amount: 48642, paid: false }, { id: 'cd1', type: 'debit', accountId: 'acc_c1', name: 'Bond Repayment', amount: 17773.29, paid: false, fixedCategory: 'Housing' }, { id: 'cd2', type: 'debit', accountId: 'acc_c1', name: 'Normandie Levy', amount: 4955, paid: false, fixedCategory: 'Housing' }];
     let elizeFixedItems = [{ id: 'einc1', type: 'income', accountId: 'acc_e1', name: 'Basic Salary', amount: 20000, paid: false }, { id: 'ed1', type: 'debit', accountId: 'acc_e1', name: 'Liberty RA', amount: 526, paid: false, fixedCategory: 'Insurance' }];
     let transactions = []; 
-    let jointChart = null;
 
     function initSystem() {
         const picker = document.getElementById('month-selector');
         const now = new Date(); const month = String(now.getMonth() + 1).padStart(2, '0');
         picker.value = `${now.getFullYear()}-${month}`; 
         document.getElementById('exp-date').valueAsDate = now;
-        loadGlobalConfig(); initChart(); changeMonth(); initCloudSync();
+        loadGlobalConfig(); changeMonth(); initCloudSync();
     }
 
     function changeMonth() {
         currentMonthKey = document.getElementById('month-selector').value;
-        inlineEditTxId = null; inlineEditFixedId = null;
+        inlineEditTxId = null;
         loadData(); if(cloudEnabled) { initCloudSync(); } 
     }
 
@@ -626,10 +630,6 @@
         document.getElementById('main-header-title').innerText = appNames.dash;
         document.getElementById('btn-tab-cullen').innerText = appNames.p1; 
         document.getElementById('btn-tab-elize').innerText = appNames.p2; 
-        document.getElementById('title-p1-profile').innerText = appNames.p1 + "'s Financial Profile";
-        document.getElementById('title-p1-ledger').innerText = appNames.p1 + "'s General Ledger";
-        document.getElementById('title-p2-profile').innerText = appNames.p2 + "'s Financial Profile";
-        document.getElementById('title-p2-ledger').innerText = appNames.p2 + "'s General Ledger";
         document.getElementById('opt-filter-p1').innerText = appNames.p1 + " Individual";
         document.getElementById('opt-filter-p2').innerText = appNames.p2 + " Individual";
         
@@ -684,7 +684,7 @@
         }
     }
     function populateFixedCategoryDropdowns() {
-        const selects = [document.getElementById('new-cul-fixed-cat'), document.getElementById('new-eli-fixed-cat')];
+        const selects = [document.getElementById('new-cul-deb-cat'), document.getElementById('new-eli-deb-cat')];
         let opts = '<option value="Uncategorized">Uncategorized</option>';
         fixedCategories.forEach(c => opts += `<option value="${c}">${c}</option>`); opts += '<option value="Other">Other</option>';
         selects.forEach(s => { if(s) { let val = s.value; s.innerHTML = opts; if(val) s.value = val; else s.value = 'Uncategorized'; } });
@@ -773,13 +773,6 @@
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(tabId).classList.add('active'); btnElement.classList.add('active'); window.scrollTo(0,0);
-        if(jointChart) { jointChart.update(); }
-    }
-
-    function toggleCatGroup(groupId) {
-        const rows = document.querySelectorAll('.' + groupId); const icon = document.getElementById('icon-' + groupId); let isCollapsed = false;
-        rows.forEach(row => { row.classList.toggle('collapsed-row'); if(row.classList.contains('collapsed-row')) isCollapsed = true; });
-        if(icon) { icon.innerText = isCollapsed ? '▶' : '▼'; }
     }
 
     function toggleFormType() {
@@ -813,13 +806,11 @@
         let newName = prompt("Edit Account Name:", acc.name);
         if(newName && newName.trim() !== "") { acc.name = newName.trim(); saveGlobalConfig(); renderAccounts(); updateFinancials(); }
     }
-    
     function addAccount() {
         const name = document.getElementById('new-acc-name').value; const owner = document.getElementById('new-acc-owner').value;
         if(!name) return; accounts.push({ id: 'acc_' + Date.now(), name: name, owner: owner }); document.getElementById('new-acc-name').value = ''; 
         saveGlobalConfig(); renderAccounts(); updateFinancials();
     }
-
     function deleteAccount(id) { if(confirm("Delete this account permanently?")) { accounts = accounts.filter(a => a.id !== id); saveGlobalConfig(); renderAccounts(); updateFinancials(); } }
 
     function renderCategories() {
@@ -871,42 +862,32 @@
     function toggleCelistina(index, isChecked) { celistinaDays[index].present = isChecked; saveData(); updateFinancials(); }
     function updateCelistinaGlobalRate() { celistinaRate = parseFloat(document.getElementById('cel-rate').value) || 0; saveData(); updateFinancials(); }
 
-
-    function editInlineFixed(id) { inlineEditFixedId = id; renderFixedItems('Cullen'); renderFixedItems('Elize'); }
-    function cancelInlineFixed() { inlineEditFixedId = null; renderFixedItems('Cullen'); renderFixedItems('Elize'); }
-    function saveInlineFixed(person, id) {
-        const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; const item = arr.find(i => i.id === id);
-        if(item) {
-            item.type = document.getElementById(`ief-type-${id}`).value; item.accountId = document.getElementById(`ief-acc-${id}`).value;
-            item.name = document.getElementById(`ief-name-${id}`).value; item.amount = parseFloat(document.getElementById(`ief-amt-${id}`).value) || 0;
-            item.fixedCategory = item.type === 'debit' ? document.getElementById(`ief-cat-${id}`).value : '';
-            saveData();
-        }
-        cancelInlineFixed(); updateFinancials();
-    }
-
     function togglePaidStatus(person, id, isChecked) { 
         const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; const item = arr.find(d => d.id === id); 
         if(item) { item.paid = isChecked; saveData(); updateFinancials(); } 
     }
-    
     function removeFixedItem(person, id) { 
         if(person === 'Cullen') cullenFixedItems = cullenFixedItems.filter(d => d.id !== id); else elizeFixedItems = elizeFixedItems.filter(d => d.id !== id); 
         saveData(); updateFinancials(); 
     }
-    
-    function addFixedItem(person) {
-        const prefix = person === 'Cullen' ? 'cul' : 'eli'; 
-        const typeInput = document.getElementById(`new-${prefix}-fixed-type`).value; const accInput = document.getElementById(`new-${prefix}-fixed-account`).value;
-        const nameInput = document.getElementById(`new-${prefix}-fixed-name`).value; const amtInput = document.getElementById(`new-${prefix}-fixed-amount`).value;
-        const catInput = document.getElementById(`new-${prefix}-fixed-cat`).value;
-        if(!nameInput) return; 
-        const newItem = { id: 'fx_' + Date.now(), type: typeInput, accountId: accInput, name: nameInput, amount: parseFloat(amtInput) || 0, paid: false, fixedCategory: typeInput === 'debit' ? catInput : '' };
+    function addSpecificFixedItem(person, type) {
+        const prefix = person === 'Cullen' ? 'cul' : 'eli';
+        const typeShort = type === 'income' ? 'inc' : 'deb';
+        const accInput = document.getElementById(`new-${prefix}-${typeShort}-account`).value;
+        const nameInput = document.getElementById(`new-${prefix}-${typeShort}-name`).value;
+        const amtInput = document.getElementById(`new-${prefix}-${typeShort}-amount`).value;
+        const catInput = type === 'debit' ? document.getElementById(`new-${prefix}-deb-cat`).value : '';
+
+        if(!nameInput) return;
+        const newItem = { id: 'fx_' + Date.now(), type: type, accountId: accInput, name: nameInput, amount: parseFloat(amtInput) || 0, paid: false, fixedCategory: catInput };
         if(person === 'Cullen') cullenFixedItems.push(newItem); else elizeFixedItems.push(newItem);
-        document.getElementById(`new-${prefix}-fixed-name`).value = ''; document.getElementById(`new-${prefix}-fixed-amount`).value = ''; 
+        
+        document.getElementById(`new-${prefix}-${typeShort}-name`).value = '';
+        document.getElementById(`new-${prefix}-${typeShort}-amount`).value = '';
         saveData(); updateFinancials();
     }
 
+    /* --- INLINE TRANSACTION EDITING --- */
     function editInlineTx(id) { inlineEditTxId = id; updateFinancials(); }
     function cancelInlineTx() { inlineEditTxId = null; updateFinancials(); }
     function saveInlineTx(id) {
@@ -915,83 +896,6 @@
         if (tx.type === 'transfer') { tx.fromAccountId = document.getElementById(`ie-from-${id}`).value; tx.toAccountId = document.getElementById(`ie-to-${id}`).value; } 
         else { tx.accountId = document.getElementById(`ie-acc-${id}`).value; tx.category = document.getElementById(`ie-cat-${id}`).value; }
         cancelInlineTx(); saveData();
-    }
-
-    document.getElementById('expense-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        let txType = document.getElementById('exp-type').value;
-        let newTx = { id: Date.now(), type: txType, person: document.getElementById('exp-person').value, date: document.getElementById('exp-date').value, desc: document.getElementById('exp-desc').value, amount: parseFloat(document.getElementById('exp-amount').value) };
-        if (txType === 'transfer') {
-            newTx.fromAccountId = document.getElementById('exp-account').value; newTx.toAccountId = document.getElementById('exp-to-account').value;
-            if (newTx.fromAccountId === newTx.toAccountId) return alert("Accounts cannot be the same.");
-        } else { newTx.accountId = document.getElementById('exp-account').value; newTx.category = document.getElementById('exp-category').value; }
-        transactions.push(newTx);
-        document.getElementById('exp-amount').value = ''; document.getElementById('exp-desc').value = '';
-        saveData(); updateFinancials();
-    });
-
-    function deleteTx(id) { transactions = transactions.filter(t => t.id != id); saveData(); updateFinancials(); }
-    function resetTransactions() { if(confirm("Clear ALL transactions?")) { transactions = []; saveData(); updateFinancials(); } }
-
-    function renderFixedItems(person) {
-        const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; 
-        const tbody = document.getElementById(person === 'Cullen' ? 'cul-fixed-tbody' : 'eli-fixed-tbody'); 
-        let html = ''; const catOptions = ['Uncategorized', ...fixedCategories, 'Other'];
-
-        const buildRow = (item, groupId = '') => {
-            if (item.id === inlineEditFixedId) {
-                let accOpts = accounts.map(a => `<option value="${a.id}" ${a.id === item.accountId ? 'selected' : ''}>${a.name}</option>`).join('');
-                let typeOpts = `<option value="income" ${item.type==='income'?'selected':''}>Income</option><option value="debit" ${item.type==='debit'?'selected':''}>Debit Order</option>`;
-                let catDropdown = item.type === 'debit' ? `<select id="ief-cat-${item.id}" class="inline-edit-input" style="margin-top:4px;">${catOptions.map(c => `<option value="${c}" ${c === (item.fixedCategory || 'Uncategorized') ? 'selected' : ''}>${c}</option>`).join('')}</select>` : `<input type="hidden" id="ief-cat-${item.id}" value="">`;
-
-                return `
-                    <tr class="inline-edit-row ${groupId}">
-                        <td data-label="Paid Status" style="text-align: center;">-</td>
-                        <td data-label="Type"><select id="ief-type-${item.id}" class="inline-edit-input" onchange="document.getElementById('ief-cat-${item.id}').style.display = this.value === 'income' ? 'none' : 'block';">${typeOpts}</select>${catDropdown}</td>
-                        <td data-label="Account"><select id="ief-acc-${item.id}" class="inline-edit-input">${accOpts}</select></td>
-                        <td data-label="Description"><input type="text" id="ief-name-${item.id}" value="${item.name}" class="inline-edit-input"></td>
-                        <td data-label="Amount (ZAR)"><input type="number" id="ief-amt-${item.id}" value="${item.amount}" step="0.01" class="inline-edit-input"></td>
-                        <td data-label="Action" style="display:flex; gap:5px;"><button type="button" class="btn-action" style="color:var(--success); border-color:var(--success);" onclick="saveInlineFixed('${person}', '${item.id}')">Save</button><button type="button" class="btn-action" onclick="cancelInlineFixed()">Cancel</button></td>
-                    </tr>
-                `;
-            } else {
-                const badge = item.type === 'income' ? '<span class="badge badge-income">Income</span>' : '<span class="badge badge-debit">Debit</span>';
-                return `
-                    <tr class="${item.paid ? 'is-paid' : ''} ${groupId}">
-                        <td data-label="Paid Status" style="text-align: center;"><input type="checkbox" class="checkbox-paid" ${item.paid ? 'checked' : ''} onchange="togglePaidStatus('${person}', '${item.id}', this.checked)" title="Mark as Paid"></td>
-                        <td data-label="Type">${badge}</td>
-                        <td data-label="Account" style="font-size: 0.85em; color: var(--text-muted);">${getAccountName(item.accountId)}</td>
-                        <td data-label="Description"><strong>${item.name}</strong></td>
-                        <td data-label="Amount (ZAR)"><span style="font-weight:600;">R ${item.amount.toFixed(2)}</span></td>
-                        <td data-label="Action" style="display:flex; gap:5px;"><button type="button" class="btn-action" onclick="editInlineFixed('${item.id}')">Edit</button><button type="button" class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">Del</button></td>
-                    </tr>
-                `;
-            }
-        };
-
-        let incomes = arr.filter(i => i.type === 'income');
-        if (incomes.length > 0) { html += `<tr class="category-header"><td colspan="6" style="background:#E6F6F0!important; border-left: 3px solid var(--success);"><strong style="color:var(--success);">🟢 Income Sources</strong></td></tr>`; incomes.forEach(item => { html += buildRow(item); }); }
-
-        if (person === 'Cullen' && celistinaDays && celistinaDays.length > 0) {
-            let celTotal = celistinaDays.filter(d => d.present).length * celistinaRate; let defaultCullenAcc = accounts.find(a => a.owner === 'Cullen');
-            html += `<tr class="category-header"><td colspan="6" style="background:#EFF6FF!important; border-left: 3px solid var(--accent);"><strong style="color:var(--accent);">⚙️ Linked System Accruals</strong></td></tr>
-                <tr style="border-left: 3px solid var(--accent);">
-                    <td data-label="System Sync" style="text-align: center; font-size: 1.2em;">⚙️</td>
-                    <td data-label="Type"><span class="badge badge-debit" style="background:var(--primary); color:white; border:none;">Accrual</span></td>
-                    <td data-label="Account" style="font-size: 0.85em; color: var(--text-muted);">${defaultCullenAcc ? defaultCullenAcc.name : "Default Cheque"}</td>
-                    <td data-label="Description"><strong>Celistina Wages (Linked)</strong></td>
-                    <td data-label="Amount (ZAR)"><span style="font-weight:700; color:var(--primary);">R ${celTotal.toFixed(2)}</span></td>
-                    <td data-label="Action"><span style="font-size: 0.7em; color: var(--text-muted); font-weight:600; text-transform:uppercase;">Unpaid</span></td>
-                </tr>`;
-        }
-
-        let groups = {}; arr.filter(i => i.type === 'debit').forEach(d => { let cat = d.fixedCategory || 'Uncategorized'; if (!groups[cat]) groups[cat] = []; groups[cat].push(d); });
-        Object.keys(groups).sort((a, b) => (a === 'Uncategorized' || a === 'Other') ? 1 : ((b === 'Uncategorized' || b === 'Other') ? -1 : a.localeCompare(b))).forEach(cat => {
-            let catTotal = groups[cat].reduce((sum, item) => sum + item.amount, 0); let groupId = `grp-fix-${person}-${cat.replace(/\s+/g, '')}`;
-            html += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="6" style="background:#FDE8EC!important; border-left: 3px solid var(--danger);"><div class="category-header-flex"><span style="font-weight: 600; color: var(--danger);"><span id="icon-${groupId}" class="cat-icon" style="color:var(--danger)">▼</span> ${cat}</span><span class="category-total" style="color:var(--danger); border-color:var(--danger); background:white;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
-            groups[cat].forEach(item => { html += buildRow(item, groupId); });
-        });
-        tbody.innerHTML = html;
     }
 
     function renderTxRow(tx, groupId, accNameHtml) {
@@ -1006,6 +910,12 @@
         } else {
             return `<tr class="${groupId}"><td data-label="Date" style="white-space:nowrap;">${tx.date}</td><td data-label="Source Account" style="font-size:0.85em; color:var(--text-muted);">${accNameHtml}</td><td data-label="Description"><strong>${tx.desc}</strong></td><td data-label="Amount" style="white-space:nowrap; font-weight:600;">R ${tx.amount.toFixed(2)}</td><td data-label="Actions" style="display:flex; gap:5px;"><button type="button" class="btn-action" onclick="editInlineTx(${tx.id})">Edit</button><button type="button" class="btn-action btn-delete" onclick="deleteTx(${tx.id})">Del</button></td></tr>`;
         }
+    }
+
+    function toggleCatGroup(groupId) {
+        const rows = document.querySelectorAll('.' + groupId); const icon = document.getElementById('icon-' + groupId); let isCollapsed = false;
+        rows.forEach(row => { row.classList.toggle('collapsed-row'); if(row.classList.contains('collapsed-row')) isCollapsed = true; });
+        if(icon) { icon.innerText = isCollapsed ? '▶' : '▼'; }
     }
 
     function generateCategorizedLedger(personName) {
@@ -1032,17 +942,74 @@
             html += `<tr class="category-header" onclick="toggleCatGroup('${groupId}')"><td colspan="5" style="border-left: 3px solid var(--accent);"><div class="category-header-flex"><span style="font-weight: 600; color: var(--accent);"><span id="icon-${groupId}" class="cat-icon" style="color:var(--accent)">▼</span> Internal Transfers</span><span class="category-total" style="color:var(--accent); border-color:var(--accent); background:#EFF6FF;">R ${catTotal.toFixed(2)}</span></div></td></tr>`;
             transfers.forEach(tx => { html += renderTxRow(tx, groupId, `${getAccountName(tx.fromAccountId)} → ${getAccountName(tx.toAccountId)}`); });
         }
-        return html === '' ? '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding: 20px;">No records found for this period.</td></tr>' : html;
+        return html === '' ? '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding: 20px;">No transactions found for this period.</td></tr>' : html;
     }
 
-    function initChart() {
-        if (jointChart) { jointChart.destroy(); }
-        jointChart = new Chart(document.getElementById('jointChart').getContext('2d'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Budget Limit', data: [], backgroundColor: '#E5E7EB', borderRadius: 4 }, { label: 'Actual Spend', data: [], backgroundColor: '#0A192F', borderRadius: 4 }, { label: 'Remaining', data: [], backgroundColor: '#00A86B', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: "'Inter', sans-serif" } } } }, scales: { y: { beginAtZero: true, grid: { color: '#F3F4F6' } }, x: { grid: { display: false } } } } });
+    document.getElementById('expense-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        let txType = document.getElementById('exp-type').value;
+        let newTx = { id: Date.now(), type: txType, person: document.getElementById('exp-person').value, date: document.getElementById('exp-date').value, desc: document.getElementById('exp-desc').value, amount: parseFloat(document.getElementById('exp-amount').value) };
+        if (txType === 'transfer') {
+            newTx.fromAccountId = document.getElementById('exp-account').value; newTx.toAccountId = document.getElementById('exp-to-account').value;
+            if (newTx.fromAccountId === newTx.toAccountId) return alert("Accounts cannot be the same.");
+        } else { newTx.accountId = document.getElementById('exp-account').value; newTx.category = document.getElementById('exp-category').value; }
+        transactions.push(newTx);
+        document.getElementById('exp-amount').value = ''; document.getElementById('exp-desc').value = '';
+        saveData(); updateFinancials();
+    });
+
+    function deleteTx(id) { transactions = transactions.filter(t => t.id != id); saveData(); updateFinancials(); }
+    function resetTransactions() { if(confirm("Clear ALL transactions?")) { transactions = []; saveData(); updateFinancials(); } }
+
+    function renderPersonCards(person) {
+        const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems;
+        const prefix = person === 'Cullen' ? 'cul' : 'eli';
+
+        // 1. Income Table
+        let incHtml = '';
+        let incomes = arr.filter(i => i.type === 'income');
+        incomes.forEach(item => {
+            incHtml += `<tr class="${item.paid ? 'is-paid' : ''}">
+                <td data-label="Paid Status"><input type="checkbox" class="checkbox-paid" ${item.paid ? 'checked' : ''} onchange="togglePaidStatus('${person}', '${item.id}', this.checked)"></td>
+                <td data-label="Account" style="font-size: 0.85em; color: var(--text-muted);">${getAccountName(item.accountId)}</td>
+                <td data-label="Description"><strong>${item.name}</strong></td>
+                <td data-label="Amount">R ${item.amount.toFixed(2)}</td>
+                <td data-label="Action"><button type="button" class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">Del</button></td>
+            </tr>`;
+        });
+        document.getElementById(`${prefix}-income-tbody`).innerHTML = incHtml || '<tr><td colspan="5" style="text-align:center; padding: 15px; color: var(--text-muted);">No income sources added.</td></tr>';
+
+        // 2. Debit Table
+        let debHtml = '';
+        let debits = arr.filter(i => i.type === 'debit');
+
+        if (person === 'Cullen' && celistinaDays && celistinaDays.length > 0) {
+            let celTotal = celistinaDays.filter(d => d.present).length * celistinaRate;
+            let defaultCullenAcc = accounts.find(a => a.owner === 'Cullen');
+            debHtml += `<tr style="border-left: 3px solid var(--accent); background: #EFF6FF;">
+                <td data-label="Status" style="text-align: center;">⚙️</td>
+                <td data-label="Category"><span class="badge badge-debit" style="background:var(--primary); color:white; border:none;">Accrual</span></td>
+                <td data-label="Account" style="font-size: 0.85em; color: var(--text-muted);">${defaultCullenAcc ? defaultCullenAcc.name : "Default"}</td>
+                <td data-label="Description"><strong>Celistina Wages</strong></td>
+                <td data-label="Amount"><strong>R ${celTotal.toFixed(2)}</strong></td>
+                <td data-label="Action">-</td>
+            </tr>`;
+        }
+
+        debits.forEach(item => {
+            debHtml += `<tr class="${item.paid ? 'is-paid' : ''}">
+                <td data-label="Paid Status"><input type="checkbox" class="checkbox-paid" ${item.paid ? 'checked' : ''} onchange="togglePaidStatus('${person}', '${item.id}', this.checked)"></td>
+                <td data-label="Category"><span class="badge badge-debit">${item.fixedCategory || 'Uncategorized'}</span></td>
+                <td data-label="Account" style="font-size: 0.85em; color: var(--text-muted);">${getAccountName(item.accountId)}</td>
+                <td data-label="Description"><strong>${item.name}</strong></td>
+                <td data-label="Amount">R ${item.amount.toFixed(2)}</td>
+                <td data-label="Action"><button type="button" class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">Del</button></td>
+            </tr>`;
+        });
+        document.getElementById(`${prefix}-debit-tbody`).innerHTML = debHtml || '<tr><td colspan="6" style="text-align:center; padding: 15px; color: var(--text-muted);">No debits added.</td></tr>';
     }
 
     function updateFinancials() {
-        renderFixedItems('Cullen'); renderFixedItems('Elize'); 
-        
         let accBalancesCurrent = {}; let accBalancesProjected = {}; 
         accounts.forEach(a => { accBalancesCurrent[a.id] = 0; accBalancesProjected[a.id] = 0; });
 
@@ -1098,8 +1065,6 @@
 
         // Calculate Reserved Budget
         let totalUnspentBud = 0;
-        let culUnspentBud = 0;
-        let eliUnspentBud = 0;
 
         categories.forEach(cat => {
             let spent = catSpendMap[cat.name] || 0;
@@ -1108,16 +1073,34 @@
 
             if (cat.accountId && accBalancesProjected[cat.accountId] !== undefined) {
                 accBalancesProjected[cat.accountId] -= unspent;
-
-                let acc = accounts.find(a => a.id === cat.accountId);
-                if (acc) {
-                    if (acc.owner === 'Cullen') culUnspentBud += unspent;
-                    else if (acc.owner === 'Elize') eliUnspentBud += unspent;
-                }
             }
         });
 
-        // 5. Render Account Balances
+        // -------------------------------------------------------------
+        // FIXED PERSONAL BASELINE MATH (Income - Debits - Budgets - Outward Transfers)
+        // -------------------------------------------------------------
+        
+        let culTransfersOut = transactions.filter(t => t.type === 'transfer' && accounts.find(a => a.id === t.fromAccountId)?.owner === 'Cullen' && accounts.find(a => a.id === t.toAccountId)?.owner !== 'Cullen').reduce((sum, t) => sum + t.amount, 0);
+        let eliTransfersOut = transactions.filter(t => t.type === 'transfer' && accounts.find(a => a.id === t.fromAccountId)?.owner === 'Elize' && accounts.find(a => a.id === t.toAccountId)?.owner !== 'Elize').reduce((sum, t) => sum + t.amount, 0);
+
+        let culLinkedBudgets = 0; let culBreakdownHTML = '';
+        categories.filter(c => accounts.find(a => a.id === c.accountId)?.owner === 'Cullen').forEach(c => {
+            culLinkedBudgets += c.limit;
+            culBreakdownHTML += `<div style="display: flex; justify-content: space-between; font-size: 0.85em; margin-bottom: 4px;"><span>- ${c.name}</span><span style="font-variant-numeric: tabular-nums; color: var(--text-muted);">R ${c.limit.toFixed(2)}</span></div>`;
+        });
+        document.getElementById('cul-bud-breakdown').innerHTML = culBreakdownHTML || `<div style="font-size: 0.85em; color: var(--text-muted);">No budgets linked</div>`;
+
+        let eliLinkedBudgets = 0; let eliBreakdownHTML = '';
+        categories.filter(c => accounts.find(a => a.id === c.accountId)?.owner === 'Elize').forEach(c => {
+            eliLinkedBudgets += c.limit;
+            eliBreakdownHTML += `<div style="display: flex; justify-content: space-between; font-size: 0.85em; margin-bottom: 4px;"><span>- ${c.name}</span><span style="font-variant-numeric: tabular-nums; color: var(--text-muted);">R ${c.limit.toFixed(2)}</span></div>`;
+        });
+        document.getElementById('eli-bud-breakdown').innerHTML = eliBreakdownHTML || `<div style="font-size: 0.85em; color: var(--text-muted);">No budgets linked</div>`;
+
+        let culNetFinal = culInc - culDeb - culTransfersOut - culLinkedBudgets;
+        let eliNetFinal = eliInc - eliDeb - eliTransfersOut - eliLinkedBudgets;
+
+        // Render New UI Accounts
         document.getElementById('accounts-grid').innerHTML = accounts.map(acc => `
             <div class="account-card ${acc.owner === 'Cullen' ? 'acc-cullen' : (acc.owner === 'Elize' ? 'acc-elize' : '')}">
                 <span class="acc-owner">${acc.owner === 'Cullen' ? appNames.p1 : (acc.owner === 'Elize' ? appNames.p2 : acc.owner)}</span>
@@ -1126,19 +1109,13 @@
                 <div style="font-size: 0.75em; color: var(--text-muted); margin-top: 8px; font-weight: 600; border-top: 1px solid var(--border-light); padding-top: 6px;">Proj. EOM: R ${accBalancesProjected[acc.id].toFixed(2)}</div>
             </div>`).join('');
 
-        // 6. Ledgers & Summaries Render
-        document.getElementById('cul-tbody').innerHTML = generateCategorizedLedger('Cullen'); 
-        document.getElementById('eli-tbody').innerHTML = generateCategorizedLedger('Elize'); 
-        
+        // Joint Summary Updates
         let jointInc = culInc + eliInc; 
         let jointDeb = culDeb + eliDeb; 
         let jointSpent = culSpent + eliSpent;
         let jointPaidInc = culPaidInc + eliPaidInc;
         let jointPaidDeb = culPaidDeb + eliPaidDeb;
         
-        // --- PERFECTLY BALANCED EXPLICIT MATH ---
-        
-        // Joint Summary
         setRemUI('joint-income-display', null, jointInc); 
         setRemUI('joint-debits-display', null, jointDeb); 
         setRemUI('joint-spent-display', null, jointSpent); 
@@ -1150,57 +1127,80 @@
         setRemUI('cfo-proj-end-val', 'cfo-proj-end-box', jointMathProj); 
         setRemUI('joint-remaining-display', 'joint-remaining-box', jointMathLiquid);
 
-        // Cullen Summary
-        setRemUI('cul-inc-disp', null, culInc); 
-        setRemUI('cul-deb-disp', null, culDeb); 
-        setRemUI('cul-spent-disp', null, culSpent); 
-        setRemUI('cul-bud-disp', null, culUnspentBud);
-        
-        let culMathProj = culInc - culDeb - culSpent - culUnspentBud;
-        let culMathLiquid = culPaidInc - culPaidDeb - culSpent;
-        
-        setRemUI('cul-proj-disp', null, culMathProj); 
-        setRemUI('cul-liquid-disp', 'cul-rem-box', culMathLiquid);
-        
-        // Elize Summary
-        setRemUI('eli-inc-disp', null, eliInc); 
-        setRemUI('eli-deb-disp', null, eliDeb); 
-        setRemUI('eli-spent-disp', null, eliSpent); 
-        setRemUI('eli-bud-disp', null, eliUnspentBud);
+        // Individual UI Updates
+        setRemUI('cul-tab-inc', null, culInc);
+        setRemUI('cul-tab-deb', null, culDeb);
+        setRemUI('cul-net-inc', null, culInc);
+        setRemUI('cul-net-deb', null, culDeb);
+        setRemUI('cul-net-trans-out', null, culTransfersOut);
+        setRemUI('cul-net-bud', null, culLinkedBudgets);
+        setRemUI('cul-net-final', null, culNetFinal);
 
-        let eliMathProj = eliInc - eliDeb - eliSpent - eliUnspentBud;
-        let eliMathLiquid = eliPaidInc - eliPaidDeb - eliSpent;
+        setRemUI('eli-tab-inc', null, eliInc);
+        setRemUI('eli-tab-deb', null, eliDeb);
+        setRemUI('eli-net-inc', null, eliInc);
+        setRemUI('eli-net-deb', null, eliDeb);
+        setRemUI('eli-net-trans-out', null, eliTransfersOut);
+        setRemUI('eli-net-bud', null, eliLinkedBudgets);
+        setRemUI('eli-net-final', null, eliNetFinal);
 
-        setRemUI('eli-proj-disp', null, eliMathProj); 
-        setRemUI('eli-liquid-disp', 'eli-rem-box', eliMathLiquid);
+        renderPersonCards('Cullen');
+        renderPersonCards('Elize');
+        
+        // Restore Ledgers
+        document.getElementById('cul-tbody').innerHTML = generateCategorizedLedger('Cullen'); 
+        document.getElementById('eli-tbody').innerHTML = generateCategorizedLedger('Elize'); 
 
-        // 7. Filter & Chart Math
-        let overviewFilter = document.getElementById('overview-filter').value; let filteredExpenses = transactions.filter(t => t.type !== 'transfer'); 
+        // -------------------------------------------------------------
+        // MODERN BUDGET TRACKER RENDER
+        // -------------------------------------------------------------
+        let overviewFilter = document.getElementById('overview-filter').value; 
+        let filteredExpenses = transactions.filter(t => t.type !== 'transfer'); 
         if(overviewFilter !== 'Joint') { filteredExpenses = filteredExpenses.filter(t => t.person === overviewFilter); }
 
-        let filteredCatSpendMap = {}; categories.forEach(c => filteredCatSpendMap[c.name] = 0); filteredExpenses.forEach(tx => { if (filteredCatSpendMap[tx.category] !== undefined) filteredCatSpendMap[tx.category] += tx.amount; });
+        let filteredCatSpendMap = {}; 
+        categories.forEach(c => filteredCatSpendMap[c.name] = 0); 
+        filteredExpenses.forEach(tx => { if (filteredCatSpendMap[tx.category] !== undefined) filteredCatSpendMap[tx.category] += tx.amount; });
 
-        if (jointChart && jointChart.data) {
-            jointChart.data.labels = categories.map(c => c.name); jointChart.data.datasets[0].data = categories.map(c => c.limit); 
-            jointChart.data.datasets[1].data = categories.map(c => filteredCatSpendMap[c.name]); 
-            jointChart.data.datasets[1].backgroundColor = categories.map(c => (filteredCatSpendMap[c.name] > c.limit && overviewFilter === 'Joint') ? '#D90429' : '#0A192F'); 
-            jointChart.data.datasets[2].data = categories.map(c => c.limit - filteredCatSpendMap[c.name]); 
-            jointChart.data.datasets[2].backgroundColor = categories.map(c => (c.limit - filteredCatSpendMap[c.name] >= 0) ? '#00A86B' : '#F59E0B');
-            jointChart.data.datasets[1].label = overviewFilter === 'Joint' ? 'Actual Spend (Household)' : `Total Personal Spend`;
-            jointChart.data.datasets[0].hidden = overviewFilter !== 'Joint'; jointChart.data.datasets[2].hidden = overviewFilter !== 'Joint'; jointChart.update();
+        let modernHTML = '';
+        categories.forEach(cat => {
+            const bud = cat.limit; 
+            const spend = filteredCatSpendMap[cat.name]; 
+            const remaining = bud - spend;
+            
+            let percent = bud > 0 ? (spend / bud) * 100 : 0;
+            let barWidth = Math.min(percent, 100);
+            let barColorClass = percent >= 100 ? 'danger' : (percent > 80 ? 'warning' : '');
+            let remainClass = remaining < 0 ? 'over' : '';
+            
+            modernHTML += `
+            <div class="budget-tracker-card">
+                <div class="btc-header">
+                    <div class="btc-title">
+                        <span>${cat.name}</span>
+                        <span class="btc-account-badge">${getAccountName(cat.accountId) || 'Unlinked'}</span>
+                    </div>
+                    <div class="btc-amounts tabular-nums">
+                        R ${spend.toFixed(2)} <span style="font-weight:400; font-size:0.85em;">/ R ${bud.toFixed(2)}</span>
+                    </div>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill ${barColorClass}" style="width: ${barWidth}%;"></div>
+                </div>
+                <div class="btc-footer">
+                    <span style="color: var(--text-muted); font-weight: 500;">Spent: ${percent.toFixed(0)}%</span>
+                    <span class="btc-remaining ${remainClass} tabular-nums">${remaining < 0 ? 'Over: R ' + Math.abs(remaining).toFixed(2) : 'Remaining: R ' + remaining.toFixed(2)}</span>
+                </div>
+            </div>`;
+        });
+        
+        if (modernHTML === '') {
+            modernHTML = `<div style="padding: 20px; color: var(--text-muted); font-weight: 500; text-align: center; width: 100%;">No active budgets to track.</div>`;
         }
+        
+        document.getElementById('modern-budget-container').innerHTML = modernHTML;
 
-        // 8. Overview Tables Math
-        let overviewHTML = ''; 
-        if (overviewFilter === 'Joint') {
-            document.getElementById('overview-thead').innerHTML = `<tr><th>Category</th><th>Household Limit</th><th>Total Spend</th><th>Remaining</th></tr>`;
-            categories.forEach(cat => {
-                const bud = cat.limit; const spendFiltered = filteredCatSpendMap[cat.name]; const remainingFiltered = bud - spendFiltered;
-                overviewHTML += `<tr><td data-label="Category"><strong>${cat.name}</strong></td><td data-label="Limit" style="white-space:nowrap; font-variant-numeric: tabular-nums;">R ${bud.toFixed(2)}</td><td data-label="Spend" style="white-space:nowrap; font-variant-numeric: tabular-nums;">R ${spendFiltered.toFixed(2)}</td><td data-label="Remaining" style="${remainingFiltered < 0 ? 'color: var(--danger)' : 'color: var(--success)'}; font-weight: bold; white-space:nowrap; font-variant-numeric: tabular-nums;">R ${remainingFiltered.toFixed(2)}</td></tr>`;
-            });
-        }
-        document.getElementById('overview-budget-tbody').innerHTML = overviewHTML; 
-
+        // Forecast Alert Updates
         let forecastHTML = '';
         categories.forEach(cat => {
             let jointCatSpend = transactions.filter(t => t.category === cat.name && t.type !== 'transfer').reduce((sum, t) => sum + t.amount, 0);
