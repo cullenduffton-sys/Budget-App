@@ -373,7 +373,7 @@
             <div class="section-title"><span style="color: var(--success);">Income Overview</span><span id="cul-tab-inc" style="font-variant-numeric: tabular-nums;">R 0.00</span></div>
             <div class="ledger-table-container" style="max-height: 250px;">
                 <table class="table-responsive">
-                    <thead><tr><th>Status</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 80px;">Action</th></tr></thead>
+                    <thead><tr><th>Status</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 140px;">Action</th></tr></thead>
                     <tbody id="cul-income-tbody"></tbody>
                 </table>
             </div>
@@ -389,7 +389,7 @@
             <div class="section-title"><span style="color: var(--danger);">Debit Overview</span><span id="cul-tab-deb" style="font-variant-numeric: tabular-nums;">R 0.00</span></div>
             <div class="ledger-table-container" style="max-height: 350px;">
                 <table class="table-responsive">
-                    <thead><tr><th>Status</th><th>Category</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 80px;">Action</th></tr></thead>
+                    <thead><tr><th>Status</th><th>Category</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 140px;">Action</th></tr></thead>
                     <tbody id="cul-debit-tbody"></tbody>
                 </table>
             </div>
@@ -456,7 +456,7 @@
             <div class="section-title"><span style="color: var(--success);">Income Overview</span><span id="eli-tab-inc" style="font-variant-numeric: tabular-nums;">R 0.00</span></div>
             <div class="ledger-table-container" style="max-height: 250px;">
                 <table class="table-responsive">
-                    <thead><tr><th>Status</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 80px;">Action</th></tr></thead>
+                    <thead><tr><th>Status</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 140px;">Action</th></tr></thead>
                     <tbody id="eli-income-tbody"></tbody>
                 </table>
             </div>
@@ -472,7 +472,7 @@
             <div class="section-title"><span style="color: var(--danger);">Debit Overview</span><span id="eli-tab-deb" style="font-variant-numeric: tabular-nums;">R 0.00</span></div>
             <div class="ledger-table-container" style="max-height: 350px;">
                 <table class="table-responsive">
-                    <thead><tr><th>Status</th><th>Category</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 80px;">Action</th></tr></thead>
+                    <thead><tr><th>Status</th><th>Category</th><th>Account</th><th>Description</th><th>Amount</th><th style="width: 140px;">Action</th></tr></thead>
                     <tbody id="eli-debit-tbody"></tbody>
                 </table>
             </div>
@@ -590,6 +590,7 @@
     let cloudEnabled = false;
     let dbCloud = null;
     let inlineEditTxId = null;
+    let editFixedId = null; // Used for editing fixed debits/incomes
 
     let appNames = { dash: "Executive Dashboard", p1: "Cullen", p2: "Elize" };
     let fixedCategories = ['Housing', 'Telecommunications', 'Insurance', 'Kids', 'Utilities', 'Health'];
@@ -621,6 +622,7 @@
     function changeMonth() {
         currentMonthKey = document.getElementById('month-selector').value;
         inlineEditTxId = null;
+        editFixedId = null;
         loadData(); if(cloudEnabled) { initCloudSync(); } 
     }
 
@@ -900,6 +902,26 @@
     function toggleCelistina(index, isChecked) { celistinaDays[index].present = isChecked; saveData(); updateFinancials(); }
     function updateCelistinaGlobalRate() { celistinaRate = parseFloat(document.getElementById('cel-rate').value) || 0; saveData(); updateFinancials(); }
 
+    // --- FIXED ITEM EDIT LOGIC ---
+    function editFixedItem(id) { editFixedId = id; updateFinancials(); }
+    function cancelFixedEdit() { editFixedId = null; updateFinancials(); }
+    function saveFixedEdit(person, type, id) {
+        let arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems;
+        let item = arr.find(i => i.id === id);
+        if(!item) return;
+
+        item.name = document.getElementById(`ie-fix-name-${id}`).value;
+        item.amount = parseFloat(document.getElementById(`ie-fix-amt-${id}`).value) || 0;
+        item.accountId = document.getElementById(`ie-fix-acc-${id}`).value;
+        if(type === 'debit') {
+            item.fixedCategory = document.getElementById(`ie-fix-cat-${id}`).value;
+        }
+
+        editFixedId = null;
+        saveData();
+        updateFinancials();
+    }
+
     function togglePaidStatus(person, id, isChecked) { 
         const arr = person === 'Cullen' ? cullenFixedItems : elizeFixedItems; const item = arr.find(d => d.id === id); 
         if(item) { item.paid = isChecked; saveData(); updateFinancials(); } 
@@ -1007,13 +1029,24 @@
         let incHtml = '';
         let incomes = arr.filter(i => i.type === 'income');
         incomes.forEach(item => {
-            incHtml += `<tr class="${item.paid ? 'is-paid' : ''}">
-                <td data-label="Paid Status"><input type="checkbox" class="checkbox-paid" ${item.paid ? 'checked' : ''} onchange="togglePaidStatus('${person}', '${item.id}', this.checked)"></td>
-                <td data-label="Account" style="font-size: 0.85em; color: var(--text-muted);">${getAccountName(item.accountId)}</td>
-                <td data-label="Description"><strong>${item.name}</strong></td>
-                <td data-label="Amount">R ${item.amount.toFixed(2)}</td>
-                <td data-label="Action"><button type="button" class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">Del</button></td>
-            </tr>`;
+            if (item.id === editFixedId) {
+                let accOpts = accounts.map(a => `<option value="${a.id}" ${a.id === item.accountId ? 'selected' : ''}>${a.name}</option>`).join('');
+                incHtml += `<tr class="inline-edit-row">
+                    <td data-label="Paid Status">-</td>
+                    <td data-label="Account"><select id="ie-fix-acc-${item.id}" class="inline-edit-input">${accOpts}</select></td>
+                    <td data-label="Description"><input type="text" id="ie-fix-name-${item.id}" value="${item.name}" class="inline-edit-input"></td>
+                    <td data-label="Amount"><input type="number" id="ie-fix-amt-${item.id}" value="${item.amount}" step="0.01" class="inline-edit-input"></td>
+                    <td data-label="Action" style="display:flex; gap:5px;"><button type="button" class="btn-action" style="color:var(--success); border-color:var(--success);" onclick="saveFixedEdit('${person}', 'income', '${item.id}')">Save</button><button type="button" class="btn-action" onclick="cancelFixedEdit()">Cancel</button></td>
+                </tr>`;
+            } else {
+                incHtml += `<tr class="${item.paid ? 'is-paid' : ''}">
+                    <td data-label="Paid Status"><input type="checkbox" class="checkbox-paid" ${item.paid ? 'checked' : ''} onchange="togglePaidStatus('${person}', '${item.id}', this.checked)"></td>
+                    <td data-label="Account" style="font-size: 0.85em; color: var(--text-muted);">${getAccountName(item.accountId)}</td>
+                    <td data-label="Description"><strong>${item.name}</strong></td>
+                    <td data-label="Amount">R ${item.amount.toFixed(2)}</td>
+                    <td data-label="Action" style="display:flex; gap:5px;"><button type="button" class="btn-action" onclick="editFixedItem('${item.id}')">Edit</button><button type="button" class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">Del</button></td>
+                </tr>`;
+            }
         });
         document.getElementById(`${prefix}-income-tbody`).innerHTML = incHtml || '<tr><td colspan="5" style="text-align:center; padding: 15px; color: var(--text-muted);">No income sources added.</td></tr>';
 
@@ -1035,14 +1068,28 @@
         }
 
         debits.forEach(item => {
-            debHtml += `<tr class="${item.paid ? 'is-paid' : ''}">
-                <td data-label="Paid Status"><input type="checkbox" class="checkbox-paid" ${item.paid ? 'checked' : ''} onchange="togglePaidStatus('${person}', '${item.id}', this.checked)"></td>
-                <td data-label="Category"><span class="badge badge-debit">${item.fixedCategory || 'Uncategorized'}</span></td>
-                <td data-label="Account" style="font-size: 0.85em; color: var(--text-muted);">${getAccountName(item.accountId)}</td>
-                <td data-label="Description"><strong>${item.name}</strong></td>
-                <td data-label="Amount">R ${item.amount.toFixed(2)}</td>
-                <td data-label="Action"><button type="button" class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">Del</button></td>
-            </tr>`;
+            if (item.id === editFixedId) {
+                let accOpts = accounts.map(a => `<option value="${a.id}" ${a.id === item.accountId ? 'selected' : ''}>${a.name}</option>`).join('');
+                let catOpts = '<option value="Uncategorized">Uncategorized</option>' + fixedCategories.map(c => `<option value="${c}" ${c === item.fixedCategory ? 'selected' : ''}>${c}</option>`).join('') + `<option value="Other" ${item.fixedCategory === 'Other' ? 'selected' : ''}>Other</option>`;
+
+                debHtml += `<tr class="inline-edit-row">
+                    <td data-label="Paid Status">-</td>
+                    <td data-label="Category"><select id="ie-fix-cat-${item.id}" class="inline-edit-input">${catOpts}</select></td>
+                    <td data-label="Account"><select id="ie-fix-acc-${item.id}" class="inline-edit-input">${accOpts}</select></td>
+                    <td data-label="Description"><input type="text" id="ie-fix-name-${item.id}" value="${item.name}" class="inline-edit-input"></td>
+                    <td data-label="Amount"><input type="number" id="ie-fix-amt-${item.id}" value="${item.amount}" step="0.01" class="inline-edit-input"></td>
+                    <td data-label="Action" style="display:flex; gap:5px;"><button type="button" class="btn-action" style="color:var(--success); border-color:var(--success);" onclick="saveFixedEdit('${person}', 'debit', '${item.id}')">Save</button><button type="button" class="btn-action" onclick="cancelFixedEdit()">Cancel</button></td>
+                </tr>`;
+            } else {
+                debHtml += `<tr class="${item.paid ? 'is-paid' : ''}">
+                    <td data-label="Paid Status"><input type="checkbox" class="checkbox-paid" ${item.paid ? 'checked' : ''} onchange="togglePaidStatus('${person}', '${item.id}', this.checked)"></td>
+                    <td data-label="Category"><span class="badge badge-debit">${item.fixedCategory || 'Uncategorized'}</span></td>
+                    <td data-label="Account" style="font-size: 0.85em; color: var(--text-muted);">${getAccountName(item.accountId)}</td>
+                    <td data-label="Description"><strong>${item.name}</strong></td>
+                    <td data-label="Amount">R ${item.amount.toFixed(2)}</td>
+                    <td data-label="Action" style="display:flex; gap:5px;"><button type="button" class="btn-action" onclick="editFixedItem('${item.id}')">Edit</button><button type="button" class="btn-action btn-delete" onclick="removeFixedItem('${person}', '${item.id}')">Del</button></td>
+                </tr>`;
+            }
         });
         document.getElementById(`${prefix}-debit-tbody`).innerHTML = debHtml || '<tr><td colspan="6" style="text-align:center; padding: 15px; color: var(--text-muted);">No debits added.</td></tr>';
     }
